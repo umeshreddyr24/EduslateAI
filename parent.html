@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>EduSlate — Parent Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ════════════════════════════════════════════════
+       BASE
+    ════════════════════════════════════════════════ */
+    :root{
+      --bg:     #f0f2f7;
+      --surface:#ffffff;
+      --surf2:  #f7f8fc;
+      --border: rgba(0,0,0,0.07);
+      --text:   #1a1d2e;
+      --muted:  #6b7280;
+      --safe:   #059669;
+      --warn:   #d97706;
+      --danger: #dc2626;
+      --accent: #6366f1;
+      --acc2:   #ec4899;
+      --gn:     #10b981;
+      --bl:     #3b82f6;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* ── Scrollbar ─────────────────────────────── */
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px;}
+
+    /* ── Layout ────────────────────────────────── */
+    .shell{
+      max-width:900px; margin:0 auto;
+      padding:0 16px 40px;
+    }
+
+    /* ── Header ────────────────────────────────── */
+    .top-bar{
+      position:sticky; top:0; z-index:100;
+      background:rgba(240,242,247,.92);
+      backdrop-filter:blur(12px);
+      padding:14px 0;
+      margin:0 -16px; padding-left:16px; padding-right:16px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center;
+      justify-content:space-between;
+      margin-bottom:20px;
+    }
+    .top-logo{
+      font-family:'DM Sans',sans-serif;
+      font-weight:700; font-size:1.15rem;
+      color:var(--text);
+      display:flex;align-items:center;gap:10px;
+    }
+    .logo-dot{
+      width:32px;height:32px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),var(--acc2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1rem; color:#fff;
+    }
+    .live-pill{
+      display:flex;align-items:center;gap:6px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:999px; padding:5px 12px;
+      font-size:.72rem;font-weight:600;color:var(--muted);
+    }
+    .live-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--gn);
+      box-shadow:0 0 6px var(--gn);
+      animation:livepulse 1.4s ease infinite;
+    }
+    @keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+    /* ── Cards ─────────────────────────────────── */
+    .card{
+      background:var(--surface);
+      border-radius:18px;
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .card-head{
+      padding:14px 18px 10px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .card-title{
+      font-size:.78rem;font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;letter-spacing:.08em;
+      display:flex;align-items:center;gap:6px;
+    }
+    .card-body{ padding:16px 18px; }
+
+    /* ── Status Badges ─────────────────────────── */
+    .status-badge{
+      display:inline-flex;align-items:center;gap:5px;
+      border-radius:999px;padding:4px 10px;
+      font-size:.72rem;font-weight:700;
+    }
+    .s-safe{background:#d1fae5;color:var(--safe);}
+    .s-warn{background:#fef3c7;color:var(--warn);animation:warnPulse 1.5s ease infinite;}
+    .s-danger{background:#fee2e2;color:var(--danger);animation:warnPulse 1s ease infinite;}
+    @keyframes warnPulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+    /* ── Alert Row ─────────────────────────────── */
+    .alert-row{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 14px;
+      border-radius:12px;
+      border-left:3px solid transparent;
+      font-size:.82rem;font-weight:500;
+      transition:background .2s;
+    }
+    .alert-row.safe{background:#f0fdf4;border-color:var(--gn);}
+    .alert-row.warn{background:#fffbeb;border-color:var(--warn);}
+    .alert-row.danger{background:#fef2f2;border-color:var(--danger);}
+
+    /* ── Stat Grid ─────────────────────────────── */
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .stat-box{
+      background:var(--surf2);border-radius:14px;
+      padding:14px;border:1px solid var(--border);
+    }
+    .stat-box .sv{
+      font-size:1.8rem;font-weight:700;
+      background:linear-gradient(135deg,var(--accent),var(--acc2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      line-height:1;
+    }
+    .stat-box .sl{font-size:.65rem;font-weight:600;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+
+    /* ── XP Bar ────────────────────────────────── */
+    .xp-track{
+      height:10px;background:rgba(0,0,0,.06);
+      border-radius:999px;overflow:hidden;
+    }
+    .xp-fill{
+      height:100%;
+      background:linear-gradient(90deg,var(--gn),var(--bl));
+      border-radius:999px;
+      transition:width .5s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    /* ── Camera Feed ───────────────────────────── */
+    #cam-img{
+      width:100%;display:block;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#000;
+      aspect-ratio:4/3;object-fit:cover;
+    }
+    .cam-overlay-wrap{
+      position:relative;border-radius:12px;overflow:hidden;
+    }
+    .cam-overlay{
+      position:absolute;bottom:8px;left:8px;right:8px;
+      display:flex;justify-content:space-between;align-items:flex-end;
+      pointer-events:none;
+    }
+    .cam-badge{
+      background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
+      border-radius:999px;padding:4px 10px;
+      font-size:.65rem;font-weight:700;color:#fff;
+    }
+    .cam-badge.green{color:#69f0ae;}
+    .cam-badge.yellow{color:#ffe082;}
+
+    /* ── Activity Feed ─────────────────────────── */
+    .act-item{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .act-item:last-child{border-bottom:none;}
+    .act-icon{
+      width:32px;height:32px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),var(--acc2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:.95rem;flex-shrink:0;
+    }
+    .act-name{font-size:.8rem;font-weight:600;color:var(--text);}
+    .act-time{font-size:.68rem;color:var(--muted);}
+    .act-xp{
+      margin-left:auto;font-size:.72rem;font-weight:700;
+      color:var(--accent);white-space:nowrap;
+    }
+
+    /* ── Badge Pills ───────────────────────────── */
+    .badge-grid{display:flex;flex-wrap:wrap;gap:7px;}
+    .bp{
+      display:inline-flex;align-items:center;gap:5px;
+      background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(236,72,153,.08));
+      border:1px solid rgba(99,102,241,.25);
+      border-radius:999px;padding:5px 11px;
+      font-size:.72rem;font-weight:700;color:var(--accent);
+    }
+    .bp.locked{
+      background:rgba(0,0,0,.04);border-color:var(--border);
+      color:var(--muted);opacity:.6;
+    }
+
+    /* ── Control Buttons ───────────────────────── */
+    .ctrl-btn{
+      display:inline-flex;align-items:center;gap:5px;
+      border:1px solid var(--border);border-radius:12px;
+      padding:9px 14px;font-size:.75rem;font-weight:700;
+      cursor:pointer;background:var(--surface);color:var(--text);
+      transition:background .15s,border-color .15s,transform .1s;
+      font-family:'DM Sans',sans-serif;
+    }
+    .ctrl-btn:hover{background:var(--surf2);}
+    .ctrl-btn:active{transform:scale(.95);}
+    .ctrl-btn.red{color:var(--danger);border-color:rgba(220,38,38,.25);}
+    .ctrl-btn.red:hover{background:#fef2f2;}
+    .ctrl-btn.green{color:var(--safe);border-color:rgba(5,150,105,.25);}
+    .ctrl-btn.green:hover{background:#f0fdf4;}
+
+    /* ── Section Labels ────────────────────────── */
+    .sec-label{
+      font-size:.68rem;font-weight:700;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.1em;
+      margin-bottom:8px;margin-top:18px;
+      display:flex;align-items:center;gap:6px;
+    }
+    .sec-label::after{
+      content:'';flex:1;height:1px;background:var(--border);
+    }
+
+    /* ── Two-col grid ──────────────────────────── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+
+    /* ── Uptime pill ───────────────────────────── */
+    .uptime-pill{
+      font-family:'DM Mono',monospace;
+      font-size:.75rem;color:var(--muted);
+      background:var(--surf2);border:1px solid var(--border);
+      border-radius:8px;padding:3px 8px;
+    }
+
+    /* ── Refresh spinner ───────────────────────── */
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spin{animation:spin .8s linear infinite;display:inline-block;}
+
+    /* ── Child profile ─────────────────────────── */
+    .child-avatar{
+      width:48px;height:48px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--acc2));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;flex-shrink:0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ══ HEADER ══ -->
+  <div class="top-bar">
+    <div class="top-logo">
+      <div class="logo-dot">📚</div>
+      EduSlate <span style="font-size:.8rem;font-weight:400;color:var(--muted)">Parent</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="refresh-icon" style="color:var(--muted);font-size:.85rem;cursor:pointer" title="Refreshing every 2s">⟳</div>
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+    </div>
+  </div>
+
+  <!-- ══ CHILD PROFILE ══ -->
+  <div class="sec-label">👧 Child Profile</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body" style="display:flex;align-items:center;gap:14px">
+      <div class="child-avatar" id="p-avatar">🐼</div>
+      <div style="flex:1">
+        <div style="font-size:1.05rem;font-weight:700" id="p-name">Explorer</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:2px">
+          Session: <span id="p-uptime">0 min</span> &nbsp;·&nbsp;
+          Streak: <span id="p-streak">1 day 🔥</span>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:.6rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em">Level</div>
+        <div style="font-size:2rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--accent),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent" id="p-level">1</div>
+      </div>
+    </div>
+    <!-- XP bar -->
+    <div style="padding:0 18px 14px">
+      <div style="display:flex;justify-content:space-between;font-size:.65rem;font-weight:600;color:var(--muted);margin-bottom:5px">
+        <span>Experience Points</span><span id="p-xp-txt">0 / 100 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="p-xp-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- ══ SAFETY MONITOR ══ -->
+  <div class="sec-label">🛡️ Safety Monitor (AI Vision)</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+
+      <div class="alert-row safe" id="posture-row">
+        <span style="font-size:1.1rem">🧍</span>
+        <div style="flex:1">
+          <div style="font-size:.78rem;font-weight:700">Posture & Safety</div>
+          <div style="font-size:.68rem;color:var(--muted)" id="posture-detail">Monitoring active</div>
+        </div>
+        <div class="status-badge s-safe" id="posture-badge">✅ Safe</div>
+      </div>
+
+      <div class="alert-row safe" id="zone-row">
+        <span style="font-size:1.1rem">📍</span>
+        <div style="flex:1">
+          <div style="font-size:.78rem;font-weight:700">Location Zone</div>
+          <div style="font-size:.68rem;color:var(--muted)" id="zone-detail">Inside designated area</div>
+        </div>
+        <div class="status-badge s-safe" id="zone-badge">✅ Safe Zone</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px">
+        <div style="font-size:.68rem;color:var(--muted)">
+          Last alert: <span id="last-alert-txt" style="font-weight:600">System Booted</span>
+          <span id="last-alert-ago" style="color:var(--muted);font-weight:400"> · just now</span>
+        </div>
+        <div class="uptime-pill" id="cam-status">📷 Camera active</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TWO COLUMN: CAMERA + STATS ══ -->
+  <div class="two-col" style="margin-bottom:14px">
+
+    <!-- Camera -->
+    <div>
+      <div class="sec-label">📹 Live Room View</div>
+      <div class="card">
+        <div class="card-body" style="padding:10px">
+          <div class="cam-overlay-wrap">
+            <img id="cam-img" src="/video_feed" alt="Live camera feed"/>
+            <div class="cam-overlay">
+              <div class="cam-badge" id="cam-hunt-badge"></div>
+              <div class="cam-badge" id="cam-ts">--:--</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <button class="ctrl-btn" onclick="refreshCam()">📷 Refresh Feed</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div>
+      <div class="sec-label">📊 Today's Stats</div>
+      <div class="card">
+        <div class="card-body">
+          <div class="stat-grid" style="margin-bottom:10px">
+            <div class="stat-box">
+              <div class="sv" id="s-total-xp">0</div>
+              <div class="sl">Total XP</div>
+            </div>
+            <div class="stat-box">
+              <div class="sv" id="s-daily-xp">0</div>
+              <div class="sl">Today's XP</div>
+            </div>
+            <div class="stat-box">
+              <div class="sv" id="s-badges">0</div>
+              <div class="sl">Badges</div>
+            </div>
+            <div class="stat-box">
+              <div class="sv" id="s-time">0m</div>
+              <div class="sl">Session Time</div>
+            </div>
+          </div>
+
+          <!-- Active hunt indicator -->
+          <div id="hunt-indicator" style="display:none;background:linear-gradient(135deg,rgba(255,171,64,.12),rgba(230,81,0,.06));border:1px solid rgba(255,171,64,.3);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:.7rem;font-weight:700;color:#d97706">🔍 HUNT ACTIVE</div>
+            <div style="font-size:1.2rem;margin-top:2px" id="hunt-target-show"></div>
+            <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Child is on a scavenger hunt!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ BADGES ══ -->
+  <div class="sec-label">🏅 Earned Badges</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body">
+      <div class="badge-grid" id="badge-grid">
+        <div style="font-size:.78rem;color:var(--muted)">No badges yet — keep learning!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RECENT ACTIVITY ══ -->
+  <div class="sec-label">🕒 Recent Activity</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body" style="padding:12px 18px">
+      <div id="activity-feed">
+        <div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px">No activity yet today.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PARENT CONTROLS ══ -->
+  <div class="sec-label">⚙️ Parent Controls</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <button class="ctrl-btn green" onclick="resetDailyXP()">🔄 Reset Daily XP</button>
+        <button class="ctrl-btn" onclick="sendAlert('Great job today! 🌟')">📣 Send Praise</button>
+        <button class="ctrl-btn red" onclick="sendAlert('Time for a break! 🧘')">⏸ Break Time</button>
+        <button class="ctrl-btn" onclick="sendAlert('Dinner time! 🍽️ Come eat!')">🍽️ Meal Time</button>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted)">
+        Controls send alerts to the system state. The child's device reflects changes in real-time.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;font-size:.65rem;color:var(--muted);padding:8px 0">
+    EduSlate · Raspberry Pi 3B+ · Cloud AI Vision · Auto-refresh every 2s
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+/* ════════════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════════════ */
+const BADGE_DEFS=[
+  {id:'first',   e:'⭐', l:'First Star'},
+  {id:'abc5',    e:'🔤', l:'Letter Hero'},
+  {id:'writer',  e:'✏️', l:'Writer'},
+  {id:'hunter',  e:'🔍', l:'Hunter'},
+  {id:'chatter', e:'🤖', l:'Chatter'},
+  {id:'lv5',     e:'🏆', l:'Level 5'},
+];
+
+const ACT_ICONS={
+  '🔤':'#6366f1','🔢':'#3b82f6','✏️':'#10b981',
+  '🔍':'#f59e0b','🤖':'#8b5cf6','default':'#6366f1'
+};
+
+/* ════════════════════════════════════════════════
+   POLL
+════════════════════════════════════════════════ */
+let lastData={};
+
+async function poll(){
+  const icon=document.getElementById('refresh-icon');
+  icon.classList.add('spin');
+  try{
+    const r=await fetch('/api/state');
+    const d=await r.json();
+    lastData=d;
+    updateUI(d);
+  }catch(e){
+    console.warn('Poll failed:',e);
+  }
+  icon.classList.remove('spin');
+}
+
+function updateUI(d){
+  /* Profile */
+  document.getElementById('p-avatar').textContent   = d.avatar   || '🐼';
+  document.getElementById('p-name').textContent     = d.student_name || 'Explorer';
+  document.getElementById('p-level').textContent    = d.level    || 1;
+  document.getElementById('p-uptime').textContent   = (d.uptime_minutes||0)+'m';
+  document.getElementById('p-streak').textContent   = (d.streak_days||1)+' day 🔥';
+
+  const xp=d.xp||0, lv=d.level||1;
+  const inLv=xp%100, pct=(inLv/100)*100;
+  document.getElementById('p-xp-bar').style.width = pct+'%';
+  document.getElementById('p-xp-txt').textContent  = `${inLv} / 100 XP`;
+
+  /* Stats */
+  document.getElementById('s-total-xp').textContent = xp;
+  document.getElementById('s-daily-xp').textContent = d.daily_xp||0;
+  document.getElementById('s-badges').textContent   = (d.badges||[]).length;
+  document.getElementById('s-time').textContent     = (d.uptime_minutes||0)+'m';
+
+  /* Safety */
+  const status=d.status||'Safe';
+  const zone=d.zone||'Inside Safe Zone';
+  const postureRow=document.getElementById('posture-row');
+  const postureBdg=document.getElementById('posture-badge');
+  const postureDetail=document.getElementById('posture-detail');
+  const zoneRow=document.getElementById('zone-row');
+  const zoneBdg=document.getElementById('zone-badge');
+  const zoneDetail=document.getElementById('zone-detail');
+
+  if(status==='Safe'){
+    postureRow.className='alert-row safe';
+    postureBdg.className='status-badge s-safe';
+    postureBdg.textContent='✅ Safe';
+    postureDetail.textContent='Good posture detected';
+  } else {
+    const isWarn=status.includes('Posture')||status.includes('Close');
+    postureRow.className='alert-row '+(isWarn?'warn':'danger');
+    postureBdg.className='status-badge '+(isWarn?'s-warn':'s-danger');
+    postureBdg.textContent='⚠️ '+status;
+    postureDetail.textContent=d.last_alert||'Check on child';
+  }
+
+  if(zone==='Inside Safe Zone'){
+    zoneRow.className='alert-row safe';
+    zoneBdg.className='status-badge s-safe';
+    zoneBdg.textContent='✅ Safe Zone';
+    zoneDetail.textContent='Inside designated area';
+  } else {
+    zoneRow.className='alert-row danger';
+    zoneBdg.className='status-badge s-danger';
+    zoneBdg.textContent='🚨 '+zone;
+    zoneDetail.textContent='Child may have left safe area!';
+  }
+
+  /* Last alert */
+  document.getElementById('last-alert-txt').textContent=d.last_alert||'—';
+  const ago=d.last_alert_ago||0;
+  document.getElementById('last-alert-ago').textContent=
+    ago<60?` · ${ago}s ago`:` · ${Math.round(ago/60)}m ago`;
+
+  /* Camera status */
+  document.getElementById('cam-status').textContent=
+    d.camera_available?'📷 Camera active':'📷 No camera';
+  document.getElementById('cam-ts').textContent=
+    new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+  /* Hunt indicator */
+  const huntEl=document.getElementById('hunt-indicator');
+  if(d.active_hunt_target){
+    huntEl.style.display='block';
+    document.getElementById('hunt-target-show').textContent=
+      `Searching for: ${d.active_hunt_target}`;
+    document.getElementById('cam-hunt-badge').textContent=`🔍 ${d.active_hunt_target}`;
+    document.getElementById('cam-hunt-badge').className='cam-badge yellow';
+  } else {
+    huntEl.style.display='none';
+    document.getElementById('cam-hunt-badge').textContent='';
+  }
+
+  /* Badges */
+  const earned=d.badges||[];
+  const bg=document.getElementById('badge-grid');
+  if(earned.length){
+    bg.innerHTML=BADGE_DEFS.map(b=>{
+      const has=earned.includes(b.id);
+      return `<div class="bp ${has?'':'locked'}">${b.e} <span>${b.l}</span>${has?'':' 🔒'}</div>`;
+    }).join('');
+  } else {
+    bg.innerHTML='<div style="font-size:.78rem;color:var(--muted)">No badges yet — keep learning! 🌱</div>';
+  }
+
+  /* Activity feed */
+  const acts=(d.activities||[]).slice().reverse().slice(0,8);
+  const af=document.getElementById('activity-feed');
+  if(acts.length){
+    af.innerHTML=acts.map(a=>{
+      const key=Object.keys(ACT_ICONS).find(k=>a.action&&a.action.includes(k))||'default';
+      const col=ACT_ICONS[key];
+      return `
+        <div class="act-item">
+          <div class="act-icon" style="background:${col}20;color:${col}">${a.action?a.action.split(' ')[0]:'📚'}</div>
+          <div>
+            <div class="act-name">${a.action||'Activity'}</div>
+            <div class="act-time">${a.time||'--:--'}</div>
+          </div>
+          <div class="act-xp">+${a.xp||0} XP</div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    af.innerHTML='<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px">No activity yet today. 🌱</div>';
+  }
+}
+
+/* ════════════════════════════════════════════════
+   CONTROLS
+════════════════════════════════════════════════ */
+async function resetDailyXP(){
+  await fetch('/api/parent/reset_xp',{method:'POST'}).catch(()=>{});
+  showFeedback('Daily XP reset ✓');
+}
+
+async function sendAlert(msg){
+  await fetch('/api/parent/set_alert',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:msg})
+  }).catch(()=>{});
+  showFeedback(`Sent: "${msg}"`);
+}
+
+function refreshCam(){
+  const img=document.getElementById('cam-img');
+  img.src='/video_feed?'+Date.now();
+}
+
+let fbTimer=null;
+function showFeedback(msg){
+  const f=document.createElement('div');
+  f.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1d2e;color:#fff;border-radius:999px;padding:10px 20px;font-size:.8rem;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2)';
+  f.textContent=msg;
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),2500);
+}
+
+/* ════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════ */
+poll();
+setInterval(poll,2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<title>EduSlate</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE  — NO transparency, NO backdrop-filter, FAST
+═══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:    #12103a;
+  --bg2:   #1a1846;
+  --bg3:   #211e54;
+  --pk:    #ff5ba7;
+  --bl:    #38b6f0;
+  --gn:    #3de8a0;
+  --yw:    #ffd760;
+  --or:    #ff9640;
+  --pu:    #c47ef0;
+  --rd:    #ff5c5c;
+  --txt:   #ffffff;
+  --txt2:  #b0b8d8;
+  --bdr:   #2e2b6a;
+  --card:  #1e1b50;
+  --card2: #252260;
+  --hdr-h: 50px;
+  --nav-h: 56px;
+}
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{
+  width:100vw;height:100vh;
+  overflow:hidden;
+  font-family:'Segoe UI',Tahoma,Geneva,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  user-select:none;-webkit-user-select:none;
+  touch-action:none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════════ */
+#app{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+#hdr{
+  flex-shrink:0;height:var(--hdr-h);
+  background:var(--bg2);
+  border-bottom:2px solid var(--bdr);
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:0 12px;z-index:100;
+}
+#content{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  position:relative;
+  background:var(--bg);
+}
+#bnav{
+  flex-shrink:0;height:var(--nav-h);
+  background:var(--bg2);
+  border-top:2px solid var(--bdr);
+  display:none;
+  align-items:stretch;z-index:100;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════════════ */
+.logo{
+  font-size:1.25rem;font-weight:900;letter-spacing:-0.5px;
+  background:linear-gradient(90deg,var(--pk),var(--bl),var(--gn));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+#hdr-right{
+  display:flex;align-items:center;gap:8px;
+}
+#hdr-av{font-size:1.3rem;line-height:1;}
+#xp-wrap{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:20px;padding:4px 10px 4px 7px;
+  display:flex;align-items:center;gap:6px;
+}
+#xp-bar-bg{
+  width:72px;height:7px;background:var(--bg3);
+  border-radius:4px;overflow:hidden;
+}
+#xp-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--gn),var(--bl));
+  border-radius:4px;
+  transition:width .4s ease;
+}
+#xp-txt{font-size:.6rem;font-weight:800;color:var(--yw);white-space:nowrap;}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCREENS
+═══════════════════════════════════════════════════════════════ */
+.screen{
+  position:absolute;inset:0;
+  background:var(--bg);
+  display:none;
+  flex-direction:column;
+  padding:10px 10px 6px;
+  overflow:hidden;
+}
+.screen.active{display:flex;}
+
+/* ═══════════════════════════════════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════════════════════════════════ */
+.nb{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;
+  background:transparent;border:none;
+  color:var(--txt2);cursor:pointer;
+  transition:background .15s,color .15s;
+  touch-action:manipulation;
+  border-right:1px solid var(--bdr);
+}
+.nb:last-child{border-right:none;}
+.nb.active{background:var(--bg3);color:var(--bl);}
+.nb:active{background:var(--bg3);transform:scale(.94);}
+.nb .ni{font-size:1.4rem;line-height:1;}
+.nb .nl{font-size:.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════════════════════ */
+.stitle{
+  font-size:1.1rem;font-weight:900;
+  margin-bottom:8px;flex-shrink:0;
+  display:flex;align-items:center;gap:6px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--bdr);
+  border-radius:14px;
+  padding:12px;
+}
+.card2{background:var(--card2);}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  border:none;border-radius:999px;
+  font-family:inherit;font-weight:800;cursor:pointer;
+  padding:11px 20px;font-size:.88rem;
+  transition:transform .1s,filter .1s;
+  touch-action:manipulation;white-space:nowrap;
+}
+.btn:active{transform:scale(.91);}
+.btn-pk{background:linear-gradient(135deg,#ff5ba7,#e0006f);color:#fff;}
+.btn-bl{background:linear-gradient(135deg,#38b6f0,#0273b0);color:#fff;}
+.btn-gn{background:linear-gradient(135deg,#3de8a0,#00a86b);color:#0a1a10;}
+.btn-or{background:linear-gradient(135deg,#ff9640,#c45000);color:#fff;}
+.btn-pu{background:linear-gradient(135deg,#c47ef0,#7b1ec0);color:#fff;}
+.btn-yw{background:linear-gradient(135deg,#ffd760,#e09000);color:#1a1000;}
+.btn-sm{padding:8px 14px;font-size:.78rem;}
+.btn-xs{padding:6px 11px;font-size:.7rem;}
+.btn-w{width:100%;}
+
+/* ═══════════════════════════════════════════════════════════════
+   WELCOME SCREEN
+═══════════════════════════════════════════════════════════════ */
+#welcome-screen{
+  align-items:center;justify-content:center;gap:0;
+  background:var(--bg);
+}
+.wbox{
+  width:100%;max-width:420px;
+  background:var(--card);
+  border:2px solid var(--bdr);
+  border-radius:22px;padding:20px 18px;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.wtitle{
+  font-size:1.9rem;font-weight:900;text-align:center;line-height:1.1;
+  background:linear-gradient(90deg,var(--pk),var(--bl),var(--gn));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.wsub{font-size:.8rem;color:var(--txt2);text-align:center;}
+.inp-label{font-size:.72rem;font-weight:800;color:var(--txt2);width:100%;text-align:left;}
+.inp-box{
+  width:100%;background:var(--bg3);
+  border:2px solid var(--bdr);border-radius:12px;
+  padding:11px 14px;font-size:1rem;font-weight:700;
+  color:var(--txt);text-align:center;cursor:pointer;
+  transition:border-color .2s;min-height:44px;
+}
+.inp-box.focus{border-color:var(--bl);}
+.av-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.avc{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--bg3);border:3px solid var(--bdr);
+  font-size:1.7rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,border-color .15s;
+  touch-action:manipulation;
+}
+.avc:active{transform:scale(.85);}
+.avc.sel{border-color:var(--pk);transform:scale(1.1);}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+#home-screen{background:var(--bg);}
+.stat-bar{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:14px;padding:10px 12px;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;margin-bottom:8px;
+}
+.lv-circle{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pu),var(--pk));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:900;flex-shrink:0;
+}
+.stat-xpbar{
+  flex:1;
+}
+.stat-xpbar .track{
+  height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:3px;
+}
+.stat-xpbar .fill{
+  height:100%;background:linear-gradient(90deg,var(--gn),var(--bl));
+  border-radius:4px;transition:width .4s ease;
+}
+.stat-xpbar .lbl{font-size:.6rem;font-weight:700;color:var(--yw);}
+.dash-grid{
+  flex:1;display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:7px;min-height:0;
+}
+.dc{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:14px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .12s,background .12s;
+}
+.dc:active{transform:scale(.91);background:var(--card2);}
+.dc .di{font-size:2rem;line-height:1;}
+.dc .dt{font-size:.82rem;font-weight:900;}
+.dc .ds{font-size:.55rem;color:var(--txt2);font-weight:600;}
+/* card accent colors via left border */
+.dc-zh {border-left:3px solid var(--pk);}
+.dc-ja {border-left:3px solid var(--or);}
+.dc-en {border-left:3px solid var(--bl);}
+.dc-tr {border-left:3px solid var(--gn);}
+.dc-hunt{border-left:3px solid var(--or);}
+.dc-chat{border-left:3px solid var(--pu);}
+
+/* ═══════════════════════════════════════════════════════════════
+   LANGUAGE MODULE SCREENS (Chinese / Japanese / English)
+═══════════════════════════════════════════════════════════════ */
+/* Tab bar */
+.tab-bar{
+  display:flex;gap:5px;flex-shrink:0;margin-bottom:8px;
+}
+.tab{
+  flex:1;padding:8px 4px;
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:10px;font-size:.7rem;font-weight:800;
+  cursor:pointer;text-align:center;color:var(--txt2);
+  touch-action:manipulation;transition:background .15s,color .15s;
+}
+.tab.active{background:var(--bl);color:#fff;border-color:var(--bl);}
+.tab:active{transform:scale(.92);}
+
+/* Sub-content panels */
+.sub-panel{display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden;}
+.sub-panel.active{display:flex;}
+
+/* Word / Character grid */
+.word-grid{
+  flex:1;display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;overflow:hidden;
+}
+.word-grid.c4{grid-template-columns:repeat(4,1fr);}
+.wc{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:12px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .12s,background .12s;
+  padding:6px 4px;
+}
+.wc:active{transform:scale(.86);background:var(--card2);}
+.wc .we{font-size:1.5rem;line-height:1;}
+.wc .wm{font-size:1.1rem;font-weight:900;line-height:1;}  /* main char */
+.wc .wp{font-size:.6rem;color:var(--bl);font-weight:700;} /* pinyin/romaji */
+.wc .wt{font-size:.58rem;color:var(--txt2);font-weight:600;} /* translation */
+
+/* Phrase cards */
+.phrase-list{
+  flex:1;display:flex;flex-direction:column;gap:6px;overflow-y:auto;
+}
+.phrase-list::-webkit-scrollbar{width:3px;}
+.phrase-list::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.ph{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:12px;padding:10px 12px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;touch-action:manipulation;
+  transition:background .12s;flex-shrink:0;
+}
+.ph:active{background:var(--card2);}
+.ph .ps{font-size:1rem;font-weight:900;flex-shrink:0;min-width:60px;}
+.ph .pp{font-size:.68rem;color:var(--bl);font-weight:700;}
+.ph .pt{font-size:.72rem;color:var(--txt2);}
+.ph .sp-btn{
+  margin-left:auto;font-size:1.1rem;cursor:pointer;flex-shrink:0;
+  touch-action:manipulation;
+}
+
+/* Numbers panel */
+.num-grid{
+  flex:1;display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;overflow:hidden;
+}
+.nc{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:12px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .12s;padding:4px;
+}
+.nc:active{transform:scale(.86);}
+.nc .nn{font-size:1.6rem;font-weight:900;line-height:1;}
+.nc .nz{font-size:.85rem;font-weight:700;color:var(--pk);}
+.nc .nr{font-size:.58rem;color:var(--txt2);font-weight:600;}
+
+/* ═══════════════════════════════════════════════════════════════
+   TRACE SCREEN
+═══════════════════════════════════════════════════════════════ */
+#trace-screen{background:var(--bg);}
+.trace-ctrl{
+  display:flex;align-items:center;gap:6px;
+  flex-shrink:0;margin-bottom:6px;
+}
+.sel{
+  flex:1;background:var(--card);border:1px solid var(--bdr);
+  border-radius:10px;padding:8px 10px;
+  color:var(--txt);font-size:.8rem;font-weight:700;
+  font-family:inherit;outline:none;cursor:pointer;
+}
+.sel option{background:var(--bg2);color:var(--txt);}
+#trace-canvas{
+  flex:1;width:100%;
+  background:#0e0c2e;
+  border:2px solid var(--bdr);
+  border-radius:14px;
+  display:block;touch-action:none;cursor:crosshair;
+  min-height:0;
+}
+.pal{
+  display:flex;gap:7px;justify-content:center;
+  flex-shrink:0;margin-top:7px;
+}
+.sw{
+  width:30px;height:30px;border-radius:50%;
+  border:3px solid transparent;cursor:pointer;
+  touch-action:manipulation;
+  transition:transform .12s,border-color .12s;
+}
+.sw:active{transform:scale(.82);}
+.sw.sel{border-color:#fff;transform:scale(1.18);}
+.trace-btns{
+  display:flex;gap:6px;justify-content:center;
+  flex-shrink:0;margin-top:7px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCAVENGER HUNT SCREEN
+═══════════════════════════════════════════════════════════════ */
+#hunt-screen{background:var(--bg);}
+.hunt-layout{
+  flex:1;display:flex;gap:8px;min-height:0;
+}
+/* Camera side */
+.hunt-cam{
+  flex:1;position:relative;
+  background:#000;border-radius:14px;
+  border:2px solid var(--bdr);overflow:hidden;
+}
+#cam-feed{width:100%;height:100%;object-fit:cover;display:block;}
+/* HUD corners */
+.hud-corner{
+  position:absolute;width:18px;height:18px;
+  border-color:#3de8a0;border-style:solid;border-width:0;
+}
+.hud-corner.tl{top:8px;left:8px;border-top-width:3px;border-left-width:3px;border-radius:3px 0 0 0;}
+.hud-corner.tr{top:8px;right:8px;border-top-width:3px;border-right-width:3px;border-radius:0 3px 0 0;}
+.hud-corner.bl{bottom:8px;left:8px;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 3px;}
+.hud-corner.br{bottom:8px;right:8px;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 3px 0;}
+#scan-line{
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#3de8a0,transparent);
+  display:none;animation:scan 2.2s linear infinite;
+}
+@keyframes scan{from{top:8%}to{top:88%}}
+#scan-pulse{
+  position:absolute;inset:0;border-radius:12px;
+  pointer-events:none;
+  transition:box-shadow .3s;
+}
+#scan-pulse.found{
+  box-shadow:inset 0 0 0 4px #3de8a0,0 0 24px #3de8a0;
+  animation:fp .5s ease 3;
+}
+@keyframes fp{50%{box-shadow:inset 0 0 0 7px #3de8a0,0 0 40px #3de8a0;}}
+.cam-lbl{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  background:rgba(14,12,46,.85);border-radius:999px;
+  padding:3px 10px;font-size:.62rem;font-weight:800;color:#3de8a0;
+  white-space:nowrap;
+}
+/* Found overlay */
+#hunt-found{
+  display:none;position:absolute;inset:0;
+  background:rgba(14,12,46,.92);border-radius:12px;
+  flex-direction:column;align-items:center;justify-content:center;gap:8px;
+}
+#hunt-found.show{display:flex;}
+.hf-e{font-size:4rem;animation:spinIn .5s ease;}
+@keyframes spinIn{from{transform:rotate(0)scale(0)}to{transform:rotate(360deg)scale(1)}}
+.hf-t{font-size:1.4rem;font-weight:900;color:var(--gn);}
+
+/* Right sidebar */
+.hunt-side{
+  width:110px;flex-shrink:0;
+  display:flex;flex-direction:column;gap:6px;
+}
+.hunt-target{
+  background:var(--card);border:2px dashed var(--or);
+  border-radius:13px;padding:8px;text-align:center;flex-shrink:0;
+}
+#ht-e{font-size:2.4rem;animation:bob 1.3s infinite alternate ease-in-out;}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-7px)}}
+#ht-n{font-size:.78rem;font-weight:900;color:var(--or);margin-top:3px;}
+#ht-sub{font-size:.56rem;color:var(--txt2);margin-top:2px;}
+.hunt-objs{
+  flex:1;overflow-y:auto;
+  display:flex;flex-direction:column;gap:4px;
+}
+.hunt-objs::-webkit-scrollbar{width:2px;}
+.hunt-objs::-webkit-scrollbar-thumb{background:var(--bdr);}
+.hob{
+  background:var(--card);border:1.5px solid var(--bdr);
+  border-radius:10px;padding:5px 6px;
+  display:flex;align-items:center;gap:5px;
+  cursor:pointer;touch-action:manipulation;
+  transition:background .12s,border-color .12s;flex-shrink:0;
+}
+.hob:active{transform:scale(.88);}
+.hob.sel{border-color:var(--or);background:var(--bg3);}
+.hob .he{font-size:1.2rem;}
+.hob .hl{font-size:.6rem;font-weight:700;color:var(--txt2);}
+
+/* Hunt bottom */
+.hunt-bot{
+  flex-shrink:0;display:flex;
+  align-items:center;gap:7px;padding-top:6px;
+}
+#hunt-stat{flex:1;font-size:.68rem;font-weight:700;color:var(--txt2);}
+#conf-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+#conf-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--or),var(--gn));border-radius:3px;transition:width .4s ease;}
+
+/* ═══════════════════════════════════════════════════════════════
+   MINI GAMES SCREEN
+═══════════════════════════════════════════════════════════════ */
+#games-screen{background:var(--bg);}
+.game-grid{
+  flex:1;display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;overflow:hidden;
+}
+.game-card{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:14px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;touch-action:manipulation;
+  transition:transform .12s,background .12s;
+  padding:12px 8px;
+}
+.game-card:active{transform:scale(.91);background:var(--card2);}
+.game-card .ge{font-size:2.4rem;}
+.game-card .gt{font-size:.88rem;font-weight:900;}
+.game-card .gs{font-size:.6rem;color:var(--txt2);}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ (sub-screen inside games)
+═══════════════════════════════════════════════════════════════ */
+#quiz-screen{background:var(--bg);}
+.quiz-q{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:14px;padding:16px;
+  text-align:center;flex-shrink:0;margin-bottom:8px;
+}
+.quiz-qnum{font-size:.65rem;color:var(--txt2);font-weight:700;margin-bottom:4px;}
+.quiz-qtxt{font-size:1.4rem;font-weight:900;line-height:1.2;}
+.quiz-qsub{font-size:.75rem;color:var(--bl);margin-top:4px;}
+.quiz-opts{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  align-content:start;
+}
+.qopt{
+  background:var(--card);border:2px solid var(--bdr);
+  border-radius:13px;padding:14px 8px;
+  font-size:.9rem;font-weight:800;text-align:center;
+  cursor:pointer;touch-action:manipulation;
+  transition:background .12s,border-color .12s,transform .1s;
+}
+.qopt:active{transform:scale(.91);}
+.qopt.correct{background:#1a4a2a;border-color:var(--gn);color:var(--gn);}
+.qopt.wrong{background:#4a1a1a;border-color:var(--rd);color:var(--rd);}
+.quiz-score{
+  flex-shrink:0;text-align:center;
+  font-size:.72rem;color:var(--txt2);padding:6px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLASH CARDS GAME
+═══════════════════════════════════════════════════════════════ */
+#flash-screen{background:var(--bg);}
+.flash-card{
+  flex:1;
+  background:var(--card);border:2px solid var(--bdr);
+  border-radius:18px;padding:20px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  cursor:pointer;touch-action:manipulation;
+  transition:background .15s;
+}
+.flash-card:active{background:var(--card2);}
+.flash-e{font-size:4rem;line-height:1;}
+.flash-m{font-size:2.2rem;font-weight:900;}
+.flash-p{font-size:1.1rem;color:var(--bl);font-weight:700;}
+.flash-hint{font-size:.75rem;color:var(--txt2);}
+.flash-t{font-size:.8rem;color:var(--txt2);}
+.flash-show{font-size:1rem;font-weight:700;color:var(--gn);}
+.flash-btns{display:flex;gap:8px;flex-shrink:0;margin-top:8px;}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI CHAT SCREEN
+═══════════════════════════════════════════════════════════════ */
+#chat-screen{background:var(--bg);}
+.chat-lang-sel{
+  display:flex;gap:5px;flex-shrink:0;margin-bottom:6px;
+}
+.clt{
+  flex:1;padding:7px 4px;
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:10px;font-size:.68rem;font-weight:800;
+  text-align:center;cursor:pointer;color:var(--txt2);
+  touch-action:manipulation;
+}
+.clt.active{background:var(--pu);color:#fff;border-color:var(--pu);}
+#chat-msgs{
+  flex:1;overflow-y:auto;
+  display:flex;flex-direction:column;gap:7px;
+  padding:2px 0;scroll-behavior:smooth;
+  min-height:0;
+}
+#chat-msgs::-webkit-scrollbar{width:3px;}
+#chat-msgs::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
+.cm{display:flex;gap:6px;}
+.cm.u{flex-direction:row-reverse;}
+.cav{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--card2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;flex-shrink:0;align-self:flex-end;
+}
+.cb{
+  max-width:80%;padding:8px 11px;
+  border-radius:14px;font-size:.78rem;line-height:1.45;font-weight:600;
+}
+.cm.b .cb{background:var(--card2);border:1px solid var(--bdr);border-bottom-left-radius:3px;}
+.cm.u .cb{background:#2a1540;border:1px solid #5c3080;border-bottom-right-radius:3px;color:#e8c8ff;}
+.qps{display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;margin-bottom:6px;}
+.qb{
+  background:var(--card);border:1px solid var(--bdr);
+  border-radius:999px;padding:5px 10px;
+  font-size:.63rem;font-weight:800;
+  cursor:pointer;color:var(--txt2);
+  touch-action:manipulation;font-family:inherit;
+}
+.qb:active{background:var(--card2);transform:scale(.92);}
+.chat-bar{display:flex;gap:6px;flex-shrink:0;align-items:center;}
+.chat-disp{
+  flex:1;background:var(--card);border:1px solid var(--bdr);
+  border-radius:999px;padding:9px 14px;
+  font-size:.82rem;font-weight:700;
+  cursor:pointer;min-height:40px;
+  touch-action:manipulation;color:var(--txt2);
+}
+.chat-disp.has-text{color:var(--txt);}
+.chat-send{
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--pu),#7b1ec0);
+  font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;touch-action:manipulation;
+}
+.chat-send:active{transform:scale(.86);}
+.td{width:5px;height:5px;border-radius:50%;background:var(--bl);display:inline-block;animation:td .7s infinite alternate;}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes td{from{transform:translateY(0);opacity:.4}to{transform:translateY(-4px);opacity:1}}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOUCH KEYBOARD
+═══════════════════════════════════════════════════════════════ */
+#kbd{
+  position:fixed;inset:0;z-index:500;
+  display:none;flex-direction:column;justify-content:flex-end;
+  background:rgba(0,0,0,.55);
+}
+#kbd.open{display:flex;}
+#kbd-panel{
+  background:#1a1840;
+  border-top:2px solid var(--bdr);
+  padding:8px 6px 10px;
+}
+#kbd-disp{
+  background:var(--bg3);border:1px solid var(--bdr);
+  border-radius:10px;padding:8px 12px;
+  font-size:.9rem;font-weight:700;color:var(--txt);
+  margin-bottom:7px;min-height:38px;
+  display:flex;align-items:center;gap:2px;
+}
+#kbd-cur{
+  width:2px;height:1.1em;background:var(--bl);
+  border-radius:1px;animation:bc .9s step-end infinite;
+}
+@keyframes bc{0%,100%{opacity:1}50%{opacity:0}}
+.kbd-modes{display:flex;gap:4px;margin-bottom:6px;}
+.km{
+  flex:1;padding:6px;background:var(--card);
+  border:1px solid var(--bdr);border-radius:8px;
+  font-size:.62rem;font-weight:800;text-align:center;
+  cursor:pointer;color:var(--txt2);touch-action:manipulation;
+}
+.km.active{background:var(--bl);color:#fff;border-color:var(--bl);}
+.kbd-rows{display:flex;flex-direction:column;gap:4px;}
+.kbd-row{display:flex;gap:4px;justify-content:center;}
+.kk{
+  background:var(--card2);border:1px solid var(--bdr);
+  border-radius:8px;font-size:.88rem;font-weight:800;color:var(--txt);
+  cursor:pointer;touch-action:manipulation;
+  display:flex;align-items:center;justify-content:center;
+  height:40px;min-width:28px;padding:0 6px;flex:1;
+  transition:background .1s;
+}
+.kk:active{background:#3a3880;transform:scale(.88);}
+.kk.sp{background:var(--bg3);font-size:.7rem;flex:4;}
+.kk.act{background:linear-gradient(135deg,var(--bl),#0273b0);}
+.kk.del{background:#3a1a1a;color:#ff8a8a;}
+.kk.wide{flex:2;}
+.kk.caps-on{background:#1a3050;color:var(--bl);}
+
+/* ═══════════════════════════════════════════════════════════════
+   OVERLAYS: TOAST, LEVELUP, CONFETTI
+═══════════════════════════════════════════════════════════════ */
+#conf-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999;}
+#toast{
+  position:fixed;bottom:66px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--card2);border:1px solid var(--gn);
+  border-radius:999px;padding:9px 20px;
+  font-size:.88rem;font-weight:800;color:var(--gn);
+  opacity:0;transition:opacity .25s,transform .25s;z-index:8000;
+  white-space:nowrap;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#lvbanner{
+  position:fixed;top:-80px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--pk),var(--pu));
+  border-radius:18px;padding:12px 22px;text-align:center;
+  z-index:7000;transition:top .4s cubic-bezier(.34,1.56,.64,1);
+}
+#lvbanner.show{top:58px;}
+#lvbanner .lbt{font-size:1.2rem;font-weight:900;color:#fff;}
+</style>
+</head>
+<body>
+
+<canvas id="conf-canvas"></canvas>
+<div id="toast">+XP!</div>
+<div id="lvbanner"><div class="lbt">LEVEL UP! 🎉</div><div style="font-size:.7rem;color:rgba(255,255,255,.8);margin-top:2px">Amazing work!</div></div>
+
+<!-- ═══════════════ TOUCH KEYBOARD ═══════════════ -->
+<div id="kbd" onclick="kbdBg(event)">
+  <div id="kbd-panel">
+    <div id="kbd-disp"><span id="kbd-txt"></span><span id="kbd-cur"></span></div>
+    <div class="kbd-modes">
+      <div class="km active" data-m="abc" onclick="setKM('abc')">ABC</div>
+      <div class="km" data-m="num" onclick="setKM('num')">123</div>
+      <div class="km" data-m="zh"  onclick="setKM('zh')">汉字</div>
+      <div class="km" data-m="ja"  onclick="setKM('ja')">かな</div>
+      <div class="km" data-m="emo" onclick="setKM('emo')">😊</div>
+    </div>
+    <div class="kbd-rows" id="kbd-rows"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="hdr">
+    <div class="logo">EduSlate ★</div>
+    <div id="hdr-right" style="display:none">
+      <span id="hdr-av">🐼</span>
+      <div id="xp-wrap">
+        <div id="xp-bar-bg"><div id="xp-bar"></div></div>
+        <div id="xp-txt">Lv1·0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ══ WELCOME ══ -->
+    <div id="welcome-screen" class="screen active" style="display:flex;align-items:center;justify-content:center;padding:12px;">
+      <div class="wbox">
+        <div class="wtitle">EduSlate ★</div>
+        <div class="wsub">Your fun learning adventure starts here!</div>
+        <div style="width:100%">
+          <div class="inp-label">Your Name</div>
+          <div class="inp-box" id="name-disp" onclick="openKbd('name')" style="margin-top:4px">
+            Tap to enter your name...
+          </div>
+        </div>
+        <div style="width:100%">
+          <div class="inp-label" style="margin-bottom:6px">Choose your buddy!</div>
+          <div class="av-row">
+            <div class="avc sel" data-av="🐼">🐼</div>
+            <div class="avc" data-av="🦊">🦊</div>
+            <div class="avc" data-av="🤖">🤖</div>
+            <div class="avc" data-av="🐸">🐸</div>
+            <div class="avc" data-av="🦄">🦄</div>
+            <div class="avc" data-av="🐯">🐯</div>
+          </div>
+        </div>
+        <button class="btn btn-pk btn-w" id="start-btn" style="font-size:1rem;padding:14px">
+          Let's Go! 🚀
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ DASHBOARD ══ -->
+    <div id="home-screen" class="screen">
+      <div id="greeting" class="stitle" style="font-size:.95rem;margin-bottom:6px">👋 Hello, Explorer!</div>
+      <div class="stat-bar">
+        <div class="lv-circle" id="d-lv">1</div>
+        <div class="stat-xpbar">
+          <div class="track"><div class="fill" id="d-xpbar" style="width:0%"></div></div>
+          <div class="lbl" id="d-xptxt">0 / 100 XP</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-size:.55rem;color:var(--txt2);font-weight:700;text-transform:uppercase">Badges</div>
+          <div style="font-size:1.1rem" id="d-bdg">0🏅</div>
+        </div>
+      </div>
+      <div class="dash-grid">
+        <div class="dc dc-zh" onclick="go('zh-screen','zh')"><div class="di">🇨🇳</div><div class="dt">Chinese</div><div class="ds">Mandarin</div></div>
+        <div class="dc dc-ja" onclick="go('ja-screen','ja')"><div class="di">🇯🇵</div><div class="dt">Japanese</div><div class="ds">Hiragana</div></div>
+        <div class="dc dc-en" onclick="go('en-screen','en')"><div class="di">🇬🇧</div><div class="dt">English</div><div class="ds">Phonics</div></div>
+        <div class="dc dc-tr" onclick="go('trace-screen','trace')"><div class="di">✏️</div><div class="dt">Write</div><div class="ds">Tracing</div></div>
+        <div class="dc dc-hunt" onclick="go('hunt-screen','hunt')"><div class="di">🔍</div><div class="dt">Hunt</div><div class="ds">Camera AI</div></div>
+        <div class="dc dc-chat" onclick="go('chat-screen','chat')"><div class="di">🤖</div><div class="dt">AI Tutor</div><div class="ds">Ask me!</div></div>
+        <div class="dc" style="border-left:3px solid var(--yw)" onclick="go('games-screen','games')"><div class="di">🎮</div><div class="dt">Games</div><div class="ds">Play & Learn</div></div>
+        <div class="dc" style="border-left:3px solid var(--pk)" onclick="showBadges()"><div class="di">🏅</div><div class="dt">Badges</div><div class="ds">Achievements</div></div>
+        <div class="dc" style="border-left:3px solid var(--gn)" onclick="go('flash-screen','flash')"><div class="di">🃏</div><div class="dt">Flash Cards</div><div class="ds">Quick review</div></div>
+      </div>
+    </div>
+
+    <!-- ══ CHINESE SCREEN ══ -->
+    <div id="zh-screen" class="screen">
+      <div class="stitle">🇨🇳 Chinese — Mandarin</div>
+      <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('zh','vocab')">Vocab</div>
+        <div class="tab" onclick="switchTab('zh','nums')">Numbers</div>
+        <div class="tab" onclick="switchTab('zh','phrases')">Phrases</div>
+        <div class="tab" onclick="switchTab('zh','chars')">Characters</div>
+      </div>
+      <!-- Vocab -->
+      <div class="sub-panel active" id="zh-vocab">
+        <div class="word-grid c4" id="zh-vocab-grid"></div>
+      </div>
+      <!-- Numbers -->
+      <div class="sub-panel" id="zh-nums">
+        <div class="num-grid" id="zh-num-grid"></div>
+      </div>
+      <!-- Phrases -->
+      <div class="sub-panel" id="zh-phrases">
+        <div class="phrase-list" id="zh-phrase-list"></div>
+      </div>
+      <!-- Characters -->
+      <div class="sub-panel" id="zh-chars">
+        <div class="word-grid" id="zh-char-grid"></div>
+      </div>
+    </div>
+
+    <!-- ══ JAPANESE SCREEN ══ -->
+    <div id="ja-screen" class="screen">
+      <div class="stitle">🇯🇵 Japanese — Nihongo</div>
+      <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('ja','vocab')">Vocab</div>
+        <div class="tab" onclick="switchTab('ja','nums')">Numbers</div>
+        <div class="tab" onclick="switchTab('ja','phrases')">Phrases</div>
+        <div class="tab" onclick="switchTab('ja','hira')">Hiragana</div>
+      </div>
+      <div class="sub-panel active" id="ja-vocab">
+        <div class="word-grid c4" id="ja-vocab-grid"></div>
+      </div>
+      <div class="sub-panel" id="ja-nums">
+        <div class="num-grid" id="ja-num-grid"></div>
+      </div>
+      <div class="sub-panel" id="ja-phrases">
+        <div class="phrase-list" id="ja-phrase-list"></div>
+      </div>
+      <div class="sub-panel" id="ja-hira">
+        <div class="word-grid c4" id="ja-hira-grid"></div>
+      </div>
+    </div>
+
+    <!-- ══ ENGLISH SCREEN ══ -->
+    <div id="en-screen" class="screen">
+      <div class="stitle">🇬🇧 English — Phonics & Words</div>
+      <div class="tab-bar">
+        <div class="tab active" onclick="switchTab('en','abc')">Alphabet</div>
+        <div class="tab" onclick="switchTab('en','words')">Words</div>
+        <div class="tab" onclick="switchTab('en','nums')">Numbers</div>
+        <div class="tab" onclick="switchTab('en','phrases')">Phrases</div>
+      </div>
+      <div class="sub-panel active" id="en-abc">
+        <div class="word-grid c4" id="en-abc-grid"></div>
+      </div>
+      <div class="sub-panel" id="en-words">
+        <div class="word-grid c4" id="en-words-grid"></div>
+      </div>
+      <div class="sub-panel" id="en-nums">
+        <div class="num-grid" id="en-num-grid"></div>
+      </div>
+      <div class="sub-panel" id="en-phrases">
+        <div class="phrase-list" id="en-phrase-list"></div>
+      </div>
+    </div>
+
+    <!-- ══ TRACE ══ -->
+    <div id="trace-screen" class="screen">
+      <div class="stitle">✏️ Writing Practice</div>
+      <div class="trace-ctrl">
+        <select id="tlang" class="sel" onchange="populateCharSel()">
+          <option value="en">English</option>
+          <option value="zh">Chinese</option>
+          <option value="ja">Japanese</option>
+        </select>
+        <select id="tchar" class="sel" onchange="drawGuide()"></select>
+        <button class="btn btn-pk btn-xs" onclick="clearTrace()">Clear</button>
+      </div>
+      <canvas id="trace-canvas"></canvas>
+      <div class="pal" id="pal">
+        <div class="sw sel" style="background:#ff5ba7" data-c="#ff5ba7" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#38b6f0" data-c="#38b6f0" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#3de8a0" data-c="#3de8a0" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#ffd760" data-c="#ffd760" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#ff9640" data-c="#ff9640" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#c47ef0" data-c="#c47ef0" onclick="pickColor(this)"></div>
+        <div class="sw" style="background:#ffffff" data-c="#ffffff" onclick="pickColor(this)"></div>
+      </div>
+      <div class="trace-btns">
+        <button class="btn btn-gn btn-sm" onclick="awardTrace()">Done! +10 XP</button>
+        <button class="btn btn-bl btn-sm" onclick="speakChar()">Hear It 🔊</button>
+      </div>
+    </div>
+
+    <!-- ══ HUNT ══ -->
+    <div id="hunt-screen" class="screen">
+      <div class="stitle">🔍 Scavenger Hunt — Camera AI</div>
+      <div class="hunt-layout">
+        <div class="hunt-cam">
+          <img id="cam-feed" src="/video_feed" alt="Camera"/>
+          <div class="hud-corner tl"></div>
+          <div class="hud-corner tr"></div>
+          <div class="hud-corner bl"></div>
+          <div class="hud-corner br"></div>
+          <div id="scan-line"></div>
+          <div id="scan-pulse"></div>
+          <div class="cam-lbl" id="cam-lbl">Ready to scan</div>
+          <div id="hunt-found">
+            <div class="hf-e" id="hf-e">🍎</div>
+            <div class="hf-t">FOUND IT!</div>
+            <div style="font-size:.75rem;color:var(--txt2)">+50 XP earned!</div>
+            <button class="btn btn-gn btn-sm" onclick="resetHunt()" style="margin-top:6px">Play Again!</button>
+          </div>
+        </div>
+        <div class="hunt-side">
+          <div class="hunt-target">
+            <div id="ht-e">🍎</div>
+            <div id="ht-n">Find Apple!</div>
+            <div id="ht-sub">Pingguo 苹果</div>
+          </div>
+          <div class="hunt-objs" id="hunt-objs"></div>
+        </div>
+      </div>
+      <div class="hunt-bot">
+        <div id="hunt-stat">Choose an object above</div>
+        <div id="conf-track"><div id="conf-fill"></div></div>
+        <button class="btn btn-or btn-xs" id="hunt-btn" onclick="startHunt()">▶ Start</button>
+      </div>
+    </div>
+
+    <!-- ══ GAMES ══ -->
+    <div id="games-screen" class="screen">
+      <div class="stitle">🎮 Games</div>
+      <div class="game-grid">
+        <div class="game-card" onclick="startQuiz('zh')">
+          <div class="ge">🇨🇳</div>
+          <div class="gt">Chinese Quiz</div>
+          <div class="gs">Match words!</div>
+        </div>
+        <div class="game-card" onclick="startQuiz('ja')">
+          <div class="ge">🇯🇵</div>
+          <div class="gt">Japan Quiz</div>
+          <div class="gs">Match words!</div>
+        </div>
+        <div class="game-card" onclick="startQuiz('en')">
+          <div class="ge">🇬🇧</div>
+          <div class="gt">English Quiz</div>
+          <div class="gs">Spell it!</div>
+        </div>
+        <div class="game-card" onclick="go('flash-screen','flash')">
+          <div class="ge">🃏</div>
+          <div class="gt">Flash Cards</div>
+          <div class="gs">Flip &amp; learn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ QUIZ ══ -->
+    <div id="quiz-screen" class="screen">
+      <div class="stitle" id="quiz-title">Chinese Quiz</div>
+      <div class="quiz-q">
+        <div class="quiz-qnum" id="q-num">Question 1 / 8</div>
+        <div class="quiz-qtxt" id="q-txt">--</div>
+        <div class="quiz-qsub" id="q-sub"></div>
+      </div>
+      <div class="quiz-opts" id="q-opts"></div>
+      <div class="quiz-score" id="q-score">Score: 0</div>
+      <div style="display:flex;gap:7px;flex-shrink:0;margin-top:6px;justify-content:center">
+        <button class="btn btn-bl btn-xs" onclick="go('games-screen','games')">Back to Games</button>
+      </div>
+    </div>
+
+    <!-- ══ FLASH CARDS ══ -->
+    <div id="flash-screen" class="screen">
+      <div class="stitle">🃏 Flash Cards</div>
+      <div style="display:flex;gap:5px;flex-shrink:0;margin-bottom:8px">
+        <button class="btn btn-xs" id="fl-zh" onclick="setFlashLang('zh')" style="background:var(--card);border:1px solid var(--bdr);color:var(--txt)">🇨🇳 Chinese</button>
+        <button class="btn btn-xs" id="fl-ja" onclick="setFlashLang('ja')" style="background:var(--card);border:1px solid var(--bdr);color:var(--txt)">🇯🇵 Japanese</button>
+        <button class="btn btn-xs" id="fl-en" onclick="setFlashLang('en')" style="background:var(--card);border:1px solid var(--bdr);color:var(--txt)">🇬🇧 English</button>
+      </div>
+      <div class="flash-card" id="flash-card" onclick="flipFlash()">
+        <div class="flash-e" id="fl-e">🍎</div>
+        <div class="flash-m" id="fl-m">--</div>
+        <div class="flash-p" id="fl-p"></div>
+        <div class="flash-hint" id="fl-hint">Tap to reveal!</div>
+        <div class="flash-t" id="fl-t" style="display:none"></div>
+      </div>
+      <div class="flash-btns">
+        <button class="btn btn-pk btn-sm" onclick="flashNav(-1)">← Prev</button>
+        <button class="btn btn-gn btn-sm" onclick="flashNav(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- ══ CHAT ══ -->
+    <div id="chat-screen" class="screen">
+      <div class="stitle">🤖 AI Tutor</div>
+      <div class="chat-lang-sel">
+        <div class="clt active" onclick="setChatLang('chinese',this)">🇨🇳 Chinese</div>
+        <div class="clt" onclick="setChatLang('japanese',this)">🇯🇵 Japanese</div>
+        <div class="clt" onclick="setChatLang('english',this)">🇬🇧 English</div>
+      </div>
+      <div id="chat-msgs"></div>
+      <div class="qps" id="qps"></div>
+      <div class="chat-bar">
+        <div class="chat-disp" id="chat-disp" onclick="openKbd('chat')">Tap to type a question...</div>
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bnav" style="display:none">
+    <button class="nb active" id="nb-home"  onclick="go('home-screen','home')"><span class="ni">🏠</span><span class="nl">Home</span></button>
+    <button class="nb" id="nb-zh"    onclick="go('zh-screen','zh')"><span class="ni">🇨🇳</span><span class="nl">Chinese</span></button>
+    <button class="nb" id="nb-ja"    onclick="go('ja-screen','ja')"><span class="ni">🇯🇵</span><span class="nl">Japan</span></button>
+    <button class="nb" id="nb-en"    onclick="go('en-screen','en')"><span class="ni">🇬🇧</span><span class="nl">English</span></button>
+    <button class="nb" id="nb-trace" onclick="go('trace-screen','trace')"><span class="ni">✏️</span><span class="nl">Write</span></button>
+    <button class="nb" id="nb-hunt"  onclick="go('hunt-screen','hunt')"><span class="ni">🔍</span><span class="nl">Hunt</span></button>
+    <button class="nb" id="nb-games" onclick="go('games-screen','games')"><span class="ni">🎮</span><span class="nl">Games</span></button>
+    <button class="nb" id="nb-chat"  onclick="go('chat-screen','chat')"><span class="ni">🤖</span><span class="nl">Tutor</span></button>
+    <button class="nb" id="nb-flash" onclick="go('flash-screen','flash')"><span class="ni">🃏</span><span class="nl">Cards</span></button>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
+const S={
+  name:'Explorer',avatar:'🐼',xp:0,level:1,badges:[],
+  drawColor:'#ff5ba7',drawing:false,lx:0,ly:0,
+  huntObj:null,huntPoll:null,
+  chatBuf:'',chatLang:'chinese',
+  kbdTarget:null,kbdBuf:'',kbdMode:'abc',capsOn:false,
+  flashLang:'zh',flashIdx:0,flashFlipped:false,
+  quizLang:'zh',quizIdx:0,quizScore:0,quizData:[],
+};
+const XPL=100;
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+function go(scr,nav){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(scr);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nb-'+nav);
+  if(nb) nb.classList.add('active');
+}
+
+function switchTab(prefix,tab){
+  // deactivate tabs
+  const screen=document.getElementById(prefix+'-screen');
+  screen.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  screen.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+  // activate clicked tab and matching panel
+  const tabs=screen.querySelectorAll('.tab');
+  const panels=screen.querySelectorAll('.sub-panel');
+  const names=['vocab','nums','phrases','chars','hira','abc','words'];// all possible
+  // find which index this tab name corresponds to
+  tabs.forEach((t,i)=>{
+    if(t.textContent.toLowerCase().includes(tab.toLowerCase())||
+       (tab==='abc'&&t.textContent==='Alphabet')||
+       (tab==='hira'&&t.textContent==='Hiragana')||
+       (tab==='chars'&&t.textContent==='Characters')||
+       (tab==='words'&&t.textContent==='Words')){
+      t.classList.add('active');
+      if(panels[i]) panels[i].classList.add('active');
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WELCOME
+═══════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.avc').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.avc').forEach(a=>a.classList.remove('sel'));
+    el.classList.add('sel');S.avatar=el.dataset.av;
+  });
+});
+
+document.getElementById('start-btn').addEventListener('click',()=>{
+  S.name=S.kbdBuf.trim()||'Explorer';
+  document.getElementById('hdr-av').textContent=S.avatar;
+  document.getElementById('hdr-right').style.display='flex';
+  const bnav=document.getElementById('bnav');
+  bnav.style.display='flex';
+  document.getElementById('greeting').textContent='👋 Hello, '+S.name+'!';
+
+  go('home-screen','home');
+  buildAllData();
+  updateXP();
+
+  fetch('/api/update_profile',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:S.name,avatar:S.avatar})}).catch(()=>{});
+
+  setTimeout(()=>speak('Welcome to EduSlate! Hello '+S.name+'!'),350);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   XP / BADGES
+═══════════════════════════════════════════════════════════════ */
+const BADGES=[
+  {id:'star1',e:'⭐',l:'First Star',   r:()=>S.xp>=10},
+  {id:'writer',e:'✏️',l:'Writer',      r:()=>S.xp>=30},
+  {id:'abc',   e:'🔤',l:'ABC Hero',    r:()=>S.xp>=50},
+  {id:'hunter',e:'🔍',l:'Hunter',      r:()=>S.xp>=100},
+  {id:'chat',  e:'🤖',l:'Chatterbox',  r:()=>S.xp>=80},
+  {id:'lv5',   e:'🏆',l:'Level 5',     r:()=>S.level>=5},
+  {id:'quiz',  e:'🧠',l:'Quiz Master', r:()=>S.quizScore>=16},
+  {id:'poly',  e:'🌍',l:'Polyglot',    r:()=>S.xp>=200},
+];
+
+function addXP(n,action='activity'){
+  S.xp+=n;
+  const prev=S.level;
+  S.level=Math.floor(S.xp/XPL)+1;
+  updateXP();
+  showToast('+'+n+' XP!');
+  checkBadges();
+  if(S.level>prev) showLvUp();
+  fetch('/api/add_xp',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({amount:n,action})}).catch(()=>{});
+}
+
+function updateXP(){
+  const inLv=S.xp%XPL,pct=inLv/XPL*100;
+  document.getElementById('xp-bar').style.width=pct+'%';
+  document.getElementById('xp-txt').textContent='Lv'+S.level+'·'+S.xp;
+  document.getElementById('d-xpbar').style.width=pct+'%';
+  document.getElementById('d-xptxt').textContent=inLv+' / '+XPL+' XP';
+  document.getElementById('d-lv').textContent=S.level;
+  document.getElementById('d-bdg').textContent=S.badges.length+'🏅';
+}
+
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(!S.badges.includes(b.id)&&b.r()){
+      S.badges.push(b.id);
+      showToast('Badge: '+b.e+' '+b.l+'!');
+      speak('You earned the '+b.l+' badge!');
+      fetch('/api/add_badge',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({badge:b.id})}).catch(()=>{});
+    }
+  });
+}
+
+function showBadges(){
+  const earned=BADGES.filter(b=>S.badges.includes(b.id));
+  showToast(earned.length+' / '+BADGES.length+' Badges earned!');
+  speak(earned.length?'You have '+earned.length+' badges! '+earned.map(b=>b.l).join(', ')
+    :'Keep learning to earn badges!');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST / LEVEL UP / CONFETTI
+═══════════════════════════════════════════════════════════════ */
+let toastT=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  if(toastT)clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function showLvUp(){
+  const b=document.getElementById('lvbanner');
+  b.querySelector('.lbt').textContent='LEVEL '+S.level+'! 🎉';
+  b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'),2800);
+}
+function launchConf(){
+  const c=document.getElementById('conf-canvas'),x=c.getContext('2d');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const COLS=['#ff5ba7','#38b6f0','#3de8a0','#ffd760','#c47ef0','#ff9640','#fff'];
+  const ps=Array.from({length:110},()=>({
+    x:Math.random()*c.width,y:-15,
+    w:7+Math.random()*7,h:4+Math.random()*5,
+    col:COLS[~~(Math.random()*COLS.length)],
+    vy:2.5+Math.random()*3.5,vx:(Math.random()-.5)*3,
+    rot:Math.random()*360,rv:(Math.random()-.5)*8,
+  }));
+  let f=0;
+  (function an(){
+    if(f++>180){x.clearRect(0,0,c.width,c.height);return;}
+    x.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{
+      p.y+=p.vy;p.x+=p.vx;p.rot+=p.rv;p.vy+=.04;
+      x.save();x.translate(p.x,p.y);x.rotate(p.rot*Math.PI/180);
+      x.fillStyle=p.col;x.globalAlpha=Math.max(0,1-f/180);
+      x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore();
+    });
+    requestAnimationFrame(an);
+  })();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPEECH
+═══════════════════════════════════════════════════════════════ */
+function speak(txt,lang='en-US',rate=.92){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang=lang;u.rate=rate;u.pitch=1.05;
+  window.speechSynthesis.speak(u);
+}
+function speakZh(txt){speak(txt,'zh-CN',.8);}
+function speakJa(txt){speak(txt,'ja-JP',.85);}
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA DEFINITIONS
+═══════════════════════════════════════════════════════════════ */
+
+// Chinese Vocab
+const ZH_VOCAB=[
+  {e:'🍎',m:'苹果',p:'Píngguǒ',t:'Apple'},
+  {e:'🐱',m:'猫',  p:'Māo',    t:'Cat'},
+  {e:'🐶',m:'狗',  p:'Gǒu',    t:'Dog'},
+  {e:'🌸',m:'花',  p:'Huā',    t:'Flower'},
+  {e:'🌞',m:'太阳',p:'Tàiyáng',t:'Sun'},
+  {e:'🌙',m:'月亮',p:'Yuèliàng',t:'Moon'},
+  {e:'🏠',m:'家',  p:'Jiā',    t:'Home'},
+  {e:'🍚',m:'米饭',p:'Mǐfàn',  t:'Rice'},
+  {e:'💧',m:'水',  p:'Shuǐ',   t:'Water'},
+  {e:'📚',m:'书',  p:'Shū',    t:'Book'},
+  {e:'🎵',m:'音乐',p:'Yīnyuè', t:'Music'},
+  {e:'🚗',m:'汽车',p:'Qìchē',  t:'Car'},
+];
+
+const ZH_NUMS=[
+  {n:1,m:'一',p:'Yī'},{n:2,m:'二',p:'Èr'},{n:3,m:'三',p:'Sān'},
+  {n:4,m:'四',p:'Sì'},{n:5,m:'五',p:'Wǔ'},{n:6,m:'六',p:'Liù'},
+  {n:7,m:'七',p:'Qī'},{n:8,m:'八',p:'Bā'},{n:9,m:'九',p:'Jiǔ'},
+  {n:10,m:'十',p:'Shí'},{n:100,m:'百',p:'Bǎi'},{n:1000,m:'千',p:'Qiān'},
+  {n:0,m:'零',p:'Líng'},{n:10000,m:'万',p:'Wàn'},
+];
+
+const ZH_PHRASES=[
+  {s:'你好!',      p:'Nǐ hǎo!',     t:'Hello!'},
+  {s:'谢谢!',      p:'Xièxiè!',     t:'Thank you!'},
+  {s:'对不起。',   p:'Duìbuqǐ.',    t:'Sorry.'},
+  {s:'我爱你。',   p:'Wǒ ài nǐ.',   t:'I love you.'},
+  {s:'我叫…',      p:'Wǒ jiào…',    t:'My name is…'},
+  {s:'早上好!',    p:'Zǎoshang hǎo!',t:'Good morning!'},
+  {s:'我饿了。',   p:"Wǒ è le.",    t:'I am hungry.'},
+  {s:'再见!',      p:'Zàijiàn!',    t:'Goodbye!'},
+];
+
+const ZH_CHARS=[
+  {e:'⬛',m:'大',p:'Dà',   t:'Big'},
+  {e:'⬜',m:'小',p:'Xiǎo', t:'Small'},
+  {e:'👆',m:'上',p:'Shàng',t:'Up'},
+  {e:'👇',m:'下',p:'Xià',  t:'Down'},
+  {e:'❤️',m:'心',p:'Xīn',  t:'Heart'},
+  {e:'🌊',m:'山',p:'Shān', t:'Mountain'},
+  {e:'💡',m:'火',p:'Huǒ',  t:'Fire'},
+  {e:'🌿',m:'木',p:'Mù',   t:'Wood'},
+  {e:'☀️',m:'日',p:'Rì',   t:'Sun/Day'},
+];
+
+// Japanese Vocab
+const JA_VOCAB=[
+  {e:'🍎',m:'りんご',p:'Ringo',  t:'Apple'},
+  {e:'🐱',m:'ねこ',  p:'Neko',   t:'Cat'},
+  {e:'🐶',m:'いぬ',  p:'Inu',    t:'Dog'},
+  {e:'🌸',m:'はな',  p:'Hana',   t:'Flower'},
+  {e:'🌞',m:'たいよう',p:'Taiyō',t:'Sun'},
+  {e:'🏠',m:'いえ',  p:'Ie',     t:'House'},
+  {e:'📚',m:'ほん',  p:'Hon',    t:'Book'},
+  {e:'💧',m:'みず',  p:'Mizu',   t:'Water'},
+  {e:'🚗',m:'くるま',p:'Kuruma', t:'Car'},
+  {e:'🍣',m:'すし',  p:'Sushi',  t:'Sushi'},
+  {e:'🎵',m:'おんがく',p:'Ongaku',t:'Music'},
+  {e:'🌙',m:'つき',  p:'Tsuki',  t:'Moon'},
+];
+
+const JA_NUMS=[
+  {n:1,m:'いち',p:'Ichi'},{n:2,m:'に',p:'Ni'},{n:3,m:'さん',p:'San'},
+  {n:4,m:'し',  p:'Shi'},{n:5,m:'ご', p:'Go'},{n:6,m:'ろく',p:'Roku'},
+  {n:7,m:'なな',p:'Nana'},{n:8,m:'はち',p:'Hachi'},{n:9,m:'きゅう',p:'Kyū'},
+  {n:10,m:'じゅう',p:'Jū'},{n:100,m:'ひゃく',p:'Hyaku'},{n:0,m:'ぜろ',p:'Zero'},
+];
+
+const JA_PHRASES=[
+  {s:'こんにちは!', p:'Konnichiwa!',  t:'Hello!'},
+  {s:'ありがとう!', p:'Arigatō!',     t:'Thank you!'},
+  {s:'すみません。',p:'Sumimasen.',   t:'Excuse me.'},
+  {s:'おはようございます!',p:'Ohayō gozaimasu!',t:'Good morning!'},
+  {s:'さようなら!', p:'Sayōnara!',    t:'Goodbye!'},
+  {s:'私の名前は…', p:'Watashi no namae wa…',t:'My name is…'},
+  {s:'おやすみ!',   p:'Oyasumi!',     t:'Good night!'},
+  {s:'いただきます!',p:'Itadakimasu!',t:'Let\'s eat!'},
+];
+
+const JA_HIRA=[
+  {m:'あ',p:'a'},{m:'い',p:'i'},{m:'う',p:'u'},{m:'え',p:'e'},
+  {m:'お',p:'o'},{m:'か',p:'ka'},{m:'き',p:'ki'},{m:'く',p:'ku'},
+  {m:'け',p:'ke'},{m:'こ',p:'ko'},{m:'さ',p:'sa'},{m:'し',p:'shi'},
+];
+
+// English
+const EN_ABC=[
+  {e:'🍎',m:'A',p:'/eɪ/',t:'Apple'},{e:'🐝',m:'B',p:'/biː/',t:'Bee'},
+  {e:'🐱',m:'C',p:'/siː/',t:'Cat'}, {e:'🦆',m:'D',p:'/diː/',t:'Duck'},
+  {e:'🐘',m:'E',p:'/iː/',t:'Elephant'},{e:'🐸',m:'F',p:'/ɛf/',t:'Frog'},
+  {e:'🍇',m:'G',p:'/dʒiː/',t:'Grape'},{e:'🐣',m:'H',p:'/eɪtʃ/',t:'Hen'},
+  {e:'🍦',m:'I',p:'/aɪ/',t:'Ice'},  {e:'🎃',m:'J',p:'/dʒeɪ/',t:'Jar'},
+  {e:'🪁',m:'K',p:'/keɪ/',t:'Kite'},{e:'🦁',m:'L',p:'/ɛl/',t:'Lion'},
+];
+
+const EN_WORDS=[
+  {e:'🌈',m:'Rainbow',p:'reɪn.boʊ',t:'Sky colors'},{e:'🦋',m:'Butterfly',p:'bʌt.ər.flaɪ',t:'Insect'},
+  {e:'⭐',m:'Star',   p:'stɑːr',    t:'In the sky'},{e:'🌊',m:'Ocean',p:'oʊ.ʃən',t:'Big water'},
+  {e:'🐘',m:'Elephant',p:'el.ɪ.fənt',t:'Big animal'},{e:'🦒',m:'Giraffe',p:'dʒɪ.ræf',t:'Tall neck'},
+  {e:'🍓',m:'Strawberry',p:'strɔː.bɛri',t:'Red fruit'},{e:'🎈',m:'Balloon',p:'bə.luːn',t:'Floats up'},
+  {e:'🏔️',m:'Mountain',p:'maʊn.tɪn',t:'Big hill'},{e:'🌺',m:'Hibiscus',p:'hɪ.bɪs.kəs',t:'Flower'},
+  {e:'🦅',m:'Eagle',  p:'iː.ɡəl',   t:'Big bird'},{e:'🐬',m:'Dolphin',p:'dɒl.fɪn',t:'Sea animal'},
+];
+
+const EN_NUMS=[
+  {n:1,m:'One',p:'wʌn'},{n:2,m:'Two',p:'tuː'},{n:3,m:'Three',p:'θriː'},
+  {n:4,m:'Four',p:'fɔːr'},{n:5,m:'Five',p:'faɪv'},{n:6,m:'Six',p:'sɪks'},
+  {n:7,m:'Seven',p:'sɛvən'},{n:8,m:'Eight',p:'eɪt'},{n:9,m:'Nine',p:'naɪn'},
+  {n:10,m:'Ten',p:'tɛn'},{n:11,m:'Eleven',p:'ɪlɛvən'},{n:12,m:'Twelve',p:'twɛlv'},
+  {n:20,m:'Twenty',p:'twɛnti'},{n:100,m:'Hundred',p:'hʌndrəd'},
+];
+
+const EN_PHRASES=[
+  {s:'Good morning!',p:'ɡʊd ˈmɔːrnɪŋ',t:'Morning greeting'},
+  {s:'Thank you!',   p:'θæŋk juː',    t:'Show thanks'},
+  {s:'Please.',      p:'pliːz',        t:'Polite ask'},
+  {s:'I like that!', p:'aɪ laɪk ðæt', t:'Show you like'},
+  {s:'How are you?', p:'haʊ ɑːr juː', t:'Ask wellbeing'},
+  {s:'Let\'s go!',   p:'lɛts ɡoʊ',    t:'Time to leave'},
+  {s:'Well done!',   p:'wɛl dʌn',     t:'Praise someone'},
+  {s:'See you soon!',p:'siː juː suːn', t:'Goodbye'},
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   BUILD GRIDS
+═══════════════════════════════════════════════════════════════ */
+const COLORS=['#ff5ba7','#38b6f0','#3de8a0','#ffd760','#c47ef0','#ff9640',
+              '#80cbc4','#ef9a9a','#a5d6a7','#90caf9','#fff59d','#f48fb1'];
+
+function buildAllData(){
+  buildWordGrid('zh-vocab-grid',ZH_VOCAB,'zh');
+  buildNumGrid('zh-num-grid',ZH_NUMS,'zh');
+  buildPhraseList('zh-phrase-list',ZH_PHRASES,'zh');
+  buildWordGrid('zh-char-grid',ZH_CHARS,'zh');
+
+  buildWordGrid('ja-vocab-grid',JA_VOCAB,'ja');
+  buildNumGrid('ja-num-grid',JA_NUMS,'ja');
+  buildPhraseList('ja-phrase-list',JA_PHRASES,'ja');
+  buildHiraGrid('ja-hira-grid',JA_HIRA);
+
+  buildWordGrid('en-abc-grid',EN_ABC,'en');
+  buildWordGrid('en-words-grid',EN_WORDS,'en');
+  buildNumGrid('en-num-grid',EN_NUMS,'en');
+  buildPhraseList('en-phrase-list',EN_PHRASES,'en');
+
+  initHunt();
+  initTrace();
+  initChat();
+  initFlash();
+}
+
+function buildWordGrid(id,data,lang){
+  const g=document.getElementById(id);
+  if(!g)return;g.innerHTML='';
+  data.forEach((it,i)=>{
+    const d=document.createElement('div');
+    d.className='wc';
+    d.style.borderColor=COLORS[i%COLORS.length]+'55';
+    d.style.borderLeftColor=COLORS[i%COLORS.length];
+    d.style.borderLeftWidth='2px';
+    d.innerHTML=`<div class="we">${it.e||''}</div><div class="wm" style="color:${COLORS[i%COLORS.length]}">${it.m}</div><div class="wp">${it.p}</div><div class="wt">${it.t}</div>`;
+    d.addEventListener('click',()=>{
+      if(lang==='zh') speakZh(it.m);
+      else if(lang==='ja') speakJa(it.m);
+      else speak(it.t||it.m);
+      addXP(5, lang.toUpperCase()+' vocab');
+      d.style.transform='scale(1.1)';setTimeout(()=>d.style.transform='',250);
+    });
+    g.appendChild(d);
+  });
+}
+
+function buildNumGrid(id,data,lang){
+  const g=document.getElementById(id);
+  if(!g)return;g.innerHTML='';
+  data.forEach((it,i)=>{
+    const d=document.createElement('div');
+    d.className='nc';
+    d.style.borderLeftColor=COLORS[i%COLORS.length];
+    d.style.borderLeftWidth='2px';
+    d.innerHTML=`<div class="nn" style="color:${COLORS[i%COLORS.length]}">${it.n}</div><div class="nz">${it.m}</div><div class="nr">${it.p}</div>`;
+    d.addEventListener('click',()=>{
+      if(lang==='zh') speakZh(it.p+' '+it.m);
+      else if(lang==='ja') speakJa(it.m);
+      else speak(it.m||String(it.n));
+      addXP(3, lang+' numbers');
+      d.style.transform='scale(1.12)';setTimeout(()=>d.style.transform='',220);
+    });
+    g.appendChild(d);
+  });
+}
+
+function buildPhraseList(id,data,lang){
+  const g=document.getElementById(id);
+  if(!g)return;g.innerHTML='';
+  data.forEach((it,i)=>{
+    const d=document.createElement('div');
+    d.className='ph';
+    d.innerHTML=`
+      <div>
+        <div class="ps" style="color:${COLORS[i%COLORS.length]}">${it.s}</div>
+        <div class="pp">${it.p}</div>
+        <div class="pt">${it.t}</div>
+      </div>
+      <div class="sp-btn">🔊</div>`;
+    d.addEventListener('click',()=>{
+      if(lang==='zh') speakZh(it.s);
+      else if(lang==='ja') speakJa(it.s);
+      else speak(it.s);
+      addXP(4, lang+' phrase');
+    });
+    g.appendChild(d);
+  });
+}
+
+function buildHiraGrid(id,data){
+  const g=document.getElementById(id);
+  if(!g)return;g.innerHTML='';
+  data.forEach((it,i)=>{
+    const d=document.createElement('div');
+    d.className='wc';
+    d.style.borderLeftColor=COLORS[i%COLORS.length];d.style.borderLeftWidth='2px';
+    d.innerHTML=`<div class="wm" style="color:${COLORS[i%COLORS.length]};font-size:1.5rem">${it.m}</div><div class="wp">${it.p}</div>`;
+    d.addEventListener('click',()=>{speakJa(it.m);addXP(3,'hiragana');d.style.transform='scale(1.12)';setTimeout(()=>d.style.transform='',220);});
+    g.appendChild(d);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TRACE CANVAS
+═══════════════════════════════════════════════════════════════ */
+const TR_EN=['A','B','C','D','E','F','G','H'];
+const TR_ZH=['一','二','三','人','口','山','大','小'];
+const TR_JA=['あ','い','う','え','お','か','き'];
+
+const DOTS={
+  'A':[[.5,.08],[.2,.92],[.8,.92],[.35,.55],[.65,.55]],
+  'B':[[.2,.08],[.2,.92],[.6,.08],[.75,.22],[.6,.5],[.75,.7],[.6,.92]],
+  'C':[[.75,.18],[.5,.08],[.25,.3],[.2,.5],[.25,.72],[.5,.92],[.75,.82]],
+  'D':[[.2,.08],[.2,.92],[.55,.08],[.78,.3],[.82,.5],[.78,.72],[.55,.92]],
+  'E':[[.75,.08],[.2,.08],[.2,.5],[.62,.5],[.2,.5],[.2,.92],[.75,.92]],
+  'F':[[.75,.08],[.2,.08],[.2,.5],[.62,.5],[.2,.5],[.2,.92]],
+  'G':[[.75,.18],[.5,.08],[.25,.3],[.2,.5],[.25,.72],[.5,.92],[.78,.72],[.78,.5],[.55,.5]],
+  'H':[[.2,.08],[.2,.5],[.8,.5],[.8,.08],[.2,.92],[.8,.92]],
+  '一':[[.15,.5],[.85,.5]],
+  '二':[[.2,.35],[.8,.35],[.15,.65],[.85,.65]],
+  '三':[[.2,.25],[.8,.25],[.15,.5],[.85,.5],[.1,.75],[.9,.75]],
+  '人':[[.5,.1],[.3,.55],[.18,.9],[.5,.1],[.7,.55],[.82,.9]],
+  '口':[[.3,.2],[.7,.2],[.7,.8],[.3,.8],[.3,.2]],
+  '山':[[.5,.1],[.5,.9],[.2,.38],[.2,.9],[.8,.38],[.8,.9]],
+  '大':[[.5,.1],[.5,.9],[.15,.42],[.85,.42]],
+  '小':[[.5,.1],[.5,.9],[.28,.38],[.28,.65],[.72,.38],[.72,.65]],
+  'あ':[[.5,.1],[.5,.6],[.25,.35],[.75,.35],[.3,.75],[.7,.9]],
+  'い':[[.3,.1],[.3,.9],[.7,.1],[.7,.7],[.5,.9]],
+  'う':[[.5,.08],[.5,.5],[.3,.7],[.5,.92],[.7,.7]],
+  'え':[[.2,.35],[.8,.35],[.5,.1],[.5,.92]],
+  'お':[[.5,.08],[.5,.92],[.2,.4],[.8,.4],[.7,.65],[.5,.92]],
+  'か':[[.2,.4],[.8,.4],[.6,.1],[.6,.92]],
+  'き':[[.2,.3],[.8,.3],[.2,.6],[.8,.6],[.5,.1],[.5,.92]],
+};
+
+let tCtx=null,tCv=null;
+
+function initTrace(){
+  tCv=document.getElementById('trace-canvas');
+  tCtx=tCv.getContext('2d');
+  sizeTrace();
+  populateCharSel();
+  drawGuide();
+  // bind events once
+  tCv.addEventListener('mousedown',e=>{S.drawing=true;getXY(e);});
+  tCv.addEventListener('mousemove',e=>{if(S.drawing)trDraw(e);});
+  tCv.addEventListener('mouseup',()=>S.drawing=false);
+  tCv.addEventListener('mouseleave',()=>S.drawing=false);
+  tCv.addEventListener('touchstart',e=>{e.preventDefault();S.drawing=true;getXY(e.touches[0]);},{passive:false});
+  tCv.addEventListener('touchmove',e=>{e.preventDefault();if(S.drawing)trDraw(e.touches[0]);},{passive:false});
+  tCv.addEventListener('touchend',()=>S.drawing=false);
+}
+
+function sizeTrace(){
+  if(!tCv)return;
+  const r=tCv.getBoundingClientRect();
+  tCv.width=r.width||300;tCv.height=r.height||200;
+}
+
+function populateCharSel(){
+  const lang=document.getElementById('tlang').value;
+  const sel=document.getElementById('tchar');
+  const chars=lang==='en'?TR_EN:lang==='zh'?TR_ZH:TR_JA;
+  sel.innerHTML=chars.map(c=>`<option value="${c}">${c}</option>`).join('');
+  drawGuide();
+}
+
+function drawGuide(){
+  if(!tCtx)return;
+  const W=tCv.width,H=tCv.height;
+  const ch=document.getElementById('tchar').value;
+  const lang=document.getElementById('tlang').value;
+  tCtx.clearRect(0,0,W,H);
+  // ghost
+  tCtx.save();
+  tCtx.font=`${Math.min(W,H)*.6}px ${lang!=='en'?'serif':'Arial'}`;
+  tCtx.fillStyle='rgba(255,255,255,.04)';
+  tCtx.textAlign='center';tCtx.textBaseline='middle';
+  tCtx.fillText(ch,W/2,H/2);
+  tCtx.restore();
+  // dots
+  const pts=DOTS[ch]||[];
+  pts.forEach((d,i)=>{
+    const x=d[0]*W,y=d[1]*H;
+    tCtx.beginPath();tCtx.arc(x,y,11,0,Math.PI*2);
+    tCtx.fillStyle='rgba(56,182,240,.12)';tCtx.fill();
+    tCtx.beginPath();tCtx.arc(x,y,7,0,Math.PI*2);
+    tCtx.setLineDash([4,3]);tCtx.strokeStyle='rgba(56,182,240,.6)';tCtx.lineWidth=1.5;tCtx.stroke();
+    tCtx.setLineDash([]);
+    tCtx.font='bold 8px sans-serif';
+    tCtx.fillStyle='rgba(255,255,255,.5)';tCtx.textAlign='center';tCtx.textBaseline='middle';
+    tCtx.fillText(i+1,x,y);
+    if(i<pts.length-1){
+      const nx=pts[i+1][0]*W,ny=pts[i+1][1]*H;
+      tCtx.beginPath();tCtx.moveTo(x,y);tCtx.lineTo(nx,ny);
+      tCtx.setLineDash([4,5]);tCtx.strokeStyle='rgba(61,232,160,.2)';tCtx.lineWidth=1;tCtx.stroke();
+      tCtx.setLineDash([]);
+    }
+  });
+}
+
+function clearTrace(){drawGuide();}
+
+function pickColor(el){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');S.drawColor=el.dataset.c;
+}
+
+function getXY(e){
+  const r=tCv.getBoundingClientRect();
+  S.lx=(e.clientX-r.left)*(tCv.width/r.width);
+  S.ly=(e.clientY-r.top)*(tCv.height/r.height);
+}
+
+function trDraw(e){
+  const r=tCv.getBoundingClientRect();
+  const x=(e.clientX-r.left)*(tCv.width/r.width);
+  const y=(e.clientY-r.top)*(tCv.height/r.height);
+  tCtx.beginPath();tCtx.moveTo(S.lx,S.ly);tCtx.lineTo(x,y);
+  tCtx.strokeStyle=S.drawColor;tCtx.lineWidth=5;
+  tCtx.lineCap='round';tCtx.lineJoin='round';
+  tCtx.shadowColor=S.drawColor;tCtx.shadowBlur=6;
+  tCtx.stroke();tCtx.shadowBlur=0;
+  S.lx=x;S.ly=y;
+}
+
+function awardTrace(){addXP(10,'Writing');speak('Great writing! 10 XP!');clearTrace();}
+
+function speakChar(){
+  const ch=document.getElementById('tchar').value;
+  const lang=document.getElementById('tlang').value;
+  if(lang==='zh') speakZh(ch);
+  else if(lang==='ja') speakJa(ch);
+  else speak(ch,'en-US',.7);
+}
+
+window.addEventListener('resize',()=>{if(tCv){sizeTrace();drawGuide();}});
+
+/* ═══════════════════════════════════════════════════════════════
+   SCAVENGER HUNT
+═══════════════════════════════════════════════════════════════ */
+const HOBJS=[
+  {k:'apple', e:'🍎',l:'Apple',  sub:'Píngguǒ / リンゴ'},
+  {k:'ball',  e:'⚽',l:'Ball',   sub:'Qiú / ボール'},
+  {k:'book',  e:'📚',l:'Book',   sub:'Shū / ほん'},
+  {k:'cup',   e:'🥤',l:'Cup',    sub:'Bēizi / コップ'},
+  {k:'flower',e:'🌸',l:'Flower', sub:'Huā / はな'},
+  {k:'toy',   e:'🧸',l:'Toy',    sub:'Wánjù / おもちゃ'},
+  {k:'bottle',e:'🍼',l:'Bottle', sub:'Píngzi / びん'},
+  {k:'chair', e:'🪑',l:'Chair',  sub:'Yǐzi / いす'},
+];
+
+function initHunt(){
+  const p=document.getElementById('hunt-objs');p.innerHTML='';
+  HOBJS.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='hob'+(i===0?' sel':'');
+    d.innerHTML=`<span class="he">${o.e}</span><span class="hl">${o.l}</span>`;
+    d.addEventListener('click',()=>{
+      document.querySelectorAll('.hob').forEach(b=>b.classList.remove('sel'));
+      d.classList.add('sel');S.huntObj=o;
+      document.getElementById('ht-e').textContent=o.e;
+      document.getElementById('ht-n').textContent='Find '+o.l+'!';
+      document.getElementById('ht-sub').textContent=o.sub;
+      stopHunt();
+    });
+    p.appendChild(d);
+    if(i===0)S.huntObj=o;
+  });
+}
+
+function startHunt(){
+  if(!S.huntObj)return;
+  const sl=document.getElementById('scan-line');
+  sl.style.display='block';
+  document.getElementById('hunt-btn').textContent='⏹ Stop';
+  document.getElementById('hunt-btn').onclick=stopHunt;
+  document.getElementById('hunt-stat').textContent='Scanning for '+S.huntObj.e+'...';
+  document.getElementById('cam-lbl').textContent='Scanning: '+S.huntObj.l;
+  document.getElementById('conf-fill').style.width='0%';
+
+  fetch('/api/set_hunt',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({target:S.huntObj.k})}).catch(()=>{});
+
+  speak('Find the '+S.huntObj.l+'! Point the camera at it!');
+
+  let ticks=0;
+  S.huntPoll=setInterval(async()=>{
+    ticks++;
+    const fakeConf=Math.min(60,ticks*2.5+Math.random()*5);
+    document.getElementById('conf-fill').style.width=fakeConf+'%';
+
+    try{
+      const r=await fetch('/api/check_hunt');
+      const d=await r.json();
+      if(d.found){document.getElementById('conf-fill').style.width='100%';huntFound();return;}
+    }catch(e){if(ticks>=20){huntFound();return;}}
+    document.getElementById('hunt-stat').textContent='Searching'+'.'.repeat((ticks%3)+1)+' '+S.huntObj.e;
+  },1000);
+}
+
+function huntFound(){
+  clearInterval(S.huntPoll);S.huntPoll=null;
+  document.getElementById('scan-line').style.display='none';
+  document.getElementById('scan-pulse').classList.add('found');
+  const fo=document.getElementById('hunt-found');
+  document.getElementById('hf-e').textContent=S.huntObj?S.huntObj.e:'🎉';
+  fo.classList.add('show');
+  addXP(50,'Hunt Won');launchConf();
+  speak('Amazing! You found the '+(S.huntObj?S.huntObj.l:'it')+'! 50 XP!');
+}
+
+function stopHunt(){
+  clearInterval(S.huntPoll);S.huntPoll=null;
+  document.getElementById('scan-line').style.display='none';
+  document.getElementById('hunt-btn').textContent='▶ Start';
+  document.getElementById('hunt-btn').onclick=startHunt;
+  document.getElementById('hunt-stat').textContent='Choose an object above';
+  document.getElementById('cam-lbl').textContent='Ready to scan';
+  document.getElementById('conf-fill').style.width='0%';
+  fetch('/api/set_hunt',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({target:null})}).catch(()=>{});
+}
+
+function resetHunt(){
+  document.getElementById('hunt-found').classList.remove('show');
+  document.getElementById('scan-pulse').classList.remove('found');
+  stopHunt();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLASH CARDS
+═══════════════════════════════════════════════════════════════ */
+const FLASH_DATA={
+  zh:ZH_VOCAB, ja:JA_VOCAB, en:EN_WORDS
+};
+
+function initFlash(){setFlashLang('zh');}
+
+function setFlashLang(lang){
+  S.flashLang=lang;S.flashIdx=0;S.flashFlipped=false;
+  ['zh','ja','en'].forEach(l=>{
+    const b=document.getElementById('fl-'+l);
+    if(b) b.style.background=l===lang?'var(--bl)':null;
+  });
+  renderFlash();
+}
+
+function renderFlash(){
+  const d=FLASH_DATA[S.flashLang];
+  if(!d)return;
+  const it=d[S.flashIdx%d.length];
+  document.getElementById('fl-e').textContent=it.e||'';
+  document.getElementById('fl-m').textContent=it.m;
+  document.getElementById('fl-p').textContent=S.flashFlipped?it.p:'';
+  document.getElementById('fl-hint').textContent=S.flashFlipped?'':'Tap to reveal!';
+  document.getElementById('fl-t').style.display=S.flashFlipped?'':'none';
+  document.getElementById('fl-t').textContent=it.t||'';
+  document.getElementById('fl-hint').style.color='var(--txt2)';
+}
+
+function flipFlash(){
+  S.flashFlipped=!S.flashFlipped;renderFlash();
+  if(S.flashFlipped){
+    const d=FLASH_DATA[S.flashLang];
+    const it=d[S.flashIdx%d.length];
+    if(S.flashLang==='zh') speakZh(it.m);
+    else if(S.flashLang==='ja') speakJa(it.m);
+    else speak(it.m||it.t);
+    addXP(3,'Flash card');
+  }
+}
+
+function flashNav(dir){
+  const d=FLASH_DATA[S.flashLang];
+  S.flashIdx=(S.flashIdx+dir+d.length)%d.length;
+  S.flashFlipped=false;renderFlash();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════════════════════════════ */
+function startQuiz(lang){
+  S.quizLang=lang;S.quizIdx=0;S.quizScore=0;
+  const src=lang==='zh'?ZH_VOCAB:lang==='ja'?JA_VOCAB:EN_ABC;
+  // shuffle + take 8
+  S.quizData=[...src].sort(()=>Math.random()-.5).slice(0,8);
+  document.getElementById('quiz-title').textContent=(lang==='zh'?'🇨🇳 Chinese':lang==='ja'?'🇯🇵 Japanese':'🇬🇧 English')+' Quiz';
+  go('quiz-screen','games');
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const idx=S.quizIdx;
+  if(idx>=S.quizData.length){
+    document.getElementById('q-txt').textContent='Quiz Done! 🎉';
+    document.getElementById('q-sub').textContent='Score: '+S.quizScore+' / '+S.quizData.length;
+    document.getElementById('q-opts').innerHTML='';
+    document.getElementById('quiz-qnum').textContent='Finished!';
+    addXP(S.quizScore*5,'Quiz');
+    launchConf();
+    return;
+  }
+  const q=S.quizData[idx];
+  document.getElementById('q-num').textContent='Q'+(idx+1)+' / '+S.quizData.length+' · Score: '+S.quizScore;
+  document.getElementById('q-txt').textContent=q.e+' '+q.m;
+  document.getElementById('q-sub').textContent='What is the pronunciation?';
+
+  // 4 options: correct + 3 wrong
+  const src=S.quizLang==='zh'?ZH_VOCAB:S.quizLang==='ja'?JA_VOCAB:EN_ABC;
+  const wrong=[...src].filter(x=>x.m!==q.m).sort(()=>Math.random()-.5).slice(0,3);
+  const opts=[q,...wrong].sort(()=>Math.random()-.5);
+  const el=document.getElementById('q-opts');
+  el.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('div');
+    b.className='qopt';
+    b.textContent=o.p+(o.t?' — '+o.t:'');
+    b.addEventListener('click',()=>{
+      if(b.classList.contains('correct')||b.classList.contains('wrong'))return;
+      if(o.m===q.m){
+        b.classList.add('correct');S.quizScore++;
+        speak('Correct!');
+      }else{
+        b.classList.add('wrong');
+        el.querySelectorAll('.qopt').forEach(bb=>{
+          if(bb.textContent.startsWith(q.p))bb.classList.add('correct');
+        });
+        speak('Try again next time!');
+      }
+      setTimeout(()=>{S.quizIdx++;renderQuiz();},900);
+    });
+    el.appendChild(b);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI CHAT
+═══════════════════════════════════════════════════════════════ */
+const QUICK_PROMPTS=[
+  {l:'🍎 Fruits',     t:'Teach me fruit names!'},
+  {l:'🌈 Colors',     t:'Teach me colors!'},
+  {l:'🔢 Count to 10',t:'Count to 10 with me!'},
+  {l:'👋 Greetings',  t:'Teach me greetings!'},
+  {l:'🦁 Animals',    t:'Tell me animal names!'},
+  {l:'🌍 Travel',     t:'Useful travel phrases!'},
+];
+
+function initChat(){
+  document.getElementById('chat-msgs').innerHTML='';
+  const qc=document.getElementById('qps');qc.innerHTML='';
+  QUICK_PROMPTS.forEach(q=>{
+    const b=document.createElement('button');
+    b.className='qb';b.textContent=q.l;
+    b.addEventListener('click',()=>sendMsg(q.t));
+    qc.appendChild(b);
+  });
+  appendMsg('b','Hello '+S.name+'! I am EduBot '+S.avatar+'! I can teach you Chinese, Japanese, and English. What do you want to learn today? 🌟');
+}
+
+function setChatLang(lang,el){
+  S.chatLang=lang;
+  document.querySelectorAll('.clt').forEach(c=>c.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+function appendMsg(role,txt){
+  const msgs=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.className='cm '+role;
+  d.innerHTML=`<div class="cav">${role==='b'?S.avatar:'🧒'}</div><div class="cb">${txt}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function showTyping(){
+  const msgs=document.getElementById('chat-msgs');
+  const d=document.createElement('div');
+  d.id='typing';d.className='cm b';
+  d.innerHTML=`<div class="cav">${S.avatar}</div><div class="cb" style="padding:10px 14px"><span class="td"></span><span class="td"></span><span class="td"></span></div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function rmTyping(){const e=document.getElementById('typing');if(e)e.remove();}
+
+async function sendMsg(txt){
+  if(!txt.trim())return;
+  appendMsg('u',txt);
+  S.chatBuf='';updateChatDisp();
+  addXP(2,'AI Chat');
+  showTyping();
+  try{
+    const r=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:txt,name:S.name,avatar:S.avatar,lang:S.chatLang})
+    });
+    const d=await r.json();
+    rmTyping();appendMsg('b',d.reply);
+    speak(d.reply.replace(/[^\x00-\x7F]/g,'').substring(0,180));
+  }catch(e){
+    rmTyping();
+    const fb='Great question! In Chinese: Píngguǒ (苹果) means Apple. In Japanese: Ringo (りんご)!';
+    appendMsg('b',fb);speak(fb);
+  }
+}
+
+function sendChat(){sendMsg(S.chatBuf);}
+
+function updateChatDisp(){
+  const el=document.getElementById('chat-disp');
+  if(S.chatBuf){el.textContent=S.chatBuf;el.classList.add('has-text');}
+  else{el.textContent='Tap to type a question...';el.classList.remove('has-text');}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOUCH KEYBOARD
+═══════════════════════════════════════════════════════════════ */
+const KLAYOUTS={
+  abc:{rows:[
+    ['q','w','e','r','t','y','u','i','o','p'],
+    ['a','s','d','f','g','h','j','k','l'],
+    ['⇧','z','x','c','v','b','n','m','⌫'],
+    ['123','😊','SPACE','.',',','✓'],
+  ]},
+  num:{rows:[
+    ['1','2','3'],['4','5','6'],['7','8','9'],['0','.','⌫'],['ABC','SPACE','✓'],
+  ]},
+  zh:{rows:[
+    ['你','好','我','是','的','了','在','有','他','她'],
+    ['一','二','三','四','五','六','七','八','九','十'],
+    ['大','小','上','下','人','口','山','水','火','木'],
+    ['⌫','ABC','SPACE','✓'],
+  ]},
+  ja:{rows:[
+    ['あ','い','う','え','お','か','き','く','け','こ'],
+    ['さ','し','す','せ','そ','た','ち','つ','て','と'],
+    ['な','に','ぬ','ね','の','は','ひ','ふ','へ','ほ'],
+    ['⌫','ABC','SPACE','✓'],
+  ]},
+  emo:{rows:[
+    ['😊','😄','🥰','😎','🤩','🥳','😂','😮'],
+    ['🍎','🌈','⭐','🎉','🦁','🐼','🦊','🤖'],
+    ['✏️','📚','🌍','🎵','🏆','💡','🔥','💧'],
+    ['⌫','ABC','SPACE','✓'],
+  ]},
+};
+
+function openKbd(target){
+  S.kbdTarget=target;
+  S.kbdBuf=target==='name'?(S.name==='Explorer'?'':S.name):S.chatBuf;
+  renderKbd();
+  document.getElementById('kbd-txt').textContent=S.kbdBuf;
+  document.getElementById('kbd').classList.add('open');
+}
+
+function kbdBg(e){
+  if(e.target===document.getElementById('kbd'))
+    document.getElementById('kbd').classList.remove('open');
+}
+
+function setKM(mode){
+  S.kbdMode=mode;
+  document.querySelectorAll('.km').forEach(k=>k.classList.toggle('active',k.dataset.m===mode));
+  renderKbd();
+}
+
+function renderKbd(){
+  const layout=KLAYOUTS[S.kbdMode]||KLAYOUTS.abc;
+  const rows=document.getElementById('kbd-rows');
+  rows.innerHTML='';
+  layout.rows.forEach(row=>{
+    const rd=document.createElement('div');rd.className='kbd-row';
+    row.forEach(k=>{
+      const b=document.createElement('div');b.className='kk';
+      let lbl=k;
+      if(/^[a-zA-Z]$/.test(k)) lbl=S.capsOn?k.toUpperCase():k.toLowerCase();
+      if(k==='SPACE'){b.classList.add('sp');lbl='SPACE';}
+      if(k==='⌫') b.classList.add('del');
+      if(k==='✓') b.classList.add('act');
+      if(k==='123'||k==='ABC') b.classList.add('wide');
+      if(k==='⇧'&&S.capsOn) b.classList.add('caps-on');
+      b.textContent=lbl;
+      b.addEventListener('click',()=>kbdKey(k));
+      rd.appendChild(b);
+    });
+    rows.appendChild(rd);
+  });
+}
+
+function kbdKey(k){
+  if(k==='⌫'){S.kbdBuf=S.kbdBuf.slice(0,-1);}
+  else if(k==='SPACE'){S.kbdBuf+=' ';}
+  else if(k==='⇧'){S.capsOn=!S.capsOn;renderKbd();}
+  else if(k==='123'){setKM('num');}
+  else if(k==='ABC'){setKM('abc');}
+  else if(k==='✓'){commitKbd();return;}
+  else{
+    const ch=/^[a-zA-Z]$/.test(k)?(S.capsOn?k.toUpperCase():k.toLowerCase()):k;
+    S.kbdBuf+=ch;
+  }
+  document.getElementById('kbd-txt').textContent=S.kbdBuf;
+}
+
+function commitKbd(){
+  if(S.kbdTarget==='name'){
+    S.name=S.kbdBuf.trim()||'Explorer';
+    document.getElementById('name-disp').textContent=S.name;
+    document.getElementById('name-disp').style.color='var(--txt)';
+  } else if(S.kbdTarget==='chat'){
+    S.chatBuf=S.kbdBuf;updateChatDisp();
+  }
+  document.getElementById('kbd').classList.remove('open');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREVENT SCROLL
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('touchmove',e=>{
+  const allow=e.target.closest('#chat-msgs,.phrase-list,.hunt-objs');
+  if(!allow) e.preventDefault();
+},{passive:false});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+</script>
+</body>
+</html>

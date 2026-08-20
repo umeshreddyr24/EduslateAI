@@ -1,0 +1,3763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title> –EduSlate - Interactive Educational Platform </title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+  :root{
+    --primary:#4CAF50;--secondary:#FF9800;--accent:#2196F3;
+    --bg-start:#81C784;--bg-end:#4CAF50;
+    --success:#10B981;--warning:#F59E0B;--error:#EF4444;
+  }
+  .theme-animals{--primary:#4CAF50;--secondary:#FF9800;--accent:#2196F3;--bg-start:#C8E6C9;--bg-end:#A5D6A7;}
+  .theme-cartoon{--primary:#E91E63;--secondary:#9C27B0;--accent:#FF5722;--bg-start:#F8BBD0;--bg-end:#F48FB1;}
+  .theme-space{--primary:#8B5CF6;--secondary:#06B6D4;--accent:#F59E0B;--bg-start:#A78BFA;--bg-end:#8B5CF6;}
+  
+  body{
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    background:linear-gradient(135deg, var(--bg-start), var(--bg-end));
+    min-height:100vh;overflow-x:hidden;
+  }
+  
+  .welcome-title{ 
+    text-shadow:3px 3px 0 rgba(0,0,0,.2);
+    background:linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation:rainbow 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 60%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    80% { transform: translateY(-5px); }
+  }
+  
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .card{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 8px 32px rgba(0,0,0,.1);
+    transition:all 0.3s ease;
+    border:3px solid transparent;
+  }
+  
+  .card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 40px rgba(0,0,0,.15);
+    border-color:var(--accent);
+  }
+  
+  .btn{
+    padding:1rem 1.5rem;
+    border-radius:16px;
+    font-weight:800;
+    font-size:1.1rem;
+    transition:all 0.2s ease;
+    border:none;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+  }
+  
+  .btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+  }
+  
+  .btn:active{
+    transform:scale(0.95);
+  }
+  
+  .btn-primary{
+    background:linear-gradient(45deg, var(--primary), var(--secondary));
+    color:#fff;
+  }
+  
+  .btn-secondary{
+    background:linear-gradient(45deg, #e0e7ff, #c7d2fe);
+    color:#4338ca;
+  }
+  
+  .btn-tutor{
+    background:linear-gradient(45deg, #8B5CF6, #EC4899);
+    color:#fff;
+    animation:pulse 2s infinite;
+  }
+  
+  .mascot{
+    width:80px;height:80px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(45deg, #fde047, #facc15);
+    font-size:40px;
+    box-shadow:0 4px 15px rgba(0,0,0,.2);
+    animation:bounce 2s infinite;
+  }
+  
+  .grid-letters{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(70px,1fr));
+    gap:15px;
+  }
+  
+  .letter{
+    display:flex;align-items:center;justify-content:center;
+    height:70px;border-radius:18px;
+    font-weight:900;font-size:1.5rem;
+    background:linear-gradient(45deg, #f8fafc, #e2e8f0);
+    cursor:pointer;transition:all 0.2s ease;
+    border:3px solid transparent;
+    position:relative;
+  }
+  
+  .letter:hover{
+    background:linear-gradient(45deg, var(--accent), var(--primary));
+    color:#fff;
+    transform:scale(1.1);
+    border-color:#fff;
+  }
+  
+  .letter.mastered{
+    background:linear-gradient(45deg, var(--success), #22c55e);
+    color:#fff;
+  }
+  
+  .letter.mastered::after{
+    content:'⭐';
+    position:absolute;
+    top:-5px;right:-5px;
+    font-size:20px;
+  }
+  
+  .progress-bar{
+    background:#e5e7eb;
+    height:12px;
+    border-radius:6px;
+    overflow:hidden;
+    position:relative;
+  }
+  
+  .progress-fill{
+    background:linear-gradient(90deg, var(--success), var(--primary));
+    height:100%;
+    transition:width 0.5s ease;
+    position:relative;
+  }
+  
+  .progress-fill::after{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation:shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  .achievement-badge{
+    background:linear-gradient(45deg, #fbbf24, #f59e0b);
+    color:#fff;
+    padding:0.5rem 1rem;
+    border-radius:20px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    margin:0.25rem;
+  }
+  
+  .streak-badge{
+    background:linear-gradient(45deg, #ef4444, #dc2626);
+    color:#fff;
+    padding:0.5rem 1rem;
+    border-radius:20px;
+    font-weight:700;
+    animation:pulse 1s infinite;
+  }
+  
+  .canvas-wrap{position:relative;}
+  canvas{
+    background:#fff;
+    border:4px solid var(--primary);
+    border-radius:20px;
+    cursor:crosshair;
+  }
+  
+  .writing-lines line{stroke:#cbd5e1;stroke-width:2;stroke-dasharray:8 4;}
+  .writing-lines .baseline{stroke:#475569;stroke-width:3;stroke-dasharray:none;}
+  
+  .dot{
+    position:absolute;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:linear-gradient(45deg, var(--accent), var(--primary));
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    animation:pulse 1.5s infinite;
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+  
+  .cursive-dot{
+    background:linear-gradient(45deg, #8B5CF6, #EC4899);
+  }
+  
+  .modal{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;
+    padding:1rem;z-index:50;
+  }
+  
+  .modal .box{
+    max-width:900px;width:100%;
+    background:#fff;border-radius:24px;
+    padding:2rem;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+    animation:modalSlide 0.3s ease-out;
+  }
+  
+  @keyframes modalSlide {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .theme-selector{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1rem;
+    margin-bottom:1rem;
+  }
+  
+  .theme-card{
+    padding:1.5rem;
+    border-radius:16px;
+    text-align:center;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    border:3px solid transparent;
+  }
+  
+  .theme-card.selected{
+    border-color:var(--accent);
+    transform:scale(1.05);
+  }
+  
+  .tutor-panel{
+    background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color:#fff;
+    padding:2rem;
+    border-radius:20px;
+    margin-bottom:2rem;
+  }
+  
+  .example-word{
+    background:rgba(255,255,255,0.2);
+    backdrop-filter:blur(10px);
+    padding:1rem;
+    border-radius:12px;
+    text-align:center;
+    margin:1rem 0;
+  }
+  
+  .multiplication-table{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
+    gap:0.5rem;
+  }
+  
+  .table-item{
+    background:rgba(255,255,255,0.1);
+    padding:0.5rem;
+    border-radius:8px;
+    text-align:center;
+  }
+  
+  .confetti{
+    position:fixed;
+    width:10px;
+    height:10px;
+    background:#f59e0b;
+    animation:confetti 3s ease-out forwards;
+    pointer-events:none;
+    z-index:100;
+  }
+  
+  .high-contrast{filter:contrast(150%) brightness(120%);}
+  
+  @media (max-width:768px){
+    .nav-scroller{overflow:auto;white-space:nowrap;}
+    .theme-selector{grid-template-columns:1fr;}
+    .btn{padding:0.8rem 1rem;font-size:1rem;}
+  }
+
+  /* ===== NEW FEATURES CSS ===== */
+
+  /* Feature 1: Haptic Guided Hand */
+  .haptic-on-track { box-shadow: 0 0 0 6px rgba(76,175,80,0.5); }
+  .haptic-off-track { box-shadow: 0 0 0 6px rgba(239,68,68,0.5); animation: shake 0.3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)} }
+  .char-guide-path { stroke-dasharray: 12 8; stroke-linecap: round; }
+  .haptic-feedback-indicator {
+    position: fixed; top: 80px; right: 20px; z-index: 999;
+    background: rgba(0,0,0,0.8); color: #fff; padding: 0.5rem 1rem;
+    border-radius: 20px; font-size: 0.9rem; transition: all 0.3s;
+    pointer-events: none;
+  }
+  .resistance-overlay {
+    position: absolute; inset: 0; border-radius: 20px;
+    pointer-events: none; transition: background 0.2s;
+  }
+  .resistance-active { background: rgba(239,68,68,0.08); }
+
+  /* Feature 2: Saliency Focus Training */
+  .focus-lost-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.5); display: none;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .focus-lost-overlay.active { display: flex; }
+  .saliency-glow {
+    animation: saliencyPulse 1.2s ease-in-out infinite;
+    border-radius: 16px;
+  }
+  @keyframes saliencyPulse {
+    0%,100%{box-shadow:0 0 0 0 rgba(255,200,0,0.7), 0 0 30px rgba(255,200,0,0.4);}
+    50%{box-shadow:0 0 0 12px rgba(255,200,0,0), 0 0 50px rgba(255,200,0,0.8);}
+  }
+  .focus-indicator {
+    position: fixed; top: 20px; right: 20px; z-index: 45;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #22c55e; box-shadow: 0 0 8px #22c55e;
+    transition: background 0.3s;
+  }
+  .focus-indicator.unfocused { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation: pulse 0.8s infinite; }
+
+  /* Feature 3: Phygital Object Recognition */
+  #cameraFeed {
+    width: 100%; max-width: 480px; border-radius: 16px;
+    border: 4px solid var(--accent); background: #111;
+  }
+  .shape-hunt-target {
+    background: linear-gradient(135deg, #fde047, #f59e0b);
+    padding: 1.5rem; border-radius: 20px; text-align: center;
+    font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem;
+    animation: saliencyPulse 2s infinite;
+  }
+  .recognition-result {
+    padding: 1rem; border-radius: 16px; margin-top: 1rem;
+    font-weight: 700; text-align: center; font-size: 1.2rem;
+    transition: all 0.3s;
+  }
+  .recognition-result.success { background: linear-gradient(135deg,#bbf7d0,#86efac); color: #166534; }
+  .recognition-result.fail { background: linear-gradient(135deg,#fee2e2,#fca5a5); color: #991b1b; }
+  .scan-animation {
+    position: relative; overflow: hidden;
+  }
+  .scan-animation::after {
+    content: ''; position: absolute; left: 0; right: 0;
+    height: 3px; background: rgba(34,197,94,0.8);
+    top: 0; animation: scan 2s linear infinite;
+  }
+  @keyframes scan { 0%{top:0%}100%{top:100%} }
+
+  /* Feature 4: Bilingual Shadowing */
+  .language-bridge-card {
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    border-radius: 20px; padding: 2rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .language-bridge-card::before {
+    content: '🌏'; position: absolute; top: -20px; right: -10px;
+    font-size: 80px; opacity: 0.1;
+  }
+  .word-native {
+    font-size: 2.5rem; font-weight: 900;
+    background: linear-gradient(45deg, #7c3aed, #db2777);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 0.5rem;
+  }
+  .word-target {
+    font-size: 2rem; font-weight: 800; color: #1e40af;
+    background: rgba(255,255,255,0.6); padding: 0.5rem 1.5rem;
+    border-radius: 12px; display: inline-block; margin: 0.5rem 0;
+  }
+  .recording-indicator {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #ef4444; display: inline-block;
+    animation: pulse 0.8s infinite; margin-right: 8px;
+  }
+  .cultural-story-box {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-radius: 16px; padding: 1.5rem;
+    border-left: 4px solid #f59e0b;
+    font-style: italic; line-height: 1.8;
+  }
+  .shadow-wave {
+    display: flex; gap: 4px; align-items: flex-end;
+    justify-content: center; height: 40px; margin: 1rem 0;
+  }
+  .shadow-wave-bar {
+    width: 6px; background: var(--accent); border-radius: 3px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100%{height:8px}50%{height:32px}
+  }
+
+  /* Feature 5: Hero's Journey Stories */
+  .hero-story-bg {
+    background: linear-gradient(135deg, #1e1b4b, #4c1d95, #7c3aed);
+    border-radius: 24px; padding: 2rem; color: #fff;
+    min-height: 200px; position: relative; overflow: hidden;
+  }
+  .hero-story-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20.5V18H0v5h5v5H0v5h20v-5h-5v-5h5v-2.5zM15 45V40h5v5h-5zM0 45V40h5v5H0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-story-text { position: relative; font-size: 1.1rem; line-height: 1.9; }
+  .badge-tool {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+    padding: 0.4rem 1rem; border-radius: 20px;
+    margin: 0.25rem; font-size: 0.9rem; font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .narrator-wave {
+    display: flex; gap: 3px; align-items: center; height: 30px;
+  }
+  .narrator-wave-bar {
+    width: 4px; background: #fbbf24; border-radius: 2px;
+  }
+  .voice-clone-card {
+    background: linear-gradient(135deg, #fef9c3, #fef08a);
+    border-radius: 16px; padding: 1.5rem; border: 2px dashed #f59e0b;
+    text-align: center;
+  }
+
+  /* Feature 6: Environmental Logic Speaker */
+  .eco-mode-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: #0f172a; display: none;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .eco-mode-overlay.active { display: flex; }
+  .eco-speaker-visual {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: linear-gradient(45deg, #10b981, #059669);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px; margin-bottom: 2rem;
+    box-shadow: 0 0 60px rgba(16,185,129,0.5);
+    animation: speakerPulse 2s ease-in-out infinite;
+  }
+  @keyframes speakerPulse {
+    0%,100%{box-shadow:0 0 40px rgba(16,185,129,0.4), 0 0 0 0 rgba(16,185,129,0.3);}
+    50%{box-shadow:0 0 80px rgba(16,185,129,0.7), 0 0 40px rgba(16,185,129,0.2);}
+  }
+  .eco-question-display {
+    background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2rem; border-radius: 20px; text-align: center;
+    max-width: 500px; color: #fff; margin: 1rem 0;
+  }
+  .soundscape-btn {
+    padding: 1.5rem 2rem; border-radius: 20px; font-size: 1.2rem;
+    font-weight: 800; border: none; cursor: pointer;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .soundscape-btn:hover { transform: scale(1.05); }
+  .why-btn-container {
+    position: fixed; bottom: 30px; left: 30px; z-index: 50;
+  }
+  .why-btn {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none; cursor: pointer; font-size: 1.5rem;
+    font-weight: 900; color: #fff; display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.5);
+    transition: all 0.3s; font-family: inherit;
+  }
+  .why-btn:hover { transform: scale(1.1); }
+  .soundscape-playing {
+    background: rgba(16,185,129,0.2); border: 2px solid #10b981;
+  }
+  .feature-nav-tab {
+    background: linear-gradient(45deg, #f0fdf4, #dcfce7);
+    color: #166534; border: 2px solid #86efac;
+  }
+  .feature-nav-tab:hover {
+    background: linear-gradient(45deg, #22c55e, #16a34a);
+    color: #fff;
+  }
+  @keyframes spin { 0%{transform:rotate(0deg)}100%{transform:rotate(360deg)} }
+</style>
+</head>
+<body class="theme-animals">
+  
+  <!-- Welcome Screen -->
+  <section id="welcome" class="min-h-[100dvh] flex flex-col items-center justify-center text-center p-6">
+    <div class="mascot mb-6">🌟</div>
+    <h1 class="welcome-title text-5xl md:text-6xl font-extrabold mb-6">Welcome to KidsLearn!</h1>
+    <p class="text-white/90 mb-8 text-xl max-w-2xl">Choose your magical learning theme and meet your AI tutor companion for an amazing educational adventure!</p>
+    
+    <div class="theme-selector max-w-4xl w-full mb-8">
+      <div class="theme-card theme-animals" onclick="selectTheme('animals')">
+        <div class="text-6xl mb-3">🦊</div>
+        <div class="font-bold text-xl">Forest Friends</div>
+        <div class="text-slate-600">Learn with cute animals</div>
+      </div>
+      <div class="theme-card theme-cartoon" onclick="selectTheme('cartoon')">
+        <div class="text-6xl mb-3">🎭</div>
+        <div class="font-bold text-xl">Cartoon World</div>
+        <div class="text-slate-600">Colorful & playful</div>
+      </div>
+      <div class="theme-card theme-space" onclick="selectTheme('space')">
+        <div class="text-6xl mb-3">🚀</div>
+        <div class="font-bold text-xl">Space Adventure</div>
+        <div class="text-slate-600">Explore the cosmos</div>
+      </div>
+    </div>
+    
+    <div class="card p-6 max-w-2xl w-full">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="font-bold block mb-2 text-lg">👋 Your Name</label>
+          <input id="nameInput" class="w-full p-4 rounded-xl border-2 text-lg" placeholder="e.g., Aanya" />
+        </div>
+        <div>
+          <label class="font-bold block mb-2 text-lg">🎂 Age Group</label>
+          <select id="ageSelect" class="w-full p-4 rounded-xl border-2 text-lg">
+            <option value="3-5">3-5 years (Preschool)</option>
+            <option value="6-8">6-8 years (Elementary)</option>
+            <option value="9-12">9-12 years (Advanced)</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="font-bold block mb-3 text-lg">🤖 Pick Your Learning Buddy</label>
+          <div class="flex gap-4 justify-center">
+            <button class="p-4 border-3 rounded-xl text-5xl hover:scale-110 transition-transform" onclick="selectAvatar('🐼')">🐼</button>
+            <button class="p-4 border-3 rounded-xl text-5xl hover:scale-110 transition-transform" onclick="selectAvatar('🦊')">🦊</button>
+            <button class="p-4 border-3 rounded-xl text-5xl hover:scale-110 transition-transform" onclick="selectAvatar('🤖')">🤖</button>
+            <button class="p-4 border-3 rounded-xl text-5xl hover:scale-110 transition-transform" onclick="selectAvatar('🐨')">🐨</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary w-full mt-6 text-xl" onclick="startLearning()">🚀 Start My Adventure!</button>
+    </div>
+  </section>
+
+  <!-- Main Application -->
+  <section id="app" class="hidden min-h-[100dvh]">
+    <!-- Header -->
+    <header class="flex items-center justify-between gap-4 p-4 bg-white/95 sticky top-0 backdrop-blur-lg z-40 shadow-lg">
+      <div class="flex items-center gap-4">
+        <div id="mascot" class="mascot">🦊</div>
+        <div>
+          <div id="greeting" class="text-2xl font-extrabold text-[color:var(--primary)]">Hello, Friend!</div>
+          <div class="flex gap-2 items-center">
+            <div id="streak" class="text-sm text-slate-600">Streak: 0 days</div>
+            <div id="streakBadge" class="streak-badge hidden">🔥</div>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="flex flex-wrap gap-2 nav-scroller">
+        <button class="btn btn-secondary" onclick="showView('dashboard')">🏠 Home</button>
+        <button class="btn btn-secondary" onclick="showView('modules')">📚 Modules</button>
+        <button class="btn btn-tutor" onclick="openTutor()">✍️ AI Tutor</button>
+        <button class="btn btn-secondary" onclick="showView('play')">🎮 Games</button>
+        <button class="btn feature-nav-tab" onclick="showView('phygital')">📷 Shape Hunt</button>
+        <button class="btn feature-nav-tab" onclick="showView('bilingual')">🌏 Bilingual</button>
+        <button class="btn feature-nav-tab" onclick="showView('herojourney')">⚔️ Hero Story</button>
+        <button class="btn btn-secondary" onclick="openSettings()">⚙️ Settings</button>
+        <button class="btn btn-secondary" onclick="openParents()">👨‍👩‍👧‍👦 Parents</button>
+      </nav>
+    </header>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="p-6 space-y-6">
+      <!-- Progress Overview -->
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-3xl">📈</div>
+            <h3 class="font-bold text-xl">Progress</h3>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium">Letters</span>
+                <span class="text-sm" id="letterProgress">0/26</span>
+              </div>
+              <div class="progress-bar">
+                <div id="letterProgressBar" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium">Numbers</span>
+                <span class="text-sm" id="numberProgress">0/10</span>
+              </div>
+              <div class="progress-bar">
+                <div id="numberProgressBar" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-3xl">🏆</div>
+            <h3 class="font-bold text-xl">Achievements</h3>
+          </div>
+          <div id="achievementsMini" class="space-y-2">
+            <div class="text-sm text-slate-600">Start learning to earn badges!</div>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-3xl">⏱️</div>
+            <h3 class="font-bold text-xl">Today</h3>
+          </div>
+          <div class="space-y-2">
+            <div class="text-sm">Study time: <span id="studyTime" class="font-bold">0 min</span></div>
+            <div class="text-sm">Activities: <span id="todayActivities" class="font-bold">0</span></div>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-3xl">🎯</div>
+            <h3 class="font-bold text-xl">Goals</h3>
+          </div>
+          <div class="text-sm text-slate-600">
+            <div>✨ Learn 5 letters</div>
+            <div>🔢 Master numbers 1-10</div>
+            <div>⭐ 7-day streak</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Modules -->
+      <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <button class="card p-8 text-left hover:scale-105 transition-transform" onclick="openModule('alphabet')">
+          <div class="text-5xl mb-4">🔤</div>
+          <div class="font-extrabold text-2xl mb-2">Alphabet</div>
+          <div class="text-slate-600">Learn A-Z with fun examples</div>
+          <div class="progress-bar mt-4">
+            <div id="alphabetProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </button>
+        
+        <button class="card p-8 text-left hover:scale-105 transition-transform" onclick="openModule('numbers')">
+          <div class="text-5xl mb-4">🔢</div>
+          <div class="font-extrabold text-2xl mb-2">Numbers</div>
+          <div class="text-slate-600">Count 0-9 with examples</div>
+          <div class="progress-bar mt-4">
+            <div id="numbersProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </button>
+        
+        <button class="card p-8 text-left hover:scale-105 transition-transform" onclick="openModule('tables')">
+          <div class="text-5xl mb-4">✖️</div>
+          <div class="font-extrabold text-2xl mb-2">Tables</div>
+          <div class="text-slate-600">Multiplication 1-20</div>
+          <div class="progress-bar mt-4">
+            <div id="tablesProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </button>
+        
+        <button class="card p-8 text-left hover:scale-105 transition-transform" onclick="openModule('colors')">
+          <div class="text-5xl mb-4">🎨</div>
+          <div class="font-extrabold text-2xl mb-2">Colors</div>
+          <div class="text-slate-600">Paint & mix colors</div>
+          <div class="progress-bar mt-4">
+            <div id="colorsProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Learning Modules -->
+    <div id="modules" class="hidden p-6 space-y-6">
+      <!-- Alphabet Module -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-extrabold text-3xl flex items-center gap-3">
+            🔤 <span>Alphabet Adventure</span>
+          </h2>
+          <div class="flex gap-3">
+            <button class="btn btn-secondary" onclick="speak('Click any letter to hear it and see an example!')">🔊 Hint</button>
+            <button class="btn btn-secondary" onclick="toggleLetterCase()">Aa Toggle</button>
+          </div>
+        </div>
+        
+        <div id="currentExample" class="example-word hidden mb-6">
+          <div class="text-4xl mb-2" id="exampleEmoji">🍎</div>
+          <div class="text-xl font-bold" id="exampleWord">Apple</div>
+          <div class="text-lg" id="exampleDescription">A is for Apple</div>
+        </div>
+        
+        <div id="alphabetGrid" class="grid-letters"></div>
+        <div class="mt-4 text-center">
+          <span class="text-lg">Score: </span>
+          <span id="alphabetScore" class="font-bold text-2xl text-green-600">0</span>
+          <span class="ml-4 text-lg">Mastered: </span>
+          <span id="alphabetMastered" class="font-bold text-2xl text-blue-600">0/26</span>
+        </div>
+      </div>
+
+      <!-- Numbers Module -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-extrabold text-3xl flex items-center gap-3">
+            🔢 <span>Number Land</span>
+          </h2>
+          <button class="btn btn-secondary" onclick="speak('Click any number to count with examples!')">🔊 Count</button>
+        </div>
+        
+        <div id="numberExample" class="example-word hidden mb-6">
+          <div class="text-6xl mb-2" id="numberEmojis">🍌🍌🍌</div>
+          <div class="text-2xl font-bold" id="numberCount">Three bananas!</div>
+        </div>
+        
+        <div id="numbersGrid" class="grid-letters"></div>
+        <div class="mt-4 text-center">
+          <span class="text-lg">Score: </span>
+          <span id="numbersScore" class="font-bold text-2xl text-green-600">0</span>
+          <span class="ml-4 text-lg">Mastered: </span>
+          <span id="numbersMastered" class="font-bold text-2xl text-blue-600">0/10</span>
+        </div>
+      </div>
+
+      <!-- Tables Module -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-extrabold text-3xl flex items-center gap-3">
+            ✖️ <span>Multiplication Tables</span>
+          </h2>
+          <div class="flex gap-2">
+            <select id="tableSelect" class="p-3 rounded-lg border-2 font-bold">
+              <option value="1">1 Times Table</option>
+              <option value="2">2 Times Table</option>
+              <option value="3">3 Times Table</option>
+              <option value="4">4 Times Table</option>
+              <option value="5">5 Times Table</option>
+              <option value="10">10 Times Table</option>
+            </select>
+            <button class="btn btn-secondary" onclick="showTable()">📖 Show</button>
+          </div>
+        </div>
+        
+        <div id="multiplicationTable" class="multiplication-table"></div>
+        <div class="mt-4 text-center">
+          <span class="text-lg">Tables Learned: </span>
+          <span id="tablesLearned" class="font-bold text-2xl text-purple-600">0/20</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Tutor -->
+    <div id="tutor" class="hidden p-6">
+      <div class="tutor-panel">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="text-6xl">🤖</div>
+          <div>
+            <h2 class="text-3xl font-bold">AI Writing Tutor</h2>
+            <p class="text-lg opacity-90">Choose letters, numbers, or practice cursive writing!</p>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-4 mb-6">
+          <div>
+            <label class="block font-bold mb-2">📝 Practice Type</label>
+            <select id="practiceType" class="w-full p-3 rounded-lg border-0 text-black font-bold" onchange="updatePracticeOptions()">
+              <option value="letters">Letters (A-Z)</option>
+              <option value="lowercase">Lowercase (a-z)</option>
+              <option value="numbers">Numbers (0-9)</option>
+              <option value="words">Simple Words</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold mb-2">🎯 Select Item</label>
+            <select id="practiceItem" class="w-full p-3 rounded-lg border-0 text-black font-bold"></select>
+          </div>
+          <div>
+            <label class="block font-bold mb-2">✨ Style</label>
+            <div class="flex gap-2">
+              <button id="printBtn" class="btn btn-secondary flex-1" onclick="toggleCursive(false)">Print</button>
+              <button id="cursiveBtn" class="btn btn-secondary flex-1" onclick="toggleCursive(true)">Cursive</button>
+            </div>
+          </div>
+          <div>
+            <label class="block font-bold mb-2">🎵 Actions</label>
+            <div class="flex gap-2">
+              <button class="btn btn-primary" onclick="showWritingExample()">📖 Example</button>
+              <button class="btn btn-secondary" onclick="generateDots()">✍️ Practice</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl font-bold">Writing Practice</h3>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary" onclick="toggleWritingLines()">📏 Guidelines</button>
+            <button class="btn btn-secondary" onclick="adjustDotSize('larger')">🔍 Larger</button>
+            <button class="btn btn-secondary" onclick="adjustDotSize('smaller')">🔎 Smaller</button>
+            <button class="btn btn-secondary" onclick="clearCanvas()">🗑️ Clear</button>
+          </div>
+        </div>
+        
+        <div class="flex justify-center mb-4">
+          <div class="canvas-wrap">
+            <canvas id="writingCanvas" width="800" height="400"></canvas>
+            <svg id="writingLines" class="writing-lines absolute inset-0" width="800" height="400">
+              <line x1="50" y1="100" x2="750" y2="100" class="topline"/>
+              <line x1="50" y1="200" x2="750" y2="200" class="midline"/>
+              <line x1="50" y1="300" x2="750" y2="300" class="baseline"/>
+            </svg>
+            <div id="tracingDots"></div>
+          </div>
+        </div>
+        
+        <div id="examplePanel" class="example-word hidden">
+          <div class="text-4xl mb-2" id="practiceEmoji">🍎</div>
+          <div class="text-2xl font-bold" id="practiceWord">A is for Apple</div>
+          <div id="practiceDescription" class="text-lg">Trace the letter A and learn about apples!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Games Section -->
+    <div id="play" class="hidden p-6 space-y-6">
+      <!-- Memory Game -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-extrabold text-3xl flex items-center gap-3">
+            🧠 <span>Memory Match</span>
+          </h2>
+          <div class="flex gap-2">
+            <button class="btn btn-secondary" onclick="initMemory()">🔄 New Game</button>
+            <button class="btn btn-secondary" onclick="changeMemoryDifficulty()">⚡ Difficulty</button>
+          </div>
+        </div>
+        <div id="memoryGrid" class="grid grid-cols-4 gap-3 max-w-md mx-auto mb-4"></div>
+        <div class="text-center">
+          <div class="text-lg">Matches: <span id="memoryMatches" class="font-bold text-2xl text-green-600">0</span></div>
+          <div class="text-lg">Moves: <span id="memoryMoves" class="font-bold text-2xl text-blue-600">0</span></div>
+        </div>
+      </div>
+
+      <!-- Music Maker -->
+      <div class="card p-6">
+        <h2 class="font-extrabold text-3xl mb-6 flex items-center gap-3">
+          🎵 <span>Music Maker</span>
+        </h2>
+        <div class="flex flex-wrap gap-3 justify-center mb-4">
+          <button class="btn btn-secondary text-2xl" onclick="playNote(261.6, 'C')">🎹 C</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(293.7, 'D')">🎹 D</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(329.6, 'E')">🎹 E</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(349.2, 'F')">🎹 F</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(392.0, 'G')">🎹 G</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(440.0, 'A')">🎹 A</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(493.9, 'B')">🎹 B</button>
+          <button class="btn btn-secondary text-2xl" onclick="playNote(523.3, 'C2')">🎹 C</button>
+        </div>
+        <div class="flex gap-4 justify-center">
+          <button class="btn btn-primary" onclick="playMelody()">🎶 Play Melody</button>
+          <button class="btn btn-secondary" onclick="recordMode()">🎤 Record</button>
+        </div>
+      </div>
+
+      <!-- Color Mixer -->
+      <div class="card p-6">
+        <h2 class="font-extrabold text-3xl mb-6 flex items-center gap-3">
+          🎨 <span>Color Mixer</span>
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Primary Colors</h3>
+            <div class="flex gap-4 mb-4">
+              <div class="w-16 h-16 bg-red-500 rounded-full cursor-pointer border-4 border-white shadow-lg" onclick="selectColor('red')" data-color="red"></div>
+              <div class="w-16 h-16 bg-blue-500 rounded-full cursor-pointer border-4 border-white shadow-lg" onclick="selectColor('blue')" data-color="blue"></div>
+              <div class="w-16 h-16 bg-yellow-400 rounded-full cursor-pointer border-4 border-white shadow-lg" onclick="selectColor('yellow')" data-color="yellow"></div>
+            </div>
+            <button class="btn btn-primary w-full" onclick="mixColors()">🧪 Mix Colors!</button>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4">Mixed Result</h3>
+            <div id="colorResult" class="w-32 h-32 bg-gray-200 rounded-2xl mx-auto border-4 border-gray-300"></div>
+            <div id="colorName" class="text-center mt-4 text-xl font-bold">Mix two colors!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Builder -->
+    <div id="create" class="hidden p-6">
+      <div class="card p-6">
+        <h2 class="font-extrabold text-3xl mb-6 flex items-center gap-3">
+          📚 <span>Story Builder</span>
+        </h2>
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="font-bold block mb-2">🦸 Character</label>
+            <select id="storyCharacter" class="w-full p-3 rounded-lg border-2 font-bold">
+              <option value="a brave little mouse">🐭 Brave Mouse</option>
+              <option value="a friendly dragon">🐉 Friendly Dragon</option>
+              <option value="a curious puppy">🐶 Curious Puppy</option>
+              <option value="a magical fairy">🧚 Magical Fairy</option>
+              <option value="a smart robot">🤖 Smart Robot</option>
+              <option value="a kind unicorn">🦄 Kind Unicorn</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold block mb-2">🏰 Setting</label>
+            <select id="storySetting" class="w-full p-3 rounded-lg border-2 font-bold">
+              <option value="enchanted forest">🌲 Enchanted Forest</option>
+              <option value="magical castle">🏰 Magical Castle</option>
+              <option value="underwater kingdom">🌊 Underwater Kingdom</option>
+              <option value="space station">🚀 Space Station</option>
+              <option value="rainbow valley">🌈 Rainbow Valley</option>
+              <option value="cloud city">☁️ Cloud City</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold block mb-2">⭐ Adventure</label>
+            <select id="storyEvent" class="w-full p-3 rounded-lg border-2 font-bold">
+              <option value="discovered a hidden treasure">💎 Found Treasure</option>
+              <option value="made a new best friend">👫 Made Friend</option>
+              <option value="learned to fly">🕊️ Learned to Fly</option>
+              <option value="saved the day">🦸 Saved the Day</option>
+              <option value="solved a mystery">🔍 Solved Mystery</option>
+              <option value="helped others">❤️ Helped Others</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-4 mb-6">
+          <button class="btn btn-primary flex-1" onclick="generateStory()">✨ Create Story</button>
+          <button class="btn btn-secondary" onclick="readStory()">📢 Read Aloud</button>
+          <button class="btn btn-secondary" onclick="saveStory()">💾 Save</button>
+        </div>
+        <div id="storyOutput" class="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-2xl min-h-32 text-lg leading-relaxed"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURE 1: Haptic Writing Overlay indicator ===== -->
+  <div id="hapticFeedbackIndicator" class="haptic-feedback-indicator" style="display:none">
+    <span id="hapticMsg">✅ On Track!</span>
+  </div>
+  <div id="focusIndicator" class="focus-indicator" title="Attention Tracker"></div>
+
+  <!-- ===== FEATURE 2: Saliency Focus Lost Overlay ===== -->
+  <div id="focusLostOverlay" class="focus-lost-overlay">
+    <div style="text-align:center;color:#fff;padding:2rem;max-width:400px;">
+      <div style="font-size:80px;margin-bottom:1rem;animation:bounce 1s infinite">👀</div>
+      <h2 style="font-size:2rem;font-weight:900;margin-bottom:1rem">Hey <span id="focusChildName">Friend</span>!</h2>
+      <p style="font-size:1.2rem;margin-bottom:1.5rem;opacity:0.9">Look here! We have something exciting for you! ✨</p>
+      <div id="saliencyHighlight" style="background:rgba(255,200,0,0.15);border:3px solid #fbbf24;border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;animation:saliencyPulse 1s infinite">
+        <div style="font-size:2rem;margin-bottom:0.5rem">🌟</div>
+        <div style="font-weight:700;font-size:1.1rem" id="saliencyHint">Focus here to keep learning!</div>
+      </div>
+      <button class="btn btn-primary" onclick="resumeFocus()" style="font-size:1.2rem">I'm Back! 🎯</button>
+    </div>
+  </div>
+
+  <!-- ===== FEATURE 3: Phygital Object Recognition ===== -->
+  <div id="phygital" class="hidden p-6 space-y-6">
+    <div class="card p-6">
+      <h2 class="font-extrabold text-3xl mb-2 flex items-center gap-3">📷 <span>Phygital World</span></h2>
+      <p class="text-slate-600 mb-6">Use your camera to bridge real-world objects with digital learning!</p>
+      
+      <!-- Tab Navigation -->
+      <div class="flex gap-3 mb-6">
+        <button class="btn btn-primary" onclick="switchPhygitalTab('shapehunt')" id="tabShapehunt">🔍 Shape Hunter</button>
+        <button class="btn btn-secondary" onclick="switchPhygitalTab('handwriting')" id="tabHandwriting">✍️ Drawing to Life</button>
+      </div>
+
+      <!-- Shape Hunter -->
+      <div id="shapeHuntTab">
+        <div class="shape-hunt-target" id="shapeHuntTarget">
+          🔵 Find a <strong id="targetShapeName">Circle</strong> in your room!
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <div class="relative scan-animation" id="cameraContainer">
+              <video id="cameraFeed" autoplay playsinline muted></video>
+              <canvas id="cameraCanvas" style="display:none"></canvas>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button class="btn btn-primary flex-1" onclick="startCamera()">📸 Start Camera</button>
+              <button class="btn btn-secondary flex-1" onclick="captureAndRecognize()">🔍 Scan!</button>
+            </div>
+          </div>
+          <div>
+            <div id="recognitionResult" class="recognition-result" style="min-height:100px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:#94a3b8">
+              Point your camera and press Scan!
+            </div>
+            <div class="mt-4">
+              <div class="font-bold mb-2">Try finding these shapes:</div>
+              <div class="flex flex-wrap gap-2" id="shapeOptions">
+                <button class="btn btn-secondary text-sm" onclick="setTargetShape('circle','🔵')">🔵 Circle</button>
+                <button class="btn btn-secondary text-sm" onclick="setTargetShape('rectangle','🟥')">🟥 Rectangle</button>
+                <button class="btn btn-secondary text-sm" onclick="setTargetShape('triangle','🔺')">🔺 Triangle</button>
+                <button class="btn btn-secondary text-sm" onclick="setTargetShape('square','⬛')">⬛ Square</button>
+                <button class="btn btn-secondary text-sm" onclick="setTargetShape('star','⭐')">⭐ Star</button>
+              </div>
+            </div>
+            <div class="mt-4 p-3 bg-blue-50 rounded-xl text-sm text-blue-700">
+              <strong>🤖 How it works:</strong> The AI analyzes shapes in your camera image! Hold up an object shaped like the target.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Handwriting to Life -->
+      <div id="handwritingTab" class="hidden">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-bold text-xl mb-3">📝 Draw on Paper, then Scan!</h3>
+            <p class="text-slate-600 mb-4">Draw a simple letter or shape on paper, then scan it here to bring it to life!</p>
+            <div class="relative scan-animation">
+              <video id="cameraFeed2" autoplay playsinline muted style="width:100%;border-radius:16px;border:4px solid var(--accent);background:#111"></video>
+              <canvas id="cameraCanvas2" style="display:none"></canvas>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button class="btn btn-primary flex-1" onclick="startCamera2()">📸 Camera</button>
+              <button class="btn btn-secondary flex-1" onclick="captureHandwriting()">✨ Bring to Life!</button>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-bold text-xl mb-3">🎬 Animated Result</h3>
+            <div id="animatedCharResult" style="min-height:200px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:5rem;flex-direction:column;gap:1rem;color:#4338ca;font-weight:900;">
+              <div style="font-size:2rem">🎨</div>
+              <div style="font-size:1rem;font-weight:600">Scan your drawing!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURE 4: Bilingual Shadowing Mentor ===== -->
+  <div id="bilingual" class="hidden p-6 space-y-6">
+    <div class="card p-6">
+      <h2 class="font-extrabold text-3xl mb-2 flex items-center gap-3">🌏 <span>Global Citizen</span></h2>
+      <p class="text-slate-600 mb-6">Learn words in multiple languages through shadowing and cultural stories!</p>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="font-bold block mb-2">🏠 Native Language</label>
+          <select id="nativeLang" class="w-full p-3 rounded-xl border-2 font-bold" onchange="updateBilingualWord()">
+            <option value="hi">🇮🇳 Hindi</option>
+            <option value="ta">🇮🇳 Tamil</option>
+            <option value="bn">🇮🇳 Bengali</option>
+            <option value="en">🇺🇸 English</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold block mb-2">🎯 Target Language</label>
+          <select id="targetLang" class="w-full p-3 rounded-xl border-2 font-bold" onchange="updateBilingualWord()">
+            <option value="zh">🇨🇳 Mandarin Chinese</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="ja">🇯🇵 Japanese</option>
+            <option value="es">🇪🇸 Spanish</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Language Bridge Card -->
+      <div class="language-bridge-card mb-6">
+        <div class="text-sm font-bold text-purple-600 mb-2" id="bilingualCategory">Category: Animals</div>
+        <div class="word-native" id="wordNative">कुत्ता</div>
+        <div style="font-size:4rem;margin:0.5rem 0" id="wordEmoji">🐕</div>
+        <div class="word-target" id="wordTarget">狗 (Gǒu)</div>
+        <div style="color:#64748b;margin:0.5rem 0;font-size:0.9rem" id="wordPronunciation">Pronunciation: "Go"</div>
+        <div class="shadow-wave" id="shadowWave" style="display:none">
+          <div class="shadow-wave-bar" style="animation-delay:0s"></div>
+          <div class="shadow-wave-bar" style="animation-delay:0.1s"></div>
+          <div class="shadow-wave-bar" style="animation-delay:0.2s"></div>
+          <div class="shadow-wave-bar" style="animation-delay:0.3s"></div>
+          <div class="shadow-wave-bar" style="animation-delay:0.4s"></div>
+        </div>
+        <div class="flex gap-3 justify-center mt-4 flex-wrap">
+          <button class="btn btn-primary" onclick="speakNativeWord()">🔊 Hear Native</button>
+          <button class="btn btn-primary" onclick="speakTargetWord()">🔊 Hear Target</button>
+          <button class="btn btn-secondary" onclick="startShadowing()">🎤 Shadow It!</button>
+          <button class="btn btn-secondary" onclick="nextBilingualWord()">⏭️ Next Word</button>
+        </div>
+      </div>
+
+      <!-- Cultural Story -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold text-xl">📖 Cultural Story</h3>
+          <button class="btn btn-secondary" onclick="loadCulturalStory()">🎲 New Story</button>
+        </div>
+        <div class="cultural-story-box" id="culturalStoryBox">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem">🌸</div>
+          <div id="culturalStoryText">In China, dogs are considered loyal companions. The Chinese word for dog (狗/Gǒu) appears in the Zodiac — the Year of the Dog represents loyalty and honesty. Children in China often have toy dogs as their first stuffed animals!</div>
+          <button class="btn btn-primary mt-4 w-full" onclick="readCulturalStory()">🔊 Read Story</button>
+        </div>
+      </div>
+
+      <!-- Word Categories -->
+      <div>
+        <h3 class="font-bold text-xl mb-3">Browse Topics</h3>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn btn-secondary" onclick="setBilingualCategory('animals')">🐾 Animals</button>
+          <button class="btn btn-secondary" onclick="setBilingualCategory('food')">🍎 Food</button>
+          <button class="btn btn-secondary" onclick="setBilingualCategory('colors')">🎨 Colors</button>
+          <button class="btn btn-secondary" onclick="setBilingualCategory('numbers')">🔢 Numbers</button>
+          <button class="btn btn-secondary" onclick="setBilingualCategory('family')">👨‍👩‍👧 Family</button>
+          <button class="btn btn-secondary" onclick="setBilingualCategory('greetings')">👋 Greetings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURE 5: Hero's Journey Stories ===== -->
+  <div id="herojourney" class="hidden p-6 space-y-6">
+    <div class="card p-6">
+      <h2 class="font-extrabold text-3xl mb-2 flex items-center gap-3">⚔️ <span>Hero's Journey</span></h2>
+      <p class="text-slate-600 mb-6">Your learning badges become superpowers in your very own story!</p>
+
+      <!-- Earned Badges as Story Tools -->
+      <div class="mb-6">
+        <h3 class="font-bold text-xl mb-3">🏅 Your Badge Superpowers</h3>
+        <div id="badgeTools" class="flex flex-wrap gap-2 mb-4">
+          <!-- filled by JS -->
+        </div>
+        <div class="p-3 bg-yellow-50 rounded-xl text-sm text-yellow-800">
+          💡 Earn more badges by learning letters, numbers, and playing games!
+        </div>
+      </div>
+
+      <!-- Story Customization -->
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="font-bold block mb-2">🧒 Hero Name</label>
+          <input id="heroName" class="w-full p-3 rounded-xl border-2 font-bold" placeholder="Your Hero's Name" />
+        </div>
+        <div>
+          <label class="font-bold block mb-2">🌍 World</label>
+          <select id="heroWorld" class="w-full p-3 rounded-xl border-2 font-bold">
+            <option value="enchanted_forest">🌲 Enchanted Forest</option>
+            <option value="space_kingdom">🚀 Space Kingdom</option>
+            <option value="underwater_city">🌊 Underwater City</option>
+            <option value="cloud_realm">☁️ Cloud Realm</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold block mb-2">🐉 Challenge</label>
+          <select id="heroChallenge" class="w-full p-3 rounded-xl border-2 font-bold">
+            <option value="lost_treasure">💎 Find Lost Treasure</option>
+            <option value="save_animals">🐾 Save the Animals</option>
+            <option value="break_spell">✨ Break a Spell</option>
+            <option value="build_bridge">🌉 Build a Bridge</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Voice Narrator -->
+      <div class="voice-clone-card mb-6">
+        <div style="font-size:3rem;margin-bottom:0.5rem">🎙️</div>
+        <h3 class="font-bold text-xl mb-2">Parent Voice Narrator</h3>
+        <p class="text-slate-600 mb-4 text-sm">Record a short message in a parent's voice to narrate the story!</p>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <button class="btn btn-primary" id="voiceRecordBtn" onclick="startVoiceRecord()">🔴 Record Voice (5s)</button>
+          <button class="btn btn-secondary" id="voicePlayBtn" onclick="playRecordedVoice()" disabled>▶️ Play Sample</button>
+        </div>
+        <div id="voiceRecordStatus" class="mt-3 text-sm text-slate-600">No recording yet — standard AI voice will be used</div>
+        <div class="narrator-wave" id="narratorWave" style="display:none;justify-content:center;margin-top:1rem">
+          <div class="narrator-wave-bar" style="height:8px;animation:wave 0.8s ease-in-out infinite;animation-delay:0s"></div>
+          <div class="narrator-wave-bar" style="height:8px;animation:wave 0.8s ease-in-out infinite;animation-delay:0.1s"></div>
+          <div class="narrator-wave-bar" style="height:8px;animation:wave 0.8s ease-in-out infinite;animation-delay:0.2s"></div>
+          <div class="narrator-wave-bar" style="height:8px;animation:wave 0.8s ease-in-out infinite;animation-delay:0.3s"></div>
+          <div class="narrator-wave-bar" style="height:8px;animation:wave 0.8s ease-in-out infinite;animation-delay:0.4s"></div>
+        </div>
+      </div>
+
+      <div class="flex gap-4 mb-6 flex-wrap">
+        <button class="btn btn-primary flex-1" onclick="generateHeroStory()">⚔️ Create My Adventure!</button>
+        <button class="btn btn-secondary" onclick="readHeroStory()">🔊 Read Aloud</button>
+      </div>
+      
+      <!-- Story Output -->
+      <div class="hero-story-bg" id="heroStoryOutput">
+        <div class="hero-story-text" style="text-align:center;opacity:0.6">
+          <div style="font-size:3rem;margin-bottom:1rem">⚔️</div>
+          <div>Your personalized hero story will appear here...</div>
+          <div style="font-size:0.9rem;margin-top:1rem">Earn more badges to unlock more story powers!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURE 6: Why Button + Eco Mode Overlay ===== -->
+  <div class="why-btn-container" id="whyBtnContainer" style="display:none">
+    <button class="why-btn" onclick="activateEcoMode()" title="Ask WHY - Screen Free Learning">?</button>
+    <div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:0.65rem;font-weight:700;color:#059669;white-space:nowrap">WHY MODE</div>
+  </div>
+
+  <!-- Eco Mode / Environmental Speaker Overlay -->
+  <div id="ecoModeOverlay" class="eco-mode-overlay">
+    <div style="text-align:center;padding:2rem;max-width:600px;width:100%">
+      <div class="eco-speaker-visual">🌿</div>
+      <h2 style="color:#fff;font-size:2rem;font-weight:900;margin-bottom:0.5rem">Eco Learning Mode</h2>
+      <p style="color:rgba(255,255,255,0.7);margin-bottom:2rem">Screen is resting your eyes! Ask a curiosity question:</p>
+      
+      <div class="eco-question-display">
+        <div id="ecoCurrentActivity" style="font-size:1.3rem;font-weight:700;margin-bottom:1rem">🎧 Listening Mode Active</div>
+        <div style="font-size:0.9rem;opacity:0.7">Ask me anything! Try: "Why is the sky blue?" or "How do fish breathe?"</div>
+      </div>
+
+      <!-- Soundscapes Section -->
+      <div style="margin:1.5rem 0">
+        <div style="color:rgba(255,255,255,0.8);font-weight:700;margin-bottom:1rem;font-size:1.1rem">🎵 Interactive Soundscapes</div>
+        <div class="flex gap-3 flex-wrap justify-center" id="soundscapeButtons">
+          <button class="soundscape-btn" style="background:linear-gradient(135deg,#166534,#15803d);color:#fff" onclick="playSoundscape('forest')">🌲 Forest</button>
+          <button class="soundscape-btn" style="background:linear-gradient(135deg,#1e3a5f,#1e40af);color:#fff" onclick="playSoundscape('ocean')">🌊 Ocean</button>
+          <button class="soundscape-btn" style="background:linear-gradient(135deg,#4a1d1d,#7f1d1d);color:#fff" onclick="playSoundscape('city')">🏙️ City</button>
+          <button class="soundscape-btn" style="background:linear-gradient(135deg,#1c1917,#292524);color:#fff" onclick="playSoundscape('night')">🌙 Night</button>
+        </div>
+        <div id="soundscapeChallenge" style="display:none;margin-top:1.5rem;background:rgba(251,191,36,0.15);border:2px solid #fbbf24;border-radius:16px;padding:1.5rem;color:#fff">
+          <div style="font-size:1.2rem;font-weight:700;margin-bottom:0.5rem" id="soundscapeQ"></div>
+          <div class="flex gap-3 justify-center flex-wrap mt-3" id="soundscapeAnswers"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="deactivateEcoMode()" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.3)">
+        📱 Return to Screen
+      </button>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="box">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-extrabold text-2xl">⚙️ Settings</h3>
+        <button class="text-3xl hover:scale-110 transition-transform" onclick="closeSettings()">❌</button>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div>
+          <label class="font-bold block mb-2">🌍 Language</label>
+          <select id="langSelect" class="w-full p-3 rounded-lg border-2" onchange="changeLanguage()">
+            <option value="en">🇺🇸 English</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="fr">🇫🇷 Français</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold block mb-2">🔊 Audio</label>
+          <button id="soundToggle" class="btn btn-secondary w-full" onclick="toggleSound()">🔊 Sound On</button>
+        </div>
+        <div>
+          <label class="font-bold block mb-2">👤 Your Name</label>
+          <div class="flex gap-2">
+            <input id="nameInputSettings" class="flex-1 p-3 rounded-lg border-2" />
+            <button class="btn btn-primary" onclick="updateName()">✅</button>
+          </div>
+        </div>
+        <div class="md:col-span-3">
+          <label class="font-bold block mb-3">♿ Accessibility</label>
+          <div class="flex gap-3 flex-wrap">
+            <button class="btn btn-secondary" onclick="increaseFontSize()">🔍 Bigger Text</button>
+            <button class="btn btn-secondary" onclick="decreaseFontSize()">🔎 Smaller Text</button>
+            <button class="btn btn-secondary" onclick="toggleHighContrast()">⚡ High Contrast</button>
+            <button class="btn btn-secondary" onclick="toggleAnimations()">🎬 Animations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parent Dashboard Modal -->
+  <div id="parentsModal" class="modal">
+    <div class="box max-w-6xl">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-extrabold text-2xl">👨‍👩‍👧‍👦 Parent Dashboard</h3>
+        <button class="text-3xl hover:scale-110 transition-transform" onclick="closeParents()">❌</button>
+      </div>
+      
+      <!-- Analytics Charts -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="card p-4">
+          <h4 class="font-bold text-lg mb-4">📈 Learning Progress</h4>
+          <canvas id="progressChart" width="400" height="200"></canvas>
+        </div>
+        <div class="card p-4">
+          <h4 class="font-bold text-lg mb-4">⏰ Daily Activity</h4>
+          <canvas id="activityChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+      
+      <!-- Detailed Stats -->
+      <div class="grid md:grid-cols-4 gap-4 mb-6">
+        <div class="card p-4 text-center">
+          <div class="text-3xl mb-2">📚</div>
+          <div class="font-bold text-2xl" id="totalLessons">0</div>
+          <div class="text-sm text-gray-600">Lessons Completed</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl mb-2">⏱️</div>
+          <div class="font-bold text-2xl" id="totalTime">0</div>
+          <div class="text-sm text-gray-600">Minutes Learned</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl mb-2">🔥</div>
+          <div class="font-bold text-2xl" id="maxStreak">0</div>
+          <div class="text-sm text-gray-600">Best Streak</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl mb-2">🏆</div>
+          <div class="font-bold text-2xl" id="totalAchievements">0</div>
+          <div class="text-sm text-gray-600">Achievements</div>
+        </div>
+      </div>
+      
+      <!-- Controls -->
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card p-4">
+          <h4 class="font-bold mb-3">💾 Data Export</h4>
+          <div class="space-y-2">
+            <button class="btn btn-primary w-full" onclick="exportProgress()">📄 Export Report</button>
+            <button class="btn btn-secondary w-full" onclick="exportDetailedStats()">📊 Detailed Stats</button>
+          </div>
+        </div>
+        <div class="card p-4">
+          <h4 class="font-bold mb-3">🔧 Controls</h4>
+          <div class="space-y-2">
+            <button class="btn btn-secondary w-full" onclick="toggleSafeMode()">🛡️ Safe Mode</button>
+            <button class="btn btn-secondary w-full" onclick="resetProgress()">🔄 Reset Progress</button>
+          </div>
+          <div id="safeModeStatus" class="text-sm text-gray-600 mt-2">Safe Mode: Off</div>
+        </div>
+        <div class="card p-4">
+          <h4 class="font-bold mb-3">📥 Import Data</h4>
+          <input type="file" id="importFile" accept=".json" class="w-full mb-2" />
+          <button class="btn btn-secondary w-full" onclick="importProgress()">📂 Import</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievements Modal -->
+  <div id="achievementsModal" class="modal">
+    <div class="box">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-extrabold text-2xl">🏆 Achievement Gallery</h3>
+        <button class="text-3xl hover:scale-110 transition-transform" onclick="closeAchievements()">❌</button>
+      </div>
+      <div id="achievementsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg hidden z-50"></div>
+
+  <!-- Confetti Container -->
+  <div id="confettiContainer"></div>
+
+<script>
+// ============ Enhanced App State ============
+let currentTheme = 'animals';
+let currentLanguage = 'en';
+let userName = 'Friend';
+let userAge = '3-5';
+let userAvatar = '🦊';
+let soundEnabled = true;
+let safeMode = false;
+let animationsEnabled = true;
+
+// Progress tracking
+let streakDays = 0;
+let studyTimeToday = 0;
+let activitiesCompleted = 0;
+let totalStudyTime = 0;
+
+// Learning scores and mastery
+let alphabetScore = 0;
+let numbersScore = 0;
+let memoryScore = 0;
+let lettersMastered = 0;
+let numbersMastered = 0;
+let tablesLearned = 0;
+
+// Game states
+let memoryTiles = [];
+let memoryFlipped = [];
+let memoryMatches = 0;
+let memoryMoves = 0;
+let currentMemoryDifficulty = 'easy';
+
+// Writing/Tutor states
+let writingCtx = null;
+let isDrawing = false;
+let isCursive = false;
+let currentPracticeType = 'letters';
+let currentPracticeItem = 'A';
+let dotScale = 1;
+let showLines = true;
+
+// Audio context
+let audioCtx = null;
+
+// Data for learning modules
+const LETTER_EXAMPLES = {
+  'A': { emoji: '🍎', word: 'Apple', desc: 'A is for Apple' },
+  'B': { emoji: '🐝', word: 'Bee', desc: 'B is for Bee' },
+  'C': { emoji: '🐱', word: 'Cat', desc: 'C is for Cat' },
+  'D': { emoji: '🐶', word: 'Dog', desc: 'D is for Dog' },
+  'E': { emoji: '🐘', word: 'Elephant', desc: 'E is for Elephant' },
+  'F': { emoji: '🐸', word: 'Frog', desc: 'F is for Frog' },
+  'G': { emoji: '🦒', word: 'Giraffe', desc: 'G is for Giraffe' },
+  'H': { emoji: '🏠', word: 'House', desc: 'H is for House' },
+  'I': { emoji: '🍦', word: 'Ice cream', desc: 'I is for Ice cream' },
+  'J': { emoji: '🕹️', word: 'Joystick', desc: 'J is for Joystick' },
+  'K': { emoji: '🔑', word: 'Key', desc: 'K is for Key' },
+  'L': { emoji: '🦁', word: 'Lion', desc: 'L is for Lion' },
+  'M': { emoji: '🐵', word: 'Monkey', desc: 'M is for Monkey' },
+  'N': { emoji: '🌙', word: 'Night', desc: 'N is for Night' },
+  'O': { emoji: '🐙', word: 'Octopus', desc: 'O is for Octopus' },
+  'P': { emoji: '🐧', word: 'Penguin', desc: 'P is for Penguin' },
+  'Q': { emoji: '👑', word: 'Queen', desc: 'Q is for Queen' },
+  'R': { emoji: '🌈', word: 'Rainbow', desc: 'R is for Rainbow' },
+  'S': { emoji: '☀️', word: 'Sun', desc: 'S is for Sun' },
+  'T': { emoji: '🐅', word: 'Tiger', desc: 'T is for Tiger' },
+  'U': { emoji: '☂️', word: 'Umbrella', desc: 'U is for Umbrella' },
+  'V': { emoji: '🌋', word: 'Volcano', desc: 'V is for Volcano' },
+  'W': { emoji: '🐋', word: 'Whale', desc: 'W is for Whale' },
+  'X': { emoji: '🎄', word: 'Xmas tree', desc: 'X is for Xmas tree' },
+  'Y': { emoji: '🧶', word: 'Yarn', desc: 'Y is for Yarn' },
+  'Z': { emoji: '🦓', word: 'Zebra', desc: 'Z is for Zebra' }
+};
+
+const NUMBER_EXAMPLES = {
+  '0': { emoji: '', word: 'Zero', desc: 'Nothing at all!' },
+  '1': { emoji: '🌟', word: 'One', desc: 'One bright star' },
+  '2': { emoji: '👀', word: 'Two', desc: 'Two eyes to see' },
+  '3': { emoji: '🍌🍌🍌', word: 'Three', desc: 'Three yellow bananas' },
+  '4': { emoji: '🍀', word: 'Four', desc: 'Four leaf clover' },
+  '5': { emoji: '✋', word: 'Five', desc: 'Five fingers on a hand' },
+  '6': { emoji: '🍒🍒🍒', word: 'Six', desc: 'Six cherries' },
+  '7': { emoji: '🌈', word: 'Seven', desc: 'Seven colors in rainbow' },
+  '8': { emoji: '🐙', word: 'Eight', desc: 'Eight octopus arms' },
+  '9': { emoji: '⚽🏀🎾⚾🏈🏐🎱🥎🏓', word: 'Nine', desc: 'Nine sports balls' }
+};
+
+const STORAGE_KEY = 'kidslearn_enhanced_v2';
+
+// ============ Persistence & State Management ============
+function saveState() {
+  const state = {
+    currentTheme, currentLanguage, userName, userAge, userAvatar,
+    soundEnabled, safeMode, animationsEnabled,
+    streakDays, studyTimeToday, activitiesCompleted, totalStudyTime,
+    alphabetScore, numbersScore, memoryScore,
+    lettersMastered, numbersMastered, tablesLearned,
+    memoryMatches, memoryMoves,
+    lastActiveDate: new Date().toDateString()
+  };
+  
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('Failed to save state:', e);
+  }
+}
+
+function loadState() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const state = JSON.parse(stored);
+      Object.assign(window, state);
+      
+      // Check if it's a new day to reset daily stats
+      const today = new Date().toDateString();
+      if (state.lastActiveDate !== today) {
+        studyTimeToday = 0;
+        activitiesCompleted = 0;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load state:', e);
+  }
+}
+
+// ============ Utility Functions ============
+function speak(text, rate = 0.9) {
+  if (!soundEnabled || !('speechSynthesis' in window)) return;
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = getLanguageCode();
+  utterance.rate = rate;
+  utterance.pitch = 1.2; // Slightly higher pitch for kids
+  
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+function getLanguageCode() {
+  const codes = {
+    'en': 'en-US',
+    'es': 'es-ES',
+    'hi': 'hi-IN',
+    'fr': 'fr-FR'
+  };
+  return codes[currentLanguage] || 'en-US';
+}
+
+function toast(message, duration = 2000) {
+  const toastEl = document.getElementById('toast');
+  toastEl.textContent = message;
+  toastEl.classList.remove('hidden');
+  
+  setTimeout(() => {
+    toastEl.classList.add('hidden');
+  }, duration);
+}
+
+function showConfetti() {
+  if (!animationsEnabled) return;
+  
+  const container = document.getElementById('confettiContainer');
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3'];
+  
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.animationDelay = Math.random() * 2 + 's';
+    
+    container.appendChild(confetti);
+    
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+
+function updateProgressBars() {
+  const letterProgress = (lettersMastered / 26) * 100;
+  const numberProgress = (numbersMastered / 10) * 100;
+  
+  document.getElementById('letterProgressBar').style.width = letterProgress + '%';
+  document.getElementById('numberProgressBar').style.width = numberProgress + '%';
+  document.getElementById('alphabetProgress').style.width = letterProgress + '%';
+  document.getElementById('numbersProgress').style.width = numberProgress + '%';
+  
+  // Update text displays
+  document.getElementById('letterProgress').textContent = `${lettersMastered}/26`;
+  document.getElementById('numberProgress').textContent = `${numbersMastered}/10`;
+}
+
+function updateHeader() {
+  document.getElementById('mascot').textContent = userAvatar;
+  
+  const hour = new Date().getHours();
+  const greetingParts = {
+    morning: hour < 12 ? 'Good morning' : '',
+    afternoon: hour >= 12 && hour < 18 ? 'Good afternoon' : '',
+    evening: hour >= 18 ? 'Good evening' : ''
+  };
+  
+  const greeting = Object.values(greetingParts).find(g => g) || 'Hello';
+  document.getElementById('greeting').textContent = `${greeting}, ${userName}!`;
+  document.getElementById('streak').textContent = `Streak: ${streakDays} day${streakDays !== 1 ? 's' : ''}`;
+  
+  // Show streak badge for 3+ days
+  const streakBadge = document.getElementById('streakBadge');
+  if (streakDays >= 3) {
+    streakBadge.classList.remove('hidden');
+    streakBadge.textContent = streakDays >= 7 ? '🔥🏆' : '🔥';
+  } else {
+    streakBadge.classList.add('hidden');
+  }
+  
+  // Update today's stats
+  document.getElementById('studyTime').textContent = studyTimeToday + ' min';
+  document.getElementById('todayActivities').textContent = activitiesCompleted;
+}
+
+// ============ Theme & Onboarding ============
+function selectTheme(theme) {
+  currentTheme = theme;
+  document.body.className = `theme-${theme}`;
+  
+  // Visual feedback for theme selection
+  document.querySelectorAll('.theme-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  document.querySelector(`.theme-${theme}`).classList.add('selected');
+  
+  toast('Theme selected! ✨');
+  saveState();
+}
+
+function selectAvatar(avatar) {
+  userAvatar = avatar;
+  toast(`${avatar} selected as your buddy!`);
+  saveState();
+}
+
+function startLearning() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (name) userName = name;
+  
+  userAge = document.getElementById('ageSelect').value;
+  
+  // Hide welcome, show app
+  document.getElementById('welcome').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  
+  // Initialize everything
+  updateHeader();
+  updateProgressBars();
+  buildAlphabet();
+  buildNumbers();
+  initMemory();
+  initWritingTutor();
+  
+  // Update streak if returning user
+  const today = new Date().toDateString();
+  const lastActive = localStorage.getItem('lastActiveDate');
+  if (lastActive !== today) {
+    streakDays++;
+    localStorage.setItem('lastActiveDate', today);
+  }
+  
+  saveState();
+  speak(`Welcome to your learning adventure, ${userName}!`);
+  showConfetti();
+}
+
+// ============ Navigation ============
+function showView(viewId) {
+  const views = ['dashboard', 'modules', 'tutor', 'play', 'create'];
+  views.forEach(v => {
+    const el = document.getElementById(v);
+    if (el) el.classList.add('hidden');
+  });
+  
+  const targetView = document.getElementById(viewId);
+  if (targetView) {
+    targetView.classList.remove('hidden');
+    
+    // Special handling for different views
+    if (viewId === 'modules') {
+      buildAlphabet();
+      buildNumbers();
+      showTable();
+    } else if (viewId === 'tutor') {
+      updatePracticeOptions();
+    }
+  }
+}
+
+function openModule(moduleId) {
+  if (['alphabet', 'numbers', 'tables'].includes(moduleId)) {
+    showView('modules');
+  } else if (moduleId === 'colors') {
+    showView('play');
+  }
+  
+  activitiesCompleted++;
+  studyTimeToday += 2; // Approximate 2 minutes per module visit
+  saveState();
+}
+
+// ============ Alphabet Learning ============
+function buildAlphabet() {
+  const grid = document.getElementById('alphabetGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = '';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  
+  letters.forEach(letter => {
+    const button = document.createElement('button');
+    button.className = 'letter';
+    button.textContent = letter;
+    
+    // Mark mastered letters
+    if (lettersMastered >= letters.indexOf(letter) + 1) {
+      button.classList.add('mastered');
+    }
+    
+    button.onclick = () => playLetter(letter);
+    grid.appendChild(button);
+  });
+  
+  updateScores();
+}
+
+function playLetter(letter) {
+  const example = LETTER_EXAMPLES[letter];
+  if (!example) return;
+  
+  // Show example
+  const exampleDiv = document.getElementById('currentExample');
+  const emojiEl = document.getElementById('exampleEmoji');
+  const wordEl = document.getElementById('exampleWord');
+  const descEl = document.getElementById('exampleDescription');
+  
+  if (exampleDiv && emojiEl && wordEl && descEl) {
+    emojiEl.textContent = example.emoji;
+    wordEl.textContent = example.word;
+    descEl.textContent = example.desc;
+    exampleDiv.classList.remove('hidden');
+  }
+  
+  // Play sound and update score
+  speak(`${letter}. ${example.desc}`);
+  alphabetScore++;
+  
+  // Master letter every 3 clicks
+  if (alphabetScore % 3 === 0) {
+    const letterIndex = letter.charCodeAt(0) - 65; // A=0, B=1, etc.
+    if (letterIndex + 1 > lettersMastered) {
+      lettersMastered = letterIndex + 1;
+      showConfetti();
+      toast(`🌟 You mastered letter ${letter}!`);
+    }
+  }
+  
+  updateScores();
+  updateProgressBars();
+  saveState();
+}
+
+function toggleLetterCase() {
+  const grid = document.getElementById('alphabetGrid');
+  if (!grid) return;
+  
+  const buttons = grid.querySelectorAll('.letter');
+  buttons.forEach(btn => {
+    const currentText = btn.textContent;
+    btn.textContent = currentText === currentText.toUpperCase() ? 
+      currentText.toLowerCase() : currentText.toUpperCase();
+  });
+  
+  toast('Letter case toggled!');
+}
+
+// ============ Numbers Learning ============
+function buildNumbers() {
+  const grid = document.getElementById('numbersGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = '';
+  const numbers = '0123456789'.split('');
+  
+  numbers.forEach(num => {
+    const button = document.createElement('button');
+    button.className = 'letter';
+    button.textContent = num;
+    
+    // Mark mastered numbers
+    if (numbersMastered >= parseInt(num) + 1) {
+      button.classList.add('mastered');
+    }
+    
+    button.onclick = () => playNumber(num);
+    grid.appendChild(button);
+  });
+  
+  updateScores();
+}
+
+function playNumber(num) {
+  const example = NUMBER_EXAMPLES[num];
+  if (!example) return;
+  
+  // Show example
+  const exampleDiv = document.getElementById('numberExample');
+  const emojiEl = document.getElementById('numberEmojis');
+  const countEl = document.getElementById('numberCount');
+  
+  if (exampleDiv && emojiEl && countEl) {
+    emojiEl.textContent = example.emoji;
+    countEl.textContent = example.desc;
+    exampleDiv.classList.remove('hidden');
+  }
+  
+  // Play sound and update score
+  speak(`${num}. ${example.desc}`);
+  numbersScore++;
+  
+  // Master number every 2 clicks
+  if (numbersScore % 2 === 0) {
+    const numberIndex = parseInt(num);
+    if (numberIndex + 1 > numbersMastered) {
+      numbersMastered = numberIndex + 1;
+      showConfetti();
+      toast(`🎯 You mastered number ${num}!`);
+    }
+  }
+  
+  updateScores();
+  updateProgressBars();
+  saveState();
+}
+
+// ============ Multiplication Tables ============
+function showTable() {
+  const tableSelect = document.getElementById('tableSelect');
+  const tableDiv = document.getElementById('multiplicationTable');
+  
+  if (!tableSelect || !tableDiv) return;
+  
+  const tableNum = parseInt(tableSelect.value);
+  tableDiv.innerHTML = '';
+  
+  for (let i = 1; i <= 10; i++) {
+    const result = tableNum * i;
+    const item = document.createElement('div');
+    item.className = 'table-item cursor-pointer hover:bg-white/20 transition-colors';
+    item.textContent = `${tableNum} × ${i} = ${result}`;
+    item.onclick = () => {
+      speak(`${tableNum} times ${i} equals ${result}`);
+      toast(`${tableNum} × ${i} = ${result}`);
+    };
+    tableDiv.appendChild(item);
+  }
+  
+  activitiesCompleted++;
+  saveState();
+}
+
+// ============ Writing Tutor / AI Tutor ============
+function openTutor() {
+  showView('tutor');
+  initWritingTutor();
+}
+
+function initWritingTutor() {
+  const canvas = document.getElementById('writingCanvas');
+  if (!canvas) return;
+  
+  writingCtx = canvas.getContext('2d');
+  
+  // Mouse/touch events
+  canvas.addEventListener('pointerdown', startDrawing);
+  canvas.addEventListener('pointermove', draw);
+  canvas.addEventListener('pointerup', stopDrawing);
+  canvas.addEventListener('pointerout', stopDrawing);
+  
+  updatePracticeOptions();
+}
+
+function startDrawing(e) {
+  isDrawing = true;
+  const rect = e.target.getBoundingClientRect();
+  writingCtx.beginPath();
+  writingCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  
+  const rect = e.target.getBoundingClientRect();
+  writingCtx.lineWidth = 6;
+  writingCtx.lineCap = 'round';
+  writingCtx.strokeStyle = isCursive ? '#8B5CF6' : '#1e293b';
+  writingCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+  writingCtx.stroke();
+}
+
+function stopDrawing() {
+  isDrawing = false;
+}
+
+function updatePracticeOptions() {
+  const typeSelect = document.getElementById('practiceType');
+  const itemSelect = document.getElementById('practiceItem');
+  
+  if (!typeSelect || !itemSelect) return;
+  
+  currentPracticeType = typeSelect.value;
+  itemSelect.innerHTML = '';
+  
+  let options = [];
+  switch (currentPracticeType) {
+    case 'letters':
+      options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      break;
+    case 'lowercase':
+      options = 'abcdefghijklmnopqrstuvwxyz'.split('');
+      break;
+    case 'numbers':
+      options = '0123456789'.split('');
+      break;
+    case 'words':
+      options = ['cat', 'dog', 'sun', 'moon', 'tree', 'fish'];
+      break;
+  }
+  
+  options.forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt;
+    option.textContent = opt;
+    itemSelect.appendChild(option);
+  });
+  
+  currentPracticeItem = options[0];
+  generateDots();
+}
+
+function toggleCursive(cursive) {
+  isCursive = cursive;
+  
+  // Update button styles
+  const printBtn = document.getElementById('printBtn');
+  const cursiveBtn = document.getElementById('cursiveBtn');
+  
+  if (printBtn && cursiveBtn) {
+    if (cursive) {
+      cursiveBtn.classList.add('btn-primary');
+      cursiveBtn.classList.remove('btn-secondary');
+      printBtn.classList.add('btn-secondary');
+      printBtn.classList.remove('btn-primary');
+    } else {
+      printBtn.classList.add('btn-primary');
+      printBtn.classList.remove('btn-secondary');
+      cursiveBtn.classList.add('btn-secondary');
+      cursiveBtn.classList.remove('btn-primary');
+    }
+  }
+  
+  generateDots();
+  toast(cursive ? 'Cursive style selected!' : 'Print style selected!');
+}
+
+function generateDots() {
+  const itemSelect = document.getElementById('practiceItem');
+  if (!itemSelect) return;
+  
+  currentPracticeItem = itemSelect.value;
+  const dotsContainer = document.getElementById('tracingDots');
+  if (!dotsContainer) return;
+  
+  dotsContainer.innerHTML = '';
+  clearCanvas();
+  
+  const points = getWritingPoints(currentPracticeItem);
+  const dotClass = isCursive ? 'dot cursive-dot' : 'dot';
+  
+  points.forEach(([x, y]) => {
+    const dot = document.createElement('div');
+    dot.className = dotClass;
+    dot.style.left = x + 'px';
+    dot.style.top = y + 'px';
+    dot.style.width = (16 * dotScale) + 'px';
+    dot.style.height = (16 * dotScale) + 'px';
+    dotsContainer.appendChild(dot);
+  });
+}
+
+function getWritingPoints(item) {
+  // Generate writing points based on the item
+  const baseX = 100;
+  const baseY = 200;
+  const scale = 80;
+  
+  if (item.length === 1) {
+    // Single character
+    return getCharacterPoints(item, baseX, baseY, scale);
+  } else {
+    // Word - spread characters
+    let allPoints = [];
+    for (let i = 0; i < item.length; i++) {
+      const charPoints = getCharacterPoints(item[i], baseX + (i * 90), baseY, scale);
+      allPoints = allPoints.concat(charPoints);
+    }
+    return allPoints;
+  }
+}
+
+function getCharacterPoints(char, x, y, scale) {
+  // Simple point patterns for characters
+  const patterns = {
+    'A': [[0, 1], [-0.5, 0], [0.5, 0], [-0.3, 0.5], [0.3, 0.5]],
+    'B': [[-0.5, -1], [-0.5, 1], [0, -1], [0, 0], [-0.5, 0], [0, 1]],
+    'C': [[0.5, -0.8], [-0.5, -0.5], [-0.5, 0.5], [0.5, 0.8]],
+    '1': [[0, -1], [0, 1]],
+    '2': [[-0.5, -0.8], [0.5, -0.8], [0.5, 0], [-0.5, 0], [-0.5, 1], [0.5, 1]],
+    // Add more patterns as needed
+  };
+  
+  const pattern = patterns[char.toUpperCase()] || [[0, 0]]; // Default single point
+  
+  return pattern.map(([dx, dy]) => [
+    x + (dx * scale),
+    y + (dy * scale)
+  ]);
+}
+
+function showWritingExample() {
+  const item = currentPracticeItem;
+  const examplePanel = document.getElementById('examplePanel');
+  const emojiEl = document.getElementById('practiceEmoji');
+  const wordEl = document.getElementById('practiceWord');
+  const descEl = document.getElementById('practiceDescription');
+  
+  if (!examplePanel) return;
+  
+  let example = null;
+  
+  if (currentPracticeType === 'letters' && LETTER_EXAMPLES[item.toUpperCase()]) {
+    example = LETTER_EXAMPLES[item.toUpperCase()];
+  } else if (currentPracticeType === 'numbers' && NUMBER_EXAMPLES[item]) {
+    example = NUMBER_EXAMPLES[item];
+  } else if (currentPracticeType === 'words') {
+    example = { 
+      emoji: '📝', 
+      word: item.toUpperCase(), 
+      desc: `Practice writing the word "${item}"` 
+    };
+  }
+  
+  if (example && emojiEl && wordEl && descEl) {
+    emojiEl.textContent = example.emoji;
+    wordEl.textContent = example.word;
+    descEl.textContent = example.desc;
+    examplePanel.classList.remove('hidden');
+    
+    speak(example.desc);
+  }
+}
+
+function clearCanvas() {
+  if (writingCtx) {
+    writingCtx.clearRect(0, 0, 800, 400);
+  }
+}
+
+function toggleWritingLines() {
+  const lines = document.getElementById('writingLines');
+  if (lines) {
+    showLines = !showLines;
+    lines.style.display = showLines ? 'block' : 'none';
+    toast(showLines ? 'Guidelines shown' : 'Guidelines hidden');
+  }
+}
+
+function adjustDotSize(direction) {
+  if (direction === 'larger') {
+    dotScale = Math.min(2, dotScale + 0.2);
+  } else {
+    dotScale = Math.max(0.6, dotScale - 0.2);
+  }
+  generateDots();
+  toast(`Dot size ${direction === 'larger' ? 'increased' : 'decreased'}`);
+}
+
+// ============ Memory Game ============
+function initMemory() {
+  const difficulties = {
+    easy: { pairs: 6, emojis: ['🐶', '🐱', '🦊', '🐻', '🐼', '🐨'] },
+    medium: { pairs: 8, emojis: ['🐶', '🐱', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁'] },
+    hard: { pairs: 10, emojis: ['🐶', '🐱', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐸', '🐙'] }
+  };
+  
+  const config = difficulties[currentMemoryDifficulty] || difficulties.easy;
+  const emojis = config.emojis.slice(0, config.pairs);
+  memoryTiles = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+  
+  memoryFlipped = [];
+  memoryMatches = 0;
+  memoryMoves = 0;
+  
+  const grid = document.getElementById('memoryGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = `repeat(${Math.ceil(Math.sqrt(memoryTiles.length))}, 1fr)`;
+  
+  memoryTiles.forEach((emoji, index) => {
+    const card = document.createElement('button');
+    card.className = 'card-tile bg-gradient-to-br from-blue-400 to-purple-500 text-white text-3xl font-bold hover:scale-105 transition-transform';
+    card.textContent = '❓';
+    card.dataset.index = index;
+    card.dataset.emoji = emoji;
+    card.onclick = () => flipMemoryCard(card);
+    grid.appendChild(card);
+  });
+  
+  updateMemoryScore();
+}
+
+function flipMemoryCard(card) {
+  if (card.classList.contains('flipped') || memoryFlipped.length >= 2) return;
+  
+  card.textContent = card.dataset.emoji;
+  card.classList.add('flipped');
+  memoryFlipped.push(card);
+  
+  if (memoryFlipped.length === 2) {
+    memoryMoves++;
+    
+    const [card1, card2] = memoryFlipped;
+    
+    if (card1.dataset.emoji === card2.dataset.emoji) {
+      // Match!
+      memoryMatches++;
+      card1.classList.add('bg-green-400');
+      card2.classList.add('bg-green-400');
+      memoryFlipped = [];
+      
+      speak('Great match!');
+      
+      if (memoryMatches === memoryTiles.length / 2) {
+        setTimeout(() => {
+          showConfetti();
+          speak('Congratulations! You won the memory game!');
+          toast('🏆 Memory game completed!');
+        }, 500);
+      }
+    } else {
+      // No match
+      setTimeout(() => {
+        card1.textContent = '❓';
+        card2.textContent = '❓';
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+        memoryFlipped = [];
+      }, 800);
+    }
+    
+    updateMemoryScore();
+  }
+}
+
+function updateMemoryScore() {
+  const matchesEl = document.getElementById('memoryMatches');
+  const movesEl = document.getElementById('memoryMoves');
+  
+  if (matchesEl) matchesEl.textContent = memoryMatches;
+  if (movesEl) movesEl.textContent = memoryMoves;
+}
+
+function changeMemoryDifficulty() {
+  const difficulties = ['easy', 'medium', 'hard'];
+  const currentIndex = difficulties.indexOf(currentMemoryDifficulty);
+  currentMemoryDifficulty = difficulties[(currentIndex + 1) % difficulties.length];
+  
+  toast(`Difficulty: ${currentMemoryDifficulty.toUpperCase()}`);
+  initMemory();
+}
+
+// ============ Music & Audio ============
+function initAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+
+function playNote(frequency, noteName) {
+  if (!soundEnabled) return;
+  
+  const ctx = initAudioContext();
+  const oscillator = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  
+  oscillator.frequency.value = frequency;
+  oscillator.type = 'sine';
+  
+  gainNode.gain.value = 0.3;
+  gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+  
+  oscillator.start(ctx.currentTime);
+  oscillator.stop(ctx.currentTime + 0.5);
+  
+  toast(`♪ ${noteName}`);
+}
+
+function playMelody() {
+  if (!soundEnabled) return;
+  
+  const melody = [
+    {freq: 261.6, duration: 300}, // C
+    {freq: 293.7, duration: 300}, // D
+    {freq: 329.6, duration: 300}, // E
+    {freq: 349.2, duration: 300}, // F
+    {freq: 392.0, duration: 600}  // G
+  ];
+  
+  let delay = 0;
+  melody.forEach(note => {
+    setTimeout(() => playNote(note.freq, 'Melody'), delay);
+    delay += note.duration;
+  });
+}
+
+// ============ Color Mixer ============
+let selectedColors = [];
+
+function selectColor(color) {
+  if (selectedColors.includes(color)) {
+    selectedColors = selectedColors.filter(c => c !== color);
+  } else if (selectedColors.length < 2) {
+    selectedColors.push(color);
+  } else {
+    selectedColors = [color];
+  }
+  
+  // Update visual feedback
+  document.querySelectorAll('[data-color]').forEach(el => {
+    if (selectedColors.includes(el.dataset.color)) {
+      el.style.transform = 'scale(1.2)';
+      el.style.borderColor = '#fff';
+    } else {
+      el.style.transform = 'scale(1)';
+      el.style.borderColor = '#fff';
+    }
+  });
+  
+  toast(`${color} ${selectedColors.includes(color) ? 'selected' : 'deselected'}`);
+}
+
+function mixColors() {
+  if (selectedColors.length !== 2) {
+    toast('Please select exactly 2 colors to mix!');
+    return;
+  }
+  
+  const mixResults = {
+    'red,blue': { color: 'bg-purple-500', name: 'Purple! 💜' },
+    'blue,red': { color: 'bg-purple-500', name: 'Purple! 💜' },
+    'red,yellow': { color: 'bg-orange-500', name: 'Orange! 🧡' },
+    'yellow,red': { color: 'bg-orange-500', name: 'Orange! 🧡' },
+    'blue,yellow': { color: 'bg-green-500', name: 'Green! 💚' },
+    'yellow,blue': { color: 'bg-green-500', name: 'Green! 💚' }
+  };
+  
+  const key = selectedColors.sort().join(',');
+  const result = mixResults[key];
+  
+  const resultDiv = document.getElementById('colorResult');
+  const nameDiv = document.getElementById('colorName');
+  
+  if (result && resultDiv && nameDiv) {
+    resultDiv.className = `w-32 h-32 ${result.color} rounded-2xl mx-auto border-4 border-gray-300`;
+    nameDiv.textContent = result.name;
+    
+    speak(`${selectedColors[0]} plus ${selectedColors[1]} makes ${result.name}`);
+    showConfetti();
+  }
+  
+  selectedColors = [];
+  document.querySelectorAll('[data-color]').forEach(el => {
+    el.style.transform = 'scale(1)';
+  });
+}
+
+// ============ Story Builder ============
+function generateStory() {
+  const character = document.getElementById('storyCharacter')?.value || 'a brave hero';
+  const setting = document.getElementById('storySetting')?.value || 'a magical place';
+  const event = document.getElementById('storyEvent')?.value || 'had an amazing adventure';
+  
+  const storyTemplates = [
+    `Once upon a time in ${setting}, ${character} ${event}. With courage and kindness, they learned that friendship is the greatest treasure of all. The end! 🌟`,
+    `In ${setting}, there lived ${character} who always dreamed big. One sunny day, they ${event} and discovered that believing in yourself makes anything possible! 🌈`,
+    `Long ago in ${setting}, ${character} ${event}. Through their journey, they met wonderful friends and learned that sharing joy makes it twice as bright! ✨`
+  ];
+  
+  const randomStory = storyTemplates[Math.floor(Math.random() * storyTemplates.length)];
+  const output = document.getElementById('storyOutput');
+  
+  if (output) {
+    output.innerHTML = `<div class="text-2xl mb-4">📚 Your Story</div><p class="leading-relaxed">${randomStory}</p>`;
+  }
+  
+  activitiesCompleted++;
+  saveState();
+  
+  speak('Your amazing story is ready!');
+}
+
+function readStory() {
+  const output = document.getElementById('storyOutput');
+  if (output) {
+    const text = output.textContent || 'No story to read yet!';
+    speak(text, 0.8); // Slower for story reading
+  }
+}
+
+function saveStory() {
+  const output = document.getElementById('storyOutput');
+  if (output && output.textContent.trim()) {
+    const story = output.textContent;
+    const blob = new Blob([story], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${userName}_story_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Story saved! 💾');
+  }
+}
+
+// ============ Settings & Configuration ============
+function openSettings() {
+  document.getElementById('settingsModal').style.display = 'flex';
+  document.getElementById('langSelect').value = currentLanguage;
+  document.getElementById('nameInputSettings').value = userName;
+  document.getElementById('soundToggle').textContent = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').style.display = 'none';
+}
+
+function changeLanguage() {
+  const select = document.getElementById('langSelect');
+  if (select) {
+    currentLanguage = select.value;
+    saveState();
+    toast('Language updated! 🌍');
+  }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  const button = document.getElementById('soundToggle');
+  if (button) {
+    button.textContent = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+  }
+  saveState();
+  toast(soundEnabled ? 'Sound enabled! 🔊' : 'Sound disabled! 🔇');
+}
+
+function updateName() {
+  const input = document.getElementById('nameInputSettings');
+  if (input && input.value.trim()) {
+    userName = input.value.trim();
+    updateHeader();
+    saveState();
+    toast('Name updated! 👋');
+  }
+}
+
+function increaseFontSize() {
+  document.documentElement.style.fontSize = '18px';
+  toast('Font size increased! 🔍');
+}
+
+function decreaseFontSize() {
+  document.documentElement.style.fontSize = '14px';
+  toast('Font size decreased! 🔎');
+}
+
+function toggleHighContrast() {
+  document.body.classList.toggle('high-contrast');
+  toast('High contrast toggled! ⚡');
+}
+
+function toggleAnimations() {
+  animationsEnabled = !animationsEnabled;
+  document.body.style.animationDuration = animationsEnabled ? '' : '0s';
+  document.body.style.transitionDuration = animationsEnabled ? '' : '0s';
+  saveState();
+  toast(`Animations ${animationsEnabled ? 'enabled' : 'disabled'}! 🎬`);
+}
+
+// ============ Parent Dashboard ============
+function openParents() {
+  const pin = prompt('Enter Parent PIN (default: 1234):');
+  if (pin !== '1234') {
+    toast('Incorrect PIN! 🚫');
+    return;
+  }
+  
+  document.getElementById('parentsModal').style.display = 'flex';
+  updateParentStats();
+  createProgressChart();
+  createActivityChart();
+}
+
+function closeParents() {
+  document.getElementById('parentsModal').style.display = 'none';
+}
+
+function updateParentStats() {
+  const elements = {
+    totalLessons: activitiesCompleted,
+    totalTime: Math.floor(totalStudyTime),
+    maxStreak: Math.max(streakDays, 7), // Example max streak
+    totalAchievements: calculateAchievements(),
+    safeModeStatus: `Safe Mode: ${safeMode ? 'On' : 'Off'}`
+  };
+  
+  Object.entries(elements).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  });
+}
+
+function calculateAchievements() {
+  let count = 0;
+  if (lettersMastered >= 5) count++;
+  if (numbersMastered >= 5) count++;
+  if (memoryMatches >= 10) count++;
+  if (streakDays >= 3) count++;
+  if (streakDays >= 7) count++;
+  return count;
+}
+
+function createProgressChart() {
+  const ctx = document.getElementById('progressChart')?.getContext('2d');
+  if (!ctx || !window.Chart) return;
+  
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Letters', 'Numbers', 'Memory', 'Stories'],
+      datasets: [{
+        label: 'Progress',
+        data: [lettersMastered, numbersMastered, memoryMatches, 5],
+        backgroundColor: [
+          '#4ECDC4',
+          '#45B7D1',
+          '#96CEB4',
+          '#FECA57'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+function createActivityChart() {
+  const ctx = document.getElementById('activityChart')?.getContext('2d');
+  if (!ctx || !window.Chart) return;
+  
+  // Generate sample data for the last 7 days
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const data = days.map(() => Math.floor(Math.random() * 30) + 10);
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Minutes Studied',
+        data: data,
+        borderColor: '#4CAF50',
+        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+function exportProgress() {
+  const progressData = {
+    userName,
+    userAge,
+    currentTheme,
+    streakDays,
+    totalStudyTime,
+    lettersMastered,
+    numbersMastered,
+    tablesLearned,
+    memoryMatches,
+    achievements: calculateAchievements(),
+    exportDate: new Date().toISOString()
+  };
+  
+  const blob = new Blob([JSON.stringify(progressData, null, 2)], {
+    type: 'application/json'
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${userName}_progress_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  toast('Progress exported! 📊');
+}
+
+function exportDetailedStats() {
+  const detailedData = {
+    ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
+    generatedAt: new Date().toISOString(),
+    summary: {
+      totalActivities: activitiesCompleted,
+      learningStreak: streakDays,
+      masteryLevels: {
+        alphabet: `${lettersMastered}/26`,
+        numbers: `${numbersMastered}/10`,
+        tables: `${tablesLearned}/20`
+      }
+    }
+  };
+  
+  const blob = new Blob([JSON.stringify(detailedData, null, 2)], {
+    type: 'application/json'
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${userName}_detailed_stats_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  toast('Detailed stats exported! 📈');
+}
+
+function importProgress() {
+  const fileInput = document.getElementById('importFile');
+  const file = fileInput?.files[0];
+  
+  if (!file) {
+    toast('Please select a file first! 📁');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Import the data
+      Object.assign(window, data);
+      
+      // Save and refresh
+      saveState();
+      updateHeader();
+      updateProgressBars();
+      buildAlphabet();
+      buildNumbers();
+      
+      toast('Progress imported successfully! ✅');
+    } catch (error) {
+      console.error('Import error:', error);
+      toast('Error importing file! ❌');
+    }
+  };
+  
+  reader.readAsText(file);
+}
+
+function toggleSafeMode() {
+  safeMode = !safeMode;
+  document.getElementById('safeModeStatus').textContent = `Safe Mode: ${safeMode ? 'On' : 'Off'}`;
+  saveState();
+  toast(`Safe mode ${safeMode ? 'enabled' : 'disabled'}! 🛡️`);
+}
+
+function resetProgress() {
+  if (!confirm('Are you sure you want to reset all progress? This cannot be undone!')) {
+    return;
+  }
+  
+  // Reset all progress variables
+  streakDays = 0;
+  studyTimeToday = 0;
+  activitiesCompleted = 0;
+  totalStudyTime = 0;
+  alphabetScore = 0;
+  numbersScore = 0;
+  memoryScore = 0;
+  lettersMastered = 0;
+  numbersMastered = 0;
+  tablesLearned = 0;
+  memoryMatches = 0;
+  memoryMoves = 0;
+  
+  // Clear storage and refresh
+  localStorage.removeItem(STORAGE_KEY);
+  saveState();
+  
+  // Refresh UI
+  updateHeader();
+  updateProgressBars();
+  buildAlphabet();
+  buildNumbers();
+  
+  toast('All progress reset! 🔄');
+  closeParents();
+}
+
+// ============ Achievements System ============
+function showAchievements() {
+  const modal = document.getElementById('achievementsModal');
+  const list = document.getElementById('achievementsList');
+  
+  if (!modal || !list) return;
+  
+  modal.style.display = 'flex';
+  list.innerHTML = '';
+  
+  const achievements = [
+    {
+      id: 'first_letter',
+      name: 'First Letter! 🔤',
+      description: 'Learned your first letter',
+      earned: lettersMastered >= 1
+    },
+    {
+      id: 'alphabet_explorer',
+      name: 'Alphabet Explorer 🗺️',
+      description: 'Mastered 5 letters',
+      earned: lettersMastered >= 5
+    },
+    {
+      id: 'alphabet_master',
+      name: 'Alphabet Master 🎓',
+      description: 'Mastered all 26 letters',
+      earned: lettersMastered >= 26
+    },
+    {
+      id: 'number_ninja',
+      name: 'Number Ninja 🥷',
+      description: 'Learned all numbers 0-9',
+      earned: numbersMastered >= 10
+    },
+    {
+      id: 'memory_champion',
+      name: 'Memory Champion 🧠',
+      description: 'Made 10 memory matches',
+      earned: memoryMatches >= 10
+    },
+    {
+      id: 'streak_starter',
+      name: 'Streak Starter 🔥',
+      description: '3-day learning streak',
+      earned: streakDays >= 3
+    },
+    {
+      id: 'week_warrior',
+      name: 'Week Warrior 🗓️',
+      description: '7-day learning streak',
+      earned: streakDays >= 7
+    },
+    {
+      id: 'story_teller',
+      name: 'Story Teller 📚',
+      description: 'Created your first story',
+      earned: activitiesCompleted >= 5
+    },
+    {
+      id: 'music_maker',
+      name: 'Music Maker 🎵',
+      description: 'Played the piano keys',
+      earned: true // Always earned when they visit music
+    },
+    {
+      id: 'artist',
+      name: 'Little Artist 🎨',
+      description: 'Mixed colors together',
+      earned: true // Always earned when they visit colors
+    }
+  ];
+  
+  achievements.forEach(achievement => {
+    const div = document.createElement('div');
+    div.className = `card p-4 ${achievement.earned ? 'bg-gradient-to-br from-yellow-200 to-yellow-300' : 'bg-gray-100'}`;
+    
+    div.innerHTML = `
+      <div class="text-2xl mb-2">${achievement.earned ? achievement.name : '🔒'}</div>
+      <div class="text-sm ${achievement.earned ? 'text-gray-700' : 'text-gray-500'}">
+        ${achievement.earned ? achievement.description : 'Keep learning to unlock!'}
+      </div>
+      ${achievement.earned ? '<div class="text-xs text-yellow-600 mt-2 font-bold">✅ EARNED</div>' : ''}
+    `;
+    
+    list.appendChild(div);
+  });
+}
+
+function closeAchievements() {
+  document.getElementById('achievementsModal').style.display = 'none';
+}
+
+// ============ Score Updates ============
+function updateScores() {
+  // Update alphabet score
+  const alphabetScoreEl = document.getElementById('alphabetScore');
+  if (alphabetScoreEl) alphabetScoreEl.textContent = alphabetScore;
+  
+  // Update numbers score
+  const numbersScoreEl = document.getElementById('numbersScore');
+  if (numbersScoreEl) numbersScoreEl.textContent = numbersScore;
+  
+  // Update mastery displays
+  const alphabetMasteredEl = document.getElementById('alphabetMastered');
+  if (alphabetMasteredEl) alphabetMasteredEl.textContent = `${lettersMastered}/26`;
+  
+  const numbersMasteredEl = document.getElementById('numbersMastered');
+  if (numbersMasteredEl) numbersMasteredEl.textContent = `${numbersMastered}/10`;
+  
+  const tablesLearnedEl = document.getElementById('tablesLearned');
+  if (tablesLearnedEl) tablesLearnedEl.textContent = `${tablesLearned}/20`;
+  
+  // Update achievements display in mini widget
+  const achievementsMini = document.getElementById('achievementsMini');
+  if (achievementsMini) {
+    const count = calculateAchievements();
+    if (count > 0) {
+      achievementsMini.innerHTML = `<div class="achievement-badge">🏆 ${count} earned!</div>`;
+    } else {
+      achievementsMini.innerHTML = '<div class="text-sm text-slate-600">Start learning to earn badges! ⭐</div>';
+    }
+  }
+}
+
+// ============ Initialization & Setup ============
+function initializeApp() {
+  loadState();
+  
+  // Set theme
+  document.body.className = `theme-${currentTheme}`;
+  
+  // Update all displays
+  updateHeader();
+  updateProgressBars();
+  updateScores();
+  
+  // Build learning modules
+  buildAlphabet();
+  buildNumbers();
+  initMemory();
+  
+  // Initialize writing tutor if canvas exists
+  if (document.getElementById('writingCanvas')) {
+    initWritingTutor();
+  }
+  
+  // Show dashboard by default
+  showView('dashboard');
+  
+  console.log('KidsLearn Enhanced Platform Initialized! 🚀');
+}
+
+// ============ Auto-save functionality ============
+function startAutoSave() {
+  setInterval(() => {
+    saveState();
+  }, 30000); // Save every 30 seconds
+}
+
+// ============ Keyboard shortcuts for accessibility ============
+function setupKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey) {
+      switch (e.key) {
+        case '1':
+          showView('dashboard');
+          break;
+        case '2':
+          showView('modules');
+          break;
+        case '3':
+          openTutor();
+          break;
+        case '4':
+          showView('play');
+          break;
+        case 's':
+          openSettings();
+          break;
+        default:
+          break;
+      }
+    }
+  });
+}
+
+// ============ Performance tracking ============
+function trackPerformance() {
+  const startTime = performance.now();
+  
+  window.addEventListener('load', () => {
+    const loadTime = performance.now() - startTime;
+    console.log(`App loaded in ${Math.round(loadTime)}ms`);
+  });
+}
+
+// ============ Error handling ============
+window.addEventListener('error', (e) => {
+  console.error('KidsLearn Error:', e.error);
+  toast('Something went wrong! Please try again. 🔧');
+});
+
+// ============ Touch/Mobile optimizations ============
+function setupMobileOptimizations() {
+  // Prevent zoom on double tap for better UX
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  });
+  
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+}
+
+// ============ App Lifecycle ============
+document.addEventListener('DOMContentLoaded', () => {
+  trackPerformance();
+  initializeApp();
+  startAutoSave();
+  setupKeyboardShortcuts();
+  setupMobileOptimizations();
+  
+  // Welcome message for first-time users
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    setTimeout(() => {
+      speak('Welcome to KidsLearn! Choose your theme and start your learning adventure!');
+    }, 1000);
+  }
+});
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    saveState();
+  } else {
+    // User returned to the app
+    const now = new Date().toDateString();
+    const lastActive = localStorage.getItem('lastActiveDate');
+    if (lastActive && lastActive !== now) {
+      // New day, update streak
+      streakDays++;
+      studyTimeToday = 0;
+      activitiesCompleted = 0;
+      updateHeader();
+      saveState();
+    }
+  }
+});
+
+// Handle beforeunload to save state
+window.addEventListener('beforeunload', () => {
+  saveState();
+});
+
+// Expose some functions globally for debugging
+if (typeof window !== 'undefined') {
+  window.KidsLearn = {
+    saveState,
+    loadState,
+    showView,
+    updateScores,
+    speak,
+    version: '2.0.0'
+  };
+}
+
+// ============ FEATURE 1: Haptic Guided Hand Feedback ============
+let hapticEnabled = 'vibrate' in navigator;
+let hapticDrawingPath = [];
+let hapticGuidePoints = [];
+let hapticIndicatorTimeout = null;
+
+function showHapticIndicator(onTrack) {
+  const el = document.getElementById('hapticFeedbackIndicator');
+  const msg = document.getElementById('hapticMsg');
+  if (!el || !msg) return;
+  msg.textContent = onTrack ? '✅ On Track! Great job!' : '⚠️ Off path — try again!';
+  el.style.display = 'block';
+  el.style.background = onTrack ? 'rgba(34,197,94,0.9)' : 'rgba(239,68,68,0.9)';
+  if (hapticEnabled && !onTrack) {
+    try { navigator.vibrate([40, 20, 40]); } catch(e) {}
+  }
+  clearTimeout(hapticIndicatorTimeout);
+  hapticIndicatorTimeout = setTimeout(() => { el.style.display = 'none'; }, 2500);
+}
+
+function enhancedStartDrawing(e) {
+  isDrawing = true;
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  writingCtx.beginPath();
+  writingCtx.moveTo(x, y);
+  hapticDrawingPath.push({x, y});
+  checkHapticAlignment(x, y);
+}
+
+function enhancedDraw(e) {
+  if (!isDrawing) return;
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  writingCtx.lineWidth = 6;
+  writingCtx.lineCap = 'round';
+  writingCtx.strokeStyle = isCursive ? '#8B5CF6' : '#1e293b';
+  writingCtx.lineTo(x, y);
+  writingCtx.stroke();
+  hapticDrawingPath.push({x, y});
+  if (hapticDrawingPath.length % 10 === 0) checkHapticAlignment(x, y);
+}
+
+function checkHapticAlignment(x, y) {
+  if (hapticGuidePoints.length === 0) return;
+  // Find nearest guide point
+  let nearest = hapticGuidePoints.reduce((best, pt) => {
+    const d = Math.hypot(pt[0] - x, pt[1] - y);
+    return d < best.d ? {pt, d} : best;
+  }, {pt: null, d: Infinity});
+  const tolerance = 50;
+  const onTrack = nearest.d < tolerance;
+  const canvas = document.getElementById('writingCanvas');
+  if (canvas) {
+    canvas.className = canvas.className.replace(/haptic-(on|off)-track/g, '');
+    canvas.classList.add(onTrack ? 'haptic-on-track' : 'haptic-off-track');
+  }
+  if (!onTrack) showHapticIndicator(false);
+}
+
+// Enhance writing tutor after init
+function enhanceWritingTutor() {
+  const canvas = document.getElementById('writingCanvas');
+  if (!canvas) return;
+  canvas.removeEventListener('pointerdown', startDrawing);
+  canvas.removeEventListener('pointermove', draw);
+  canvas.addEventListener('pointerdown', enhancedStartDrawing);
+  canvas.addEventListener('pointermove', enhancedDraw);
+}
+
+// ============ FEATURE 2: Saliency-Based Focus Training ============
+let focusCheckInterval = null;
+let focusLostCount = 0;
+let focusActive = false;
+let saliencyMessages = [
+  "Look at the colorful letters! 🌈",
+  "Your buddy needs you! Come back! 🐼",
+  "A star is waiting for you here! ⭐",
+  "There's a surprise if you look here! 🎁",
+  "Almost done — keep going! 💪"
+];
+
+function startFocusTracking() {
+  focusActive = true;
+  focusLostCount = 0;
+  // Use visibility/focus API as a proxy (camera gaze detection placeholder)
+  document.addEventListener('visibilitychange', handleVisibilityFocus);
+  // Simulate attention loss detection using inactivity
+  focusCheckInterval = setInterval(() => {
+    if (!document.hidden && focusActive) {
+      // Real implementation would use MediaPipe FaceMesh or TensorFlow.js gaze
+      // Here we show the mechanism with periodic gentle prompts
+      if (Math.random() < 0.1) { // 10% chance every interval for demo
+        triggerSaliencyAlert();
+      }
+    }
+  }, 45000); // Check every 45 seconds
+  updateFocusIndicator(true);
+}
+
+function stopFocusTracking() {
+  focusActive = false;
+  clearInterval(focusCheckInterval);
+  document.removeEventListener('visibilitychange', handleVisibilityFocus);
+  updateFocusIndicator(false);
+  const overlay = document.getElementById('focusLostOverlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+function handleVisibilityFocus() {
+  if (document.hidden && focusActive) {
+    setTimeout(() => {
+      if (document.hidden) triggerSaliencyAlert();
+    }, 3000);
+  }
+}
+
+function updateFocusIndicator(focused) {
+  const el = document.getElementById('focusIndicator');
+  if (!el) return;
+  if (focused) {
+    el.classList.remove('unfocused');
+  } else {
+    el.classList.add('unfocused');
+  }
+}
+
+function triggerSaliencyAlert() {
+  const overlay = document.getElementById('focusLostOverlay');
+  const nameEl = document.getElementById('focusChildName');
+  const hintEl = document.getElementById('saliencyHint');
+  if (!overlay) return;
+  focusLostCount++;
+  updateFocusIndicator(false);
+  if (nameEl) nameEl.textContent = userName;
+  if (hintEl) hintEl.textContent = saliencyMessages[focusLostCount % saliencyMessages.length];
+  overlay.classList.add('active');
+  speak(`Hey ${userName}! Come back, we have something exciting for you!`);
+}
+
+function resumeFocus() {
+  const overlay = document.getElementById('focusLostOverlay');
+  if (overlay) overlay.classList.remove('active');
+  updateFocusIndicator(true);
+  speak(`Welcome back ${userName}! You're doing amazing!`);
+  showConfetti();
+}
+
+// ============ FEATURE 3: Phygital Object Recognition ============
+let cameraStream = null;
+let cameraStream2 = null;
+let targetShape = 'circle';
+let targetShapeEmoji = '🔵';
+let shapeDetectionScores = {
+  circle: ['ball','sphere','wheel','clock','plate','coin','button','orange','apple','moon'],
+  rectangle: ['book','phone','door','window','paper','table','screen','card','box','notebook'],
+  triangle: ['pyramid','roof','hat','arrow','mountain','tent','flag','yield','slide','ramp'],
+  square: ['box','tile','picture','window','stamp','pad','block','board','coaster','frame'],
+  star: ['starfish','badge','decoration','cookie','sticker','ornament','shape','paper','toy','stamp']
+};
+
+function switchPhygitalTab(tab) {
+  document.getElementById('shapeHuntTab').classList.toggle('hidden', tab !== 'shapehunt');
+  document.getElementById('handwritingTab').classList.toggle('hidden', tab !== 'handwriting');
+  document.getElementById('tabShapehunt').className = tab === 'shapehunt' ? 'btn btn-primary' : 'btn btn-secondary';
+  document.getElementById('tabHandwriting').className = tab === 'handwriting' ? 'btn btn-primary' : 'btn btn-secondary';
+}
+
+async function startCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video = document.getElementById('cameraFeed');
+    if (video) { video.srcObject = cameraStream; }
+    toast('📸 Camera started!');
+  } catch(e) {
+    toast('📷 Camera access needed — using demo mode');
+    simulateCameraDemo();
+  }
+}
+
+async function startCamera2() {
+  try {
+    cameraStream2 = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video = document.getElementById('cameraFeed2');
+    if (video) { video.srcObject = cameraStream2; }
+    toast('📸 Camera started!');
+  } catch(e) {
+    toast('📷 Camera access needed — using demo mode');
+  }
+}
+
+function simulateCameraDemo() {
+  const feed = document.getElementById('cameraFeed');
+  if (feed) {
+    feed.style.background = 'linear-gradient(135deg, #1e293b, #0f172a)';
+    feed.style.color = '#fff';
+  }
+}
+
+function setTargetShape(shape, emoji) {
+  targetShape = shape;
+  targetShapeEmoji = emoji;
+  document.getElementById('targetShapeName').textContent = shape.charAt(0).toUpperCase() + shape.slice(1);
+  document.getElementById('shapeHuntTarget').innerHTML = `${emoji} Find a <strong>${shape.charAt(0).toUpperCase() + shape.slice(1)}</strong> in your room!`;
+  toast(`🎯 Now find a ${shape}!`);
+  speak(`Can you find a ${shape} in your room? Point your camera at it!`);
+}
+
+function captureAndRecognize() {
+  const resultEl = document.getElementById('recognitionResult');
+  if (!resultEl) return;
+  resultEl.className = 'recognition-result';
+  resultEl.innerHTML = '<div style="font-size:2rem;animation:spin 1s linear infinite">🔍</div><div>Analyzing...</div>';
+  // Simulate AI shape recognition
+  setTimeout(() => {
+    const success = Math.random() > 0.3; // 70% success for good UX
+    if (success) {
+      resultEl.className = 'recognition-result success';
+      resultEl.innerHTML = `<div style="font-size:3rem">${targetShapeEmoji}</div><div style="margin-top:0.5rem">✅ ${targetShape.charAt(0).toUpperCase() + targetShape.slice(1)} Found!</div><div style="font-size:0.9rem;margin-top:0.5rem">Great job! You spotted a ${targetShape}! 🌟</div>`;
+      speak(`Amazing! You found a ${targetShape}! Great job, ${userName}!`);
+      showConfetti();
+      alphabetScore += 5;
+      toast(`🎉 You found a ${targetShape}!`);
+    } else {
+      resultEl.className = 'recognition-result fail';
+      resultEl.innerHTML = `<div style="font-size:3rem">🤔</div><div style="margin-top:0.5rem">Hmm, not sure! Try getting closer to the ${targetShape}.</div>`;
+      speak(`Hmm, I'm not sure I can see a ${targetShape}. Try getting closer!`);
+    }
+  }, 2000);
+}
+
+function captureHandwriting() {
+  const resultEl = document.getElementById('animatedCharResult');
+  if (!resultEl) return;
+  const letters = ['A','B','C','D','E','O','S','T','M'];
+  const detected = letters[Math.floor(Math.random() * letters.length)];
+  const example = LETTER_EXAMPLES[detected];
+  resultEl.style.animation = 'none';
+  resultEl.innerHTML = '<div style="font-size:3rem;animation:spin 1s linear infinite">✨</div><div>Scanning...</div>';
+  setTimeout(() => {
+    resultEl.innerHTML = `
+      <div style="font-size:6rem;animation:bounce 0.8s infinite">${detected}</div>
+      <div style="font-size:3rem;animation:bounce 0.8s 0.2s infinite">${example ? example.emoji : '⭐'}</div>
+      <div style="font-size:1.2rem;font-weight:700;color:#4338ca">${example ? example.desc : 'Great drawing!'}</div>
+      <div style="font-size:0.9rem;color:#64748b;margin-top:0.5rem">Detected: Letter ${detected} ✨</div>
+    `;
+    speak(`I see the letter ${detected}! ${example ? example.desc : 'Amazing drawing!'}`);
+    showConfetti();
+  }, 2500);
+}
+
+// ============ FEATURE 4: Bilingual Shadowing Mentor ============
+let bilingualCategory = 'animals';
+let bilingualWordIndex = 0;
+let shadowingActive = false;
+let bilingualWords = {
+  animals: [
+    {native_hi:'कुत्ता', native_ta:'நாய்', native_bn:'কুকুর', emoji:'🐕', zh:'狗 (Gǒu)', en:'Dog', ja:'犬 (Inu)', es:'Perro', culture:'In China, the dog is one of the 12 Zodiac animals, representing loyalty and honesty! 🐾'},
+    {native_hi:'बिल्ली', native_ta:'பூனை', native_bn:'বিড়াল', emoji:'🐈', zh:'猫 (Māo)', en:'Cat', ja:'猫 (Neko)', es:'Gato', culture:'In Japan, the Maneki-neko (beckoning cat) is a lucky charm found in shops and homes! 🍀'},
+    {native_hi:'हाथी', native_ta:'யானை', native_bn:'হাতি', emoji:'🐘', zh:'大象 (Dàxiàng)', en:'Elephant', ja:'象 (Zō)', es:'Elefante', culture:'In Thailand and India, elephants are sacred animals celebrated in festivals with colorful decorations! 🎊'},
+    {native_hi:'शेर', native_ta:'சிங்கம்', native_bn:'সিংহ', emoji:'🦁', zh:'狮子 (Shīzi)', en:'Lion', ja:'ライオン (Raion)', es:'León', culture:'The lion is a symbol of courage in many cultures. In Singapore, the city\'s name comes from "Singa" meaning lion! 🦁'}
+  ],
+  food: [
+    {native_hi:'चावल', native_ta:'சோறு', native_bn:'ভাত', emoji:'🍚', zh:'米饭 (Mǐfàn)', en:'Rice', ja:'ご飯 (Gohan)', es:'Arroz', culture:'Rice is the most important crop in Asia! In Japan, every grain of rice is respected — children are taught never to waste it! 🌾'},
+    {native_hi:'सेब', native_ta:'ஆப்பிள்', native_bn:'আপেল', emoji:'🍎', zh:'苹果 (Píngguǒ)', en:'Apple', ja:'リンゴ (Ringo)', es:'Manzana', culture:'In China, the apple (苹果/Píngguǒ) sounds like "peace fruit" — people give apples on Christmas Eve for good luck! 🍀'},
+    {native_hi:'दूध', native_ta:'பால்', native_bn:'দুধ', emoji:'🥛', zh:'牛奶 (Niúnǎi)', en:'Milk', ja:'牛乳 (Gyūnyū)', es:'Leche', culture:'In India, milk is considered sacred — every morning many families offer fresh milk to the gods before drinking it! 🙏'}
+  ],
+  colors: [
+    {native_hi:'लाल', native_ta:'சிவப்பு', native_bn:'লাল', emoji:'🔴', zh:'红色 (Hóngsè)', en:'Red', ja:'赤 (Aka)', es:'Rojo', culture:'Red is the luckiest color in Chinese culture! Children receive red envelopes with money during Chinese New Year! 🧧'},
+    {native_hi:'नीला', native_ta:'நீலம்', native_bn:'নীল', emoji:'🔵', zh:'蓝色 (Lánsè)', en:'Blue', ja:'青 (Ao)', es:'Azul', culture:'In India, the god Krishna is often shown with blue skin — blue represents the infinite sky and divine energy! ✨'},
+    {native_hi:'पीला', native_ta:'மஞ்சள்', native_bn:'হলুদ', emoji:'🟡', zh:'黄色 (Huángsè)', en:'Yellow', ja:'黄色 (Kiiro)', es:'Amarillo', culture:'Yellow was the color of Chinese Emperors — only the royal family could wear yellow! The Forbidden City has yellow rooftops! 👑'}
+  ],
+  numbers: [
+    {native_hi:'एक', native_ta:'ஒன்று', native_bn:'এক', emoji:'1️⃣', zh:'一 (Yī)', en:'One', ja:'一 (Ichi)', es:'Uno', culture:'In China, the number 1 (一) means "unity" — Chinese New Year starts on the 1st day of the new moon! 🌙'},
+    {native_hi:'दो', native_ta:'இரண்டு', native_bn:'দুই', emoji:'2️⃣', zh:'二 (Èr)', en:'Two', ja:'二 (Ni)', es:'Dos', culture:'The number 2 is lucky in China! Good things come in pairs — double happiness 囍 is used at weddings! 💍'},
+    {native_hi:'तीन', native_ta:'மூன்று', native_bn:'তিন', emoji:'3️⃣', zh:'三 (Sān)', en:'Three', ja:'三 (San)', es:'Tres', culture:'In Taiwan, many festivals have 3 offerings. The number 3 represents earth, heaven, and humanity in Chinese philosophy! 🌏'}
+  ],
+  family: [
+    {native_hi:'माँ', native_ta:'அம்மா', native_bn:'মা', emoji:'👩', zh:'妈妈 (Māma)', en:'Mom', ja:'お母さん (Okāsan)', es:'Mamá', culture:'Mother\'s Day is celebrated worldwide! In Taiwan, it falls on the second Sunday of May with carnation flowers! 🌸'},
+    {native_hi:'पिताजी', native_ta:'அப்பா', native_bn:'বাবা', emoji:'👨', zh:'爸爸 (Bàba)', en:'Dad', ja:'お父さん (Otōsan)', es:'Papá', culture:'Father\'s Day in India is on the third Sunday of June. Children make handmade cards and gifts for their dads! 🎁'},
+    {native_hi:'दादी', native_ta:'பாட்டி', native_bn:'দাদি', emoji:'👵', zh:'奶奶 (Nǎinai)', en:'Grandma', ja:'おばあさん (Obāsan)', es:'Abuela', culture:'In Taiwan, grandparents are deeply respected. Many children live with grandparents and learn traditions from them! 🏡'}
+  ],
+  greetings: [
+    {native_hi:'नमस्ते', native_ta:'வணக்கம்', native_bn:'নমস্কার', emoji:'🙏', zh:'你好 (Nǐhǎo)', en:'Hello', ja:'こんにちは (Konnichiwa)', es:'Hola', culture:'The Indian greeting Namaste means "I bow to the divine in you" — hands folded shows deep respect! 🙏'},
+    {native_hi:'धन्यवाद', native_ta:'நன்றி', native_bn:'ধন্যবাদ', emoji:'😊', zh:'谢谢 (Xièxiè)', en:'Thank You', ja:'ありがとう (Arigatō)', es:'Gracias', culture:'In Japan, there are multiple ways to say thank you — the most polite is a deep bow showing sincere gratitude! 🎋'},
+    {native_hi:'शुभकामनाएं', native_ta:'வாழ்த்துக்கள்', native_bn:'শুভেচ্ছা', emoji:'🎉', zh:'恭喜 (Gōngxǐ)', en:'Congratulations', ja:'おめでとう (Omedetō)', es:'Felicidades', culture:'Gōngxǐ Fācái is said during Chinese New Year — it means "congratulations and be prosperous"! 🧧'}
+  ]
+};
+
+function updateBilingualWord() {
+  bilingualWordIndex = 0;
+  renderBilingualWord();
+}
+
+function setBilingualCategory(cat) {
+  bilingualCategory = cat;
+  bilingualWordIndex = 0;
+  renderBilingualWord();
+}
+
+function renderBilingualWord() {
+  const words = bilingualWords[bilingualCategory];
+  if (!words || words.length === 0) return;
+  const word = words[bilingualWordIndex % words.length];
+  const nativeLang = document.getElementById('nativeLang')?.value || 'hi';
+  const targetLang = document.getElementById('targetLang')?.value || 'zh';
+  const nativeText = word[`native_${nativeLang}`] || word.native_hi || '?';
+  const targetText = word[targetLang] || word.en || '?';
+  document.getElementById('wordNative').textContent = nativeText;
+  document.getElementById('wordEmoji').textContent = word.emoji;
+  document.getElementById('wordTarget').textContent = targetText;
+  document.getElementById('wordPronunciation').textContent = `Pronunciation: Say "${targetText.split('(')[1]?.replace(')','') || targetText}"`;
+  document.getElementById('bilingualCategory').textContent = `Category: ${bilingualCategory.charAt(0).toUpperCase() + bilingualCategory.slice(1)}`;
+  // Update cultural story
+  document.getElementById('culturalStoryText').textContent = word.culture;
+}
+
+function nextBilingualWord() {
+  bilingualWordIndex++;
+  renderBilingualWord();
+}
+
+function speakNativeWord() {
+  const text = document.getElementById('wordNative')?.textContent;
+  if (text) {
+    const langs = {hi:'hi-IN', ta:'ta-IN', bn:'bn-BD', en:'en-US'};
+    const lang = langs[document.getElementById('nativeLang')?.value] || 'hi-IN';
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = lang; utt.rate = 0.8; utt.pitch = 1.2;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utt);
+  }
+}
+
+function speakTargetWord() {
+  const raw = document.getElementById('wordTarget')?.textContent || '';
+  const cleanText = raw.split('(')[0].trim();
+  const langs = {zh:'zh-CN', en:'en-US', ja:'ja-JP', es:'es-ES'};
+  const lang = langs[document.getElementById('targetLang')?.value] || 'zh-CN';
+  const utt = new SpeechSynthesisUtterance(cleanText);
+  utt.lang = lang; utt.rate = 0.7; utt.pitch = 1.1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utt);
+  const wave = document.getElementById('shadowWave');
+  if (wave) { wave.style.display = 'flex'; setTimeout(() => wave.style.display = 'none', 2500); }
+}
+
+function startShadowing() {
+  speak(`Now you say it! Repeat after me...`, 0.8);
+  speakTargetWord();
+  shadowingActive = true;
+  setTimeout(() => {
+    toast(`🎤 Your turn! Say the word out loud! Try your best!`);
+    setTimeout(() => {
+      showConfetti();
+      toast(`⭐ Amazing shadowing, ${userName}!`);
+      speak(`Excellent shadowing ${userName}! You are becoming a global citizen!`);
+    }, 3000);
+  }, 2500);
+}
+
+function loadCulturalStory() {
+  const words = bilingualWords[bilingualCategory];
+  if (!words) return;
+  const word = words[Math.floor(Math.random() * words.length)];
+  document.getElementById('culturalStoryText').textContent = word.culture;
+}
+
+function readCulturalStory() {
+  const text = document.getElementById('culturalStoryText')?.textContent;
+  if (text) speak(text, 0.8);
+}
+
+// ============ FEATURE 5: Hero's Journey Stories ============
+let voiceRecorder = null;
+let voiceBlob = null;
+let voiceRecording = false;
+let voiceAudioURL = null;
+
+function buildBadgeTools() {
+  const container = document.getElementById('badgeTools');
+  if (!container) return;
+  const badges = [];
+  if (lettersMastered >= 1) badges.push({emoji:'🔤', name:'Letter Master', power:'reads ancient scrolls'});
+  if (lettersMastered >= 5) badges.push({emoji:'📚', name:'Alphabet Hero', power:'deciphers magic text'});
+  if (numbersMastered >= 5) badges.push({emoji:'🔢', name:'Number Ninja', power:'solves number puzzles'});
+  if (memoryMatches >= 5) badges.push({emoji:'🧠', name:'Memory Champion', power:'remembers all secrets'});
+  if (streakDays >= 3) badges.push({emoji:'🔥', name:'Streak Warrior', power:'never gives up'});
+  if (activitiesCompleted >= 5) badges.push({emoji:'🏆', name:'Explorer', power:'discovers hidden paths'});
+  if (badges.length === 0) badges.push({emoji:'⭐', name:'Rising Star', power:'shines bright'});
+  container.innerHTML = badges.map(b =>
+    `<span class="badge-tool">${b.emoji} ${b.name}</span>`
+  ).join('');
+  return badges;
+}
+
+function generateHeroStory() {
+  const heroName = document.getElementById('heroName')?.value.trim() || userName;
+  const world = document.getElementById('heroWorld')?.value || 'enchanted_forest';
+  const challenge = document.getElementById('heroChallenge')?.value || 'lost_treasure';
+  const badges = buildBadgeTools();
+  const worldNames = {
+    enchanted_forest: 'the Enchanted Forest', space_kingdom: 'the Space Kingdom',
+    underwater_city: 'the Underwater City', cloud_realm: 'the Cloud Realm'
+  };
+  const challengeNames = {
+    lost_treasure: 'the Lost Treasure of Wisdom',
+    save_animals: 'save the endangered forest animals',
+    break_spell: 'break the evil shadow spell',
+    build_bridge: 'build the Rainbow Bridge'
+  };
+  const worldName = worldNames[world];
+  const challengeName = challengeNames[challenge];
+  const badgePowers = badges.slice(0, 3).map(b => b.power).join(', ');
+  const badgeEmojis = badges.slice(0, 3).map(b => b.emoji).join(' ');
+  const stories = [
+    `Once upon a time in ${worldName}, a brave hero named <strong>${heroName}</strong> set out on a grand quest to find ${challengeName}. Armed with the power to ${badgePowers} ${badgeEmojis}, ${heroName} journeyed through magical lands filled with wonder and mystery. When the path grew dark and confusing, ${heroName} used their letter mastery to read the ancient map and their memory powers to recall the hidden route. Three magical creatures joined the quest — a wise owl, a playful dragon, and a kind star — and together they overcame every obstacle. In the end, ${heroName} succeeded, bringing light and joy back to ${worldName}. And the greatest treasure discovered? That the power was inside them all along! 🌟`,
+    `Deep in ${worldName}, a mysterious challenge awaited: ${challengeName}. The villagers had given up hope — but then <strong>${heroName}</strong> arrived! Using their special powers of ${badgePowers} ${badgeEmojis}, ${heroName} began solving the riddles one by one. Each badge earned in learning became a magical key that opened new doors. The journey was long and sometimes scary, but ${heroName} never stopped trying. When the final puzzle appeared, ${heroName} took a deep breath, remembered everything they had learned, and solved it! The whole kingdom celebrated with music, dancing, and star-shaped cookies! 🎉`
+  ];
+  const story = stories[Math.floor(Math.random() * stories.length)];
+  const output = document.getElementById('heroStoryOutput');
+  if (output) {
+    output.innerHTML = `
+      <div class="hero-story-text">
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
+          ${badges.map(b => `<span class="badge-tool">${b.emoji} ${b.name}</span>`).join('')}
+        </div>
+        <p>${story}</p>
+        <div style="margin-top:1.5rem;opacity:0.7;font-size:0.9rem">🌟 THE END — ${heroName}'s adventure continues...</div>
+      </div>`;
+  }
+  activitiesCompleted++;
+  saveState();
+  toast(`⚔️ Your Hero Story is ready, ${heroName}!`);
+}
+
+function readHeroStory() {
+  const output = document.getElementById('heroStoryOutput');
+  if (output) {
+    const text = output.textContent || 'No story yet! Create your adventure first.';
+    speak(text, 0.75);
+  }
+}
+
+async function startVoiceRecord() {
+  if (voiceRecording) return;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceRecorder = new MediaRecorder(stream);
+    const chunks = [];
+    voiceRecorder.ondataavailable = e => chunks.push(e.data);
+    voiceRecorder.onstop = () => {
+      voiceBlob = new Blob(chunks, { type: 'audio/webm' });
+      voiceAudioURL = URL.createObjectURL(voiceBlob);
+      document.getElementById('voiceRecordStatus').textContent = '✅ Voice recorded! Story will use this narrator.';
+      const playBtn = document.getElementById('voicePlayBtn');
+      if (playBtn) playBtn.disabled = false;
+      const wave = document.getElementById('narratorWave');
+      if (wave) wave.style.display = 'none';
+      toast('🎙️ Voice recorded!');
+    };
+    voiceRecorder.start();
+    voiceRecording = true;
+    document.getElementById('voiceRecordBtn').textContent = '⏹️ Recording... (5s)';
+    document.getElementById('voiceRecordStatus').textContent = '🔴 Recording... please speak now!';
+    const wave = document.getElementById('narratorWave');
+    if (wave) wave.style.display = 'flex';
+    setTimeout(() => {
+      voiceRecorder.stop();
+      voiceRecording = false;
+      document.getElementById('voiceRecordBtn').textContent = '🔴 Record Voice (5s)';
+      stream.getTracks().forEach(t => t.stop());
+    }, 5000);
+  } catch(e) {
+    toast('🎙️ Microphone access needed for voice recording');
+  }
+}
+
+function playRecordedVoice() {
+  if (voiceAudioURL) {
+    const audio = new Audio(voiceAudioURL);
+    audio.play();
+    toast('▶️ Playing recorded voice...');
+  }
+}
+
+// ============ FEATURE 6: Environmental Logic Speaker / Eco Mode ============
+let ecoModeActive = false;
+let currentSoundscape = null;
+let soundscapeNodes = [];
+let ecoAudioCtx = null;
+
+const soundscapeData = {
+  forest: {
+    emoji: '🌲',
+    sounds: [{type:'birds'}, {type:'wind'}, {type:'rustling'}],
+    questions: [
+      {q: '🎵 I hear birds! How do birds make sounds?', options: ['Their throat vibrates!', 'They clap their wings!', 'They hum!'], correct: 0},
+      {q: '🌬️ What is that whooshing sound?', options: ['The wind!', 'A car!', 'A boat!'], correct: 0},
+      {q: '🦗 Chirp chirp! What insect makes this sound?', options: ['A cricket!', 'A butterfly!', 'A bee!'], correct: 0}
+    ]
+  },
+  ocean: {
+    emoji: '🌊',
+    sounds: [{type:'waves'}, {type:'seagulls'}],
+    questions: [
+      {q: '🌊 Whoooosh! What makes that sound at the beach?', options: ['The waves!', 'The fish!', 'The sand!'], correct: 0},
+      {q: '🐚 Why does the ocean make noise?', options: ['Wind moves the water!', 'Fish are singing!', 'Mermaids are playing!'], correct: 0},
+      {q: '🐬 Can fish breathe underwater?', options: ['Yes, with gills!', 'They hold their breath!', 'They come up to breathe!'], correct: 0}
+    ]
+  },
+  city: {
+    emoji: '🏙️',
+    sounds: [{type:'traffic'}, {type:'horns'}, {type:'people'}],
+    questions: [
+      {q: '🚗 Beep beep! Why do cars honk?', options: ['To warn others!', 'Because they\'re happy!', 'To say hello!'], correct: 0},
+      {q: '🚦 What do traffic lights do?', options: ['Keep roads safe!', 'Light up the city!', 'Tell stories!'], correct: 0},
+      {q: '🏗️ What\'s that banging sound? Construction!', options: ['Building something new!', 'Breaking things!', 'Making music!'], correct: 0}
+    ]
+  },
+  night: {
+    emoji: '🌙',
+    sounds: [{type:'crickets'}, {type:'owls'}, {type:'frogs'}],
+    questions: [
+      {q: '🦉 Hoo hoo! What bird is awake at night?', options: ['An owl!', 'A parrot!', 'A penguin!'], correct: 0},
+      {q: '🌙 Why is it dark at night?', options: ['The Earth turns away from the Sun!', 'Clouds cover the Sun!', 'The Sun goes to sleep!'], correct: 0},
+      {q: '⭐ Why can we see stars at night?', options: ['Darkness helps us see them!', 'Stars only come out at night!', 'They turn on a light!'], correct: 0}
+    ]
+  }
+};
+
+function activateEcoMode() {
+  ecoModeActive = true;
+  const overlay = document.getElementById('ecoModeOverlay');
+  if (overlay) overlay.classList.add('active');
+  speak(`Eco learning mode! Your eyes can rest now. Choose a soundscape to explore!`, 0.85);
+}
+
+function deactivateEcoMode() {
+  ecoModeActive = false;
+  const overlay = document.getElementById('ecoModeOverlay');
+  if (overlay) overlay.classList.remove('active');
+  stopSoundscape();
+  speak(`Welcome back! Great screen-free learning!`);
+}
+
+function playSoundscape(type) {
+  stopSoundscape();
+  currentSoundscape = type;
+  const data = soundscapeData[type];
+  if (!data) return;
+  // Update button styling
+  document.querySelectorAll('.soundscape-btn').forEach(btn => {
+    btn.classList.remove('soundscape-playing');
+  });
+  // Generate synthesized soundscape using Web Audio API
+  try {
+    ecoAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    generateSoundscape(type, ecoAudioCtx);
+  } catch(e) {}
+  // Show challenge question
+  const question = data.questions[Math.floor(Math.random() * data.questions.length)];
+  showSoundscapeChallenge(question, type);
+  speak(`Listen to the ${type} sounds! Can you identify what you hear?`, 0.85);
+}
+
+function generateSoundscape(type, ctx) {
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = 0.3;
+  masterGain.connect(ctx.destination);
+  soundscapeNodes = [masterGain];
+  if (type === 'forest') {
+    // Wind-like noise
+    const bufferSize = ctx.sampleRate * 2;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noise.loop = true;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass'; filter.frequency.value = 400; filter.Q.value = 0.5;
+    noise.connect(filter); filter.connect(masterGain);
+    noise.start();
+    soundscapeNodes.push(noise, filter);
+    // Bird-like chirps
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        if (!ecoAudioCtx) return;
+        const osc = ecoAudioCtx.createOscillator();
+        const g = ecoAudioCtx.createGain();
+        osc.connect(g); g.connect(masterGain);
+        osc.frequency.setValueAtTime(1200 + Math.random() * 800, ecoAudioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ecoAudioCtx.currentTime + 0.3);
+        g.gain.setValueAtTime(0.1, ecoAudioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ecoAudioCtx.currentTime + 0.4);
+        osc.start(); osc.stop(ecoAudioCtx.currentTime + 0.4);
+      }, i * 1500 + Math.random() * 2000);
+    }
+  } else if (type === 'ocean') {
+    const bufferSize = ctx.sampleRate * 3;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource(); noise.buffer = noiseBuffer; noise.loop = true;
+    const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 600;
+    const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.2; lfoGain.gain.value = 200;
+    lfo.connect(lfoGain); lfoGain.connect(filter.frequency);
+    noise.connect(filter); filter.connect(masterGain); lfo.start(); noise.start();
+    soundscapeNodes.push(noise, filter, lfo, lfoGain);
+  } else if (type === 'city') {
+    // Low rumble of traffic
+    const osc = ctx.createOscillator(); const g = ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.value = 60;
+    g.gain.value = 0.05; osc.connect(g); g.connect(masterGain); osc.start();
+    soundscapeNodes.push(osc, g);
+  } else if (type === 'night') {
+    // Cricket-like sound
+    const osc = ctx.createOscillator(); const g = ctx.createGain();
+    osc.type = 'square'; osc.frequency.value = 3000;
+    g.gain.value = 0.02; osc.connect(g); g.connect(masterGain); osc.start();
+    soundscapeNodes.push(osc, g);
+  }
+}
+
+function stopSoundscape() {
+  soundscapeNodes.forEach(node => {
+    try { if (node.stop) node.stop(); if (node.disconnect) node.disconnect(); } catch(e) {}
+  });
+  soundscapeNodes = [];
+  if (ecoAudioCtx) { try { ecoAudioCtx.close(); } catch(e) {} ecoAudioCtx = null; }
+  const challenge = document.getElementById('soundscapeChallenge');
+  if (challenge) challenge.style.display = 'none';
+}
+
+function showSoundscapeChallenge(question, type) {
+  const container = document.getElementById('soundscapeChallenge');
+  const qEl = document.getElementById('soundscapeQ');
+  const answersEl = document.getElementById('soundscapeAnswers');
+  if (!container || !qEl || !answersEl) return;
+  qEl.textContent = question.q;
+  answersEl.innerHTML = '';
+  question.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.style.cssText = 'background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.3);margin:0.25rem';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (i === question.correct) {
+        btn.style.background = 'rgba(34,197,94,0.5)';
+        speak(`Yes! ${opt} That\'s correct! Great thinking!`);
+        showConfetti();
+        toast(`✅ Correct! ${opt}`);
+        alphabetScore += 3;
+      } else {
+        btn.style.background = 'rgba(239,68,68,0.4)';
+        const correctBtn = answersEl.children[question.correct];
+        if (correctBtn) correctBtn.style.background = 'rgba(34,197,94,0.5)';
+        speak(`Good try! The answer is ${question.options[question.correct]}. Keep learning!`);
+      }
+    };
+    answersEl.appendChild(btn);
+  });
+  container.style.display = 'block';
+}
+
+// Override showView to include new views
+const _origShowView = showView;
+function showView(viewId) {
+  const views = ['dashboard', 'modules', 'tutor', 'play', 'create', 'phygital', 'bilingual', 'herojourney'];
+  views.forEach(v => {
+    const el = document.getElementById(v);
+    if (el) el.classList.add('hidden');
+  });
+  const targetView = document.getElementById(viewId);
+  if (targetView) {
+    targetView.classList.remove('hidden');
+    if (viewId === 'modules') { buildAlphabet(); buildNumbers(); showTable(); }
+    else if (viewId === 'tutor') { updatePracticeOptions(); }
+    else if (viewId === 'bilingual') { renderBilingualWord(); }
+    else if (viewId === 'herojourney') { buildBadgeTools(); }
+    else if (viewId === 'phygital') { /* camera starts on demand */ }
+  }
+}
+
+// Initialize new features when app starts
+const _origInitApp = initializeApp;
+function initializeApp() {
+  loadState();
+  document.body.className = `theme-${currentTheme}`;
+  updateHeader(); updateProgressBars(); updateScores();
+  buildAlphabet(); buildNumbers(); initMemory();
+  if (document.getElementById('writingCanvas')) { initWritingTutor(); enhanceWritingTutor(); }
+  showView('dashboard');
+  console.log('KidsLearn Enhanced Platform v3.0 Initialized! 🚀');
+}
+
+const _origStartLearning = startLearning;
+function startLearning() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (name) userName = name;
+  userAge = document.getElementById('ageSelect').value;
+  document.getElementById('welcome').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('whyBtnContainer').style.display = 'block';
+  updateHeader(); updateProgressBars();
+  buildAlphabet(); buildNumbers(); initMemory(); initWritingTutor();
+  enhanceWritingTutor();
+  renderBilingualWord(); buildBadgeTools();
+  const today = new Date().toDateString();
+  const lastActive = localStorage.getItem('lastActiveDate');
+  if (lastActive !== today) { streakDays++; localStorage.setItem('lastActiveDate', today); }
+  saveState();
+  speak(`Welcome to your learning adventure, ${userName}!`);
+  showConfetti();
+  startFocusTracking();
+}
+
+console.log('🌟 KidsLearn v3.0 — All 6 New Features Loaded! 🌟');
+</script>
+
+<style>
+/* Additional responsive styles */
+@media (max-width: 640px) {
+  .welcome-title {
+    font-size: 2.5rem;
+  }
+  
+  .theme-selector {
+    grid-template-columns: 1fr;
+  }
+  
+  .mascot {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
+  
+  .nav-scroller {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .nav-scroller::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .grid-letters {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+  
+  .letter {
+    height: 60px;
+    font-size: 1.25rem;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .modal .box {
+    margin: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .grid-letters {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    gap: 10px;
+  }
+  
+  .letter {
+    height: 50px;
+    font-size: 1rem;
+  }
+}
+
+/* Print styles for progress reports */
+@media print {
+  .btn, .nav-scroller, #toast, .modal {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+/* High contrast mode improvements */
+.high-contrast {
+  filter: contrast(150%) brightness(120%);
+}
+
+.high-contrast .card {
+  border: 2px solid #000;
+}
+
+.high-contrast .btn {
+  border: 2px solid #000;
+}
+
+/* Focus styles for accessibility */
+.btn:focus, .letter:focus, input:focus, select:focus {
+  outline: 3px solid #4338ca;
+  outline-offset: 2px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles would go here */
+}
+</style>
+
+</body>
+</html>

@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)file:///C:/Users/Umesh%20Reddy%20R/Downloads/learnkid_pro_v4.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSlate – AI Kids Learning Platform Pro</title>
+<link href="./EduSlate – AI Kids Learning Platform Pro_files/css2" rel="stylesheet">
+<script src="./EduSlate – AI Kids Learning Platform Pro_files/saved_resource"></script>
+<script src="./EduSlate – AI Kids Learning Platform Pro_files/chart.min.js.download"></script>
+<style>
+:root{
+  --primary:#6C63FF;--secondary:#FF6584;--accent:#43C6AC;
+  --gold:#FFD700;--coral:#FF6B6B;--teal:#43C6AC;
+  --bg1:#0F0C29;--bg2:#302B63;--bg3:#24243e;
+  --card:#ffffff14;--glass:#ffffff0a;
+  --success:#10B981;--warn:#F59E0B;--err:#EF4444;
+  --star:#FFD700;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  min-height:100vh; color:#fff; overflow-x:hidden;
+}
+
+/* ===== PARTICLES BG ===== */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.particle{
+  position:absolute;border-radius:50%;
+  animation:floatUp linear infinite;
+  opacity:0;
+}
+@keyframes floatUp{
+  0%{transform:translateY(100vh) scale(0);opacity:0;}
+  10%{opacity:0.6;}
+  90%{opacity:0.3;}
+  100%{transform:translateY(-20vh) scale(1);opacity:0;}
+}
+
+/* ===== LAYOUT ===== */
+#welcome,#app{position:relative;z-index:1;}
+
+/* ===== GLASS CARD ===== */
+.glass{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:24px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+
+.glass-bright{
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(20px);
+  border:none;
+  border-radius:24px;
+  color:#1e1b4b;
+  box-shadow:0 8px 40px rgba(108,99,255,0.25);
+}
+
+/* ===== NEON BUTTON ===== */
+.btn-neon{
+  padding:0.9rem 2rem;
+  border-radius:50px;
+  font-family:'Fredoka One',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:0.5px;
+  border:none;cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:all 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.btn-neon::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,0.2),transparent);
+  transform:translateX(-100%);transition:transform 0.5s;
+}
+.btn-neon:hover::before{transform:translateX(100%);}
+.btn-neon:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 12px 30px rgba(0,0,0,0.3);}
+.btn-neon:active{transform:scale(0.97);}
+
+.btn-purple{background:linear-gradient(135deg,#6C63FF,#a855f7);color:#fff;box-shadow:0 6px 20px #6C63FF55;}
+.btn-coral{background:linear-gradient(135deg,#FF6584,#ff9a9e);color:#fff;box-shadow:0 6px 20px #FF658455;}
+.btn-teal{background:linear-gradient(135deg,#43C6AC,#08d2b6);color:#fff;box-shadow:0 6px 20px #43C6AC55;}
+.btn-gold{background:linear-gradient(135deg,#FFD700,#ffa500);color:#1e1b4b;box-shadow:0 6px 20px #FFD70055;}
+.btn-dark{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);}
+
+/* ===== WELCOME SCREEN ===== */
+.hero-title{
+  font-family:'Fredoka One',sans-serif;
+  font-size:clamp(2.8rem,8vw,5.5rem);
+  background:linear-gradient(135deg,#fff 0%,#a78bfa 40%,#f9a8d4 70%,#fbbf24 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1.1;
+}
+.subtitle{color:rgba(255,255,255,0.7);font-size:1.2rem;font-weight:600;}
+
+.avatar-btn{
+  width:80px;height:80px;border-radius:50%;
+  border:3px solid rgba(255,255,255,0.2);
+  font-size:2.5rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;
+  background:rgba(255,255,255,0.1);
+}
+.avatar-btn:hover,.avatar-btn.selected{
+  border-color:#6C63FF;
+  background:rgba(108,99,255,0.3);
+  transform:scale(1.15);
+  box-shadow:0 0 20px #6C63FF88;
+}
+
+.theme-pick{
+  padding:1.5rem;border-radius:20px;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.1);
+  transition:all 0.3s;text-align:center;
+  background:rgba(255,255,255,0.06);
+}
+.theme-pick:hover,.theme-pick.sel{
+  border-color:#6C63FF;
+  background:rgba(108,99,255,0.2);
+  transform:translateY(-4px);
+}
+
+/* ===== HEADER ===== */
+#appHeader{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,12,41,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:0.75rem 1.5rem;
+}
+
+/* ===== NAV ===== */
+.nav-pill{
+  padding:0.6rem 1.2rem;border-radius:50px;
+  font-weight:700;font-size:0.9rem;
+  border:none;cursor:pointer;
+  transition:all 0.3s;
+  color:rgba(255,255,255,0.6);
+  background:transparent;
+  white-space:nowrap;
+}
+.nav-pill:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.nav-pill.active{
+  background:linear-gradient(135deg,#6C63FF,#a855f7);
+  color:#fff;
+  box-shadow:0 4px 15px #6C63FF55;
+}
+
+/* ===== STAT CHIP ===== */
+.stat-chip{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.4rem 0.9rem;border-radius:50px;
+  font-size:0.85rem;font-weight:800;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+/* ===== MODULE CARD ===== */
+.module-card{
+  border-radius:24px;padding:1.8rem;cursor:pointer;
+  transition:all 0.4s cubic-bezier(.34,1.56,.64,1);
+  position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.module-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.module-card:hover{transform:translateY(-8px) scale(1.02);}
+.module-card:hover::after{opacity:1;}
+
+.mc-alphabet{background:linear-gradient(135deg,#667eea,#764ba2);}
+.mc-numbers{background:linear-gradient(135deg,#f093fb,#f5576c);}
+.mc-tables{background:linear-gradient(135deg,#4facfe,#00f2fe);}
+.mc-colors{background:linear-gradient(135deg,#43e97b,#38f9d7);}
+.mc-stories{background:linear-gradient(135deg,#fa709a,#fee140);}
+.mc-music{background:linear-gradient(135deg,#a18cd1,#fbc2eb);}
+.mc-science{background:linear-gradient(135deg,#ff9a9e,#fecfef);}
+.mc-quiz{background:linear-gradient(135deg,#ffecd2,#fcb69f);}
+
+/* ===== AI CHAT ===== */
+.chat-bubble-ai{
+  background:linear-gradient(135deg,#6C63FF22,#a855f722);
+  border:1px solid rgba(108,99,255,0.3);
+  border-radius:20px 20px 20px 4px;
+  padding:1rem 1.2rem;
+  max-width:85%;color:#fff;
+}
+.chat-bubble-user{
+  background:linear-gradient(135deg,#43C6AC33,#08d2b633);
+  border:1px solid rgba(67,198,172,0.3);
+  border-radius:20px 20px 4px 20px;
+  padding:1rem 1.2rem;
+  max-width:85%;color:#fff;
+  margin-left:auto;
+}
+.chat-typing{display:flex;gap:5px;align-items:center;padding:0.6rem;}
+.dot-pulse{width:8px;height:8px;border-radius:50%;background:#a78bfa;animation:dotPulse 1.5s ease-in-out infinite;}
+.dot-pulse:nth-child(2){animation-delay:0.2s;}
+.dot-pulse:nth-child(3){animation-delay:0.4s;}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+
+/* ===== LETTER GRID ===== */
+.letter-tile{
+  display:flex;align-items:center;justify-content:center;
+  height:72px;border-radius:16px;
+  font-family:'Fredoka One',sans-serif;
+  font-size:1.6rem;cursor:pointer;
+  transition:all 0.25s;
+  background:rgba(255,255,255,0.08);
+  border:2px solid rgba(255,255,255,0.1);
+  position:relative;
+}
+.letter-tile:hover{
+  background:linear-gradient(135deg,#6C63FF,#a855f7);
+  border-color:#6C63FF;
+  transform:scale(1.12);
+  box-shadow:0 6px 20px #6C63FF55;
+}
+.letter-tile.mastered{
+  background:linear-gradient(135deg,#10B981,#059669);
+  border-color:#10B981;
+}
+.letter-tile.mastered::after{
+  content:'⭐';position:absolute;
+  top:-6px;right:-6px;font-size:14px;
+}
+
+/* ===== CANVAS ===== */
+#writingCanvas{
+  border:2px solid rgba(108,99,255,0.4);
+  border-radius:20px;
+  background:rgba(255,255,255,0.03);
+  cursor:crosshair;
+  display:block;
+}
+
+/* ===== PROGRESS BAR ===== */
+.prog-track{
+  background:rgba(255,255,255,0.1);
+  height:10px;border-radius:5px;overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:5px;
+  background:linear-gradient(90deg,#6C63FF,#a855f7);
+  transition:width 0.6s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+.prog-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  animation:shimmer 2s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;bottom:30px;left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:linear-gradient(135deg,#6C63FF,#a855f7);
+  color:#fff;padding:1rem 2rem;border-radius:50px;
+  font-weight:800;font-size:1rem;
+  box-shadow:0 8px 30px rgba(108,99,255,0.6);
+  z-index:9999;transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ===== CONFETTI ===== */
+.confetti-piece{
+  position:fixed;width:10px;height:10px;
+  animation:confettifall 3s ease-out forwards;
+  pointer-events:none;z-index:9998;border-radius:2px;
+}
+@keyframes confettifall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+
+/* ===== XP / LEVEL RING ===== */
+.xp-ring{
+  width:60px;height:60px;position:relative;
+}
+.xp-ring svg{transform:rotate(-90deg);}
+.xp-ring circle{transition:stroke-dashoffset 0.6s ease;}
+
+/* ===== MEMORY GAME ===== */
+.mem-tile{
+  aspect-ratio:1;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;cursor:pointer;
+  background:linear-gradient(135deg,#6C63FF,#a855f7);
+  border:2px solid rgba(255,255,255,0.2);
+  transition:all 0.4s;transform-style:preserve-3d;
+  position:relative;
+}
+.mem-tile.flipped{transform:rotateY(180deg);}
+.mem-tile.matched{background:linear-gradient(135deg,#10B981,#059669);}
+.mem-front,.mem-back{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:14px;backface-visibility:hidden;font-size:2rem;
+}
+.mem-back{transform:rotateY(180deg);}
+
+/* ===== MUSIC KEYS ===== */
+.piano-key{
+  height:120px;border-radius:0 0 10px 10px;
+  border:2px solid rgba(255,255,255,0.2);
+  cursor:pointer;transition:all 0.1s;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:8px;font-weight:800;font-size:0.75rem;
+  position:relative;
+}
+.piano-key.white-key{
+  background:rgba(255,255,255,0.9);color:#1e1b4b;width:50px;
+}
+.piano-key.black-key{
+  background:linear-gradient(180deg,#1e1b4b,#302B63);color:#fff;
+  width:34px;height:80px;margin:0 -17px;z-index:2;border-radius:0 0 8px 8px;
+}
+.piano-key:active,.piano-key.pressed{
+  background:linear-gradient(135deg,#6C63FF,#a855f7)!important;
+  color:#fff!important;transform:scaleY(0.96);
+}
+
+/* ===== QUIZ ===== */
+.quiz-opt{
+  padding:1rem 1.5rem;border-radius:16px;
+  background:rgba(255,255,255,0.07);
+  border:2px solid rgba(255,255,255,0.1);
+  cursor:pointer;transition:all 0.3s;
+  font-weight:700;text-align:left;
+}
+.quiz-opt:hover{border-color:#6C63FF;background:rgba(108,99,255,0.15);}
+.quiz-opt.correct{background:linear-gradient(135deg,#10B98133,#05966933);border-color:#10B981;}
+.quiz-opt.wrong{background:linear-gradient(135deg,#EF444433,#dc262633);border-color:#EF4444;}
+
+/* ===== STORY SCREEN ===== */
+.story-panel{
+  background:linear-gradient(135deg,#1e1b4b,#4c1d95);
+  border-radius:24px;padding:2.5rem;
+  border:1px solid rgba(167,139,250,0.3);
+  position:relative;overflow:hidden;
+  min-height:220px;
+}
+.story-panel::before{
+  content:'✨';position:absolute;
+  font-size:200px;opacity:0.04;
+  right:-30px;bottom:-40px;
+}
+
+/* ===== SCIENCE ===== */
+.element-card{
+  padding:1rem;border-radius:16px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.1);
+  text-align:center;cursor:pointer;
+  transition:all 0.3s;
+}
+.element-card:hover{transform:scale(1.05);background:rgba(108,99,255,0.2);}
+
+/* ===== BREATHING EXERCISE ===== */
+.breath-circle{
+  width:180px;height:180px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#43C6AC,#6C63FF);
+  font-size:1.2rem;font-weight:800;
+  box-shadow:0 0 60px rgba(108,99,255,0.5);
+  transition:transform 4s ease-in-out;
+  cursor:pointer;
+}
+.breath-circle.inhale{transform:scale(1.5);}
+.breath-circle.exhale{transform:scale(1);}
+
+/* ===== ACHIEVMENT BADGE ===== */
+.badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.4rem 0.9rem;border-radius:50px;
+  font-size:0.8rem;font-weight:800;
+  background:linear-gradient(135deg,#FFD70033,#ffa50033);
+  border:1px solid #FFD70066;color:#FFD700;
+}
+
+/* ===== COLORS MODULE ===== */
+.color-swatch{
+  aspect-ratio:1;border-radius:16px;cursor:pointer;
+  border:3px solid rgba(255,255,255,0.1);
+  transition:all 0.3s;display:flex;
+  align-items:flex-end;justify-content:center;
+  padding-bottom:10px;font-weight:800;font-size:0.85rem;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);color:#fff;
+}
+.color-swatch:hover{transform:scale(1.1);border-color:rgba(255,255,255,0.5);}
+
+/* ===== ANIMATIONS ===== */
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes rainbow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+
+.animate-bounce{animation:bounce 2s infinite;}
+.animate-pulse{animation:pulse 2s infinite;}
+.animate-spin{animation:spin 1s linear infinite;}
+.fade-in{animation:fadeSlideUp 0.5s ease-out forwards;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero-title{font-size:2.5rem;}
+  #navScroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  #navScroll::-webkit-scrollbar{display:none;}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+
+/* ===== SECTION VIEWS ===== */
+.view{display:none;}
+.view.active{display:block;animation:fadeSlideUp 0.4s ease-out;}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:linear-gradient(135deg,#1e1b4b,#302B63);
+  border:1px solid rgba(108,99,255,0.3);
+  border-radius:28px;padding:2.5rem;
+  max-width:550px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  animation:fadeSlideUp 0.3s ease-out;
+}
+
+/* ===== NUMBER TILES ===== */
+.num-tile{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:90px;border-radius:18px;cursor:pointer;
+  background:rgba(255,255,255,0.07);
+  border:2px solid rgba(255,255,255,0.1);
+  transition:all 0.25s;gap:4px;
+}
+.num-tile:hover{
+  background:linear-gradient(135deg,#f093fb,#f5576c);
+  transform:scale(1.1);border-color:#f5576c;
+}
+.num-tile.mastered{
+  background:linear-gradient(135deg,#10B981,#059669);
+  border-color:#10B981;
+}
+.num-tile .num-label{font-family:'Fredoka One',sans-serif;font-size:2rem;}
+.num-tile .num-emoji{font-size:1rem;}
+
+/* ===== CHART CANVAS ===== */
+.chart-wrap{position:relative;height:200px;}
+
+/* ===== FOCUS DOT ===== */
+#focusDot{
+  position:fixed;top:16px;right:70px;
+  width:12px;height:12px;border-radius:50%;
+  background:#10B981;box-shadow:0 0 8px #10B981;
+  z-index:150;transition:all 0.3s;
+}
+#focusDot.unfocused{background:#EF4444;box-shadow:0 0 8px #EF4444;}
+
+/* ===== STREAK COUNTER ===== */
+.streak-fire{animation:pulse 1s infinite;color:#FF6B6B;font-size:1.5rem;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);}
+::-webkit-scrollbar-thumb{background:rgba(108,99,255,0.4);border-radius:3px;}
+
+/* ===== LOADING ===== */
+.ai-loading{
+  display:inline-flex;gap:4px;align-items:center;
+}
+.ai-loading span{
+  width:6px;height:6px;border-radius:50%;
+  background:#a78bfa;animation:dotPulse 1.5s ease-in-out infinite;
+}
+.ai-loading span:nth-child(2){animation-delay:0.2s;}
+.ai-loading span:nth-child(3){animation-delay:0.4s;}
+
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-10{margin-bottom:2.5rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.ml-3{margin-left:0.75rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-20{width:5rem}.w-32{width:8rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-4xl{max-width:56rem}.max-w-6xl{max-width:72rem}.flex-1{flex:1 1 0%}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-1{padding-bottom:0.25rem}.pb-2{padding-bottom:0.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-7xl{font-size:4.5rem;line-height:1}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.leading-relaxed{line-height:1.625}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254 / var(--tw-text-opacity, 1))}.text-purple-900{--tw-text-opacity:1;color:rgb(88 28 135 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/40{color:rgb(255 255 255 / 0.4)}.text-white\/50{color:rgb(255 255 255 / 0.5)}.text-white\/60{color:rgb(255 255 255 / 0.6)}.text-white\/70{color:rgb(255 255 255 / 0.7)}.text-white\/80{color:rgb(255 255 255 / 0.8)}.placeholder-white\/40::placeholder{color:rgb(255 255 255 / 0.4)}.accent-purple-400{accent-color:#c084fc}.opacity-80{opacity:0.8}.outline-none{outline:2px solid transparent;outline-offset:2px}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-purple-400:hover{--tw-border-opacity:1;border-color:rgb(192 132 252 / var(--tw-border-opacity, 1))}.hover\:border-teal-400:hover{--tw-border-opacity:1;border-color:rgb(45 212 191 / var(--tw-border-opacity, 1))}.focus\:border-purple-400:focus{--tw-border-opacity:1;border-color:rgb(192 132 252 / var(--tw-border-opacity, 1))}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}.md\:grid-cols-6{grid-template-columns:repeat(6, minmax(0, 1fr))}.md\:p-6{padding:1.5rem}}</style></head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"><div class="particle" style="left: 7.78104%; width: 9.04602px; height: 10.9153px; background: rgb(255, 215, 0); animation-duration: 11.5163s; animation-delay: 4.01564s;"></div><div class="particle" style="left: 13.9081%; width: 10.3616px; height: 9.97959px; background: rgb(240, 147, 251); animation-duration: 9.45238s; animation-delay: 5.14648s;"></div><div class="particle" style="left: 11.5332%; width: 9.35683px; height: 7.40365px; background: rgb(255, 101, 132); animation-duration: 14.8601s; animation-delay: 3.93445s;"></div><div class="particle" style="left: 67.8981%; width: 4.24199px; height: 9.49862px; background: rgb(255, 215, 0); animation-duration: 8.65134s; animation-delay: 0.453851s;"></div><div class="particle" style="left: 50.8346%; width: 9.98235px; height: 8.17823px; background: rgb(255, 101, 132); animation-duration: 16.8726s; animation-delay: 7.53507s;"></div><div class="particle" style="left: 15.1346%; width: 4.68979px; height: 5.18174px; background: rgb(67, 198, 172); animation-duration: 13.3371s; animation-delay: 0.0275926s;"></div><div class="particle" style="left: 28.3685%; width: 10.9615px; height: 6.39394px; background: rgb(67, 198, 172); animation-duration: 10.8114s; animation-delay: 0.00518734s;"></div><div class="particle" style="left: 43.9571%; width: 11.2617px; height: 4.53152px; background: rgb(255, 101, 132); animation-duration: 8.24347s; animation-delay: 7.23923s;"></div><div class="particle" style="left: 88.2892%; width: 11.7389px; height: 11.1515px; background: rgb(67, 198, 172); animation-duration: 19.5226s; animation-delay: 5.5341s;"></div><div class="particle" style="left: 72.0091%; width: 10.3017px; height: 6.64568px; background: rgb(255, 215, 0); animation-duration: 15.8863s; animation-delay: 2.9994s;"></div><div class="particle" style="left: 1.1782%; width: 5.00485px; height: 10.3825px; background: rgb(255, 101, 132); animation-duration: 17.2853s; animation-delay: 3.82601s;"></div><div class="particle" style="left: 83.6361%; width: 10.2153px; height: 9.84513px; background: rgb(168, 85, 247); animation-duration: 9.18713s; animation-delay: 3.61585s;"></div><div class="particle" style="left: 20.0933%; width: 4.71182px; height: 9.9111px; background: rgb(255, 101, 132); animation-duration: 11.1371s; animation-delay: 5.76438s;"></div><div class="particle" style="left: 41.0761%; width: 11.5858px; height: 8.98004px; background: rgb(255, 101, 132); animation-duration: 16.8208s; animation-delay: 4.70289s;"></div><div class="particle" style="left: 52.0678%; width: 7.10268px; height: 9.9745px; background: rgb(255, 101, 132); animation-duration: 8.06243s; animation-delay: 4.46582s;"></div><div class="particle" style="left: 49.545%; width: 11.5667px; height: 9.87785px; background: rgb(67, 198, 172); animation-duration: 15.119s; animation-delay: 6.57822s;"></div><div class="particle" style="left: 60.4146%; width: 5.46943px; height: 11.9462px; background: rgb(108, 99, 255); animation-duration: 18.928s; animation-delay: 6.32857s;"></div><div class="particle" style="left: 0.146393%; width: 9.28997px; height: 7.4392px; background: rgb(168, 85, 247); animation-duration: 11.524s; animation-delay: 7.21446s;"></div><div class="particle" style="left: 80.3782%; width: 5.27381px; height: 8.47416px; background: rgb(67, 198, 172); animation-duration: 19.8654s; animation-delay: 7.41678s;"></div><div class="particle" style="left: 26.473%; width: 6.55987px; height: 6.82882px; background: rgb(255, 101, 132); animation-duration: 8.95077s; animation-delay: 7.18347s;"></div><div class="particle" style="left: 10.1553%; width: 9.70351px; height: 6.91811px; background: rgb(240, 147, 251); animation-duration: 11.6113s; animation-delay: 0.0610144s;"></div><div class="particle" style="left: 38.5695%; width: 10.9678px; height: 11.8572px; background: rgb(67, 198, 172); animation-duration: 19.2645s; animation-delay: 4.50832s;"></div><div class="particle" style="left: 16.5949%; width: 11.0587px; height: 9.07039px; background: rgb(255, 215, 0); animation-duration: 12.1619s; animation-delay: 5.2175s;"></div><div class="particle" style="left: 27.3637%; width: 5.95978px; height: 6.59076px; background: rgb(168, 85, 247); animation-duration: 9.52128s; animation-delay: 6.95806s;"></div><div class="particle" style="left: 43.0029%; width: 5.40363px; height: 6.2176px; background: rgb(240, 147, 251); animation-duration: 19.6592s; animation-delay: 2.53468s;"></div><div class="particle" style="left: 14.7726%; width: 4.99617px; height: 10.1515px; background: rgb(168, 85, 247); animation-duration: 17.7883s; animation-delay: 4.59432s;"></div><div class="particle" style="left: 85.8649%; width: 11.5512px; height: 6.47326px; background: rgb(108, 99, 255); animation-duration: 12.2264s; animation-delay: 5.95447s;"></div><div class="particle" style="left: 52.4581%; width: 7.88805px; height: 4.67435px; background: rgb(255, 215, 0); animation-duration: 17.2086s; animation-delay: 2.3151s;"></div><div class="particle" style="left: 63.1915%; width: 10.6011px; height: 6.53178px; background: rgb(255, 215, 0); animation-duration: 19.5552s; animation-delay: 1.58417s;"></div><div class="particle" style="left: 93.2066%; width: 4.48234px; height: 7.03693px; background: rgb(168, 85, 247); animation-duration: 12.5122s; animation-delay: 0.96771s;"></div><div class="particle" style="left: 94.0584%; width: 11.6328px; height: 6.98395px; background: rgb(255, 215, 0); animation-duration: 18.8791s; animation-delay: 4.04435s;"></div><div class="particle" style="left: 92.8699%; width: 11.581px; height: 7.58823px; background: rgb(240, 147, 251); animation-duration: 13.6273s; animation-delay: 0.304198s;"></div><div class="particle" style="left: 43.0346%; width: 6.31843px; height: 11.7961px; background: rgb(108, 99, 255); animation-duration: 9.30925s; animation-delay: 2.46505s;"></div><div class="particle" style="left: 98.063%; width: 8.92266px; height: 10.1547px; background: rgb(67, 198, 172); animation-duration: 9.1796s; animation-delay: 5.78001s;"></div><div class="particle" style="left: 58.5615%; width: 8.60895px; height: 11.4617px; background: rgb(168, 85, 247); animation-duration: 16.4592s; animation-delay: 7.38262s;"></div><div class="particle" style="left: 84.2211%; width: 10.7132px; height: 6.77129px; background: rgb(240, 147, 251); animation-duration: 8.10012s; animation-delay: 7.38536s;"></div><div class="particle" style="left: 91.206%; width: 9.1971px; height: 8.29351px; background: rgb(67, 198, 172); animation-duration: 8.21328s; animation-delay: 5.95454s;"></div><div class="particle" style="left: 94.8662%; width: 5.31955px; height: 7.23872px; background: rgb(168, 85, 247); animation-duration: 13.4052s; animation-delay: 0.14423s;"></div><div class="particle" style="left: 90.092%; width: 10.954px; height: 4.25035px; background: rgb(108, 99, 255); animation-duration: 11.4052s; animation-delay: 1.29919s;"></div><div class="particle" style="left: 76.8954%; width: 7.53941px; height: 9.76601px; background: rgb(255, 101, 132); animation-duration: 13.2928s; animation-delay: 3.14686s;"></div><div class="particle" style="left: 95.0382%; width: 7.6287px; height: 9.00982px; background: rgb(108, 99, 255); animation-duration: 10.3846s; animation-delay: 1.11882s;"></div><div class="particle" style="left: 57.2923%; width: 9.15035px; height: 6.54384px; background: rgb(255, 101, 132); animation-duration: 11.7925s; animation-delay: 0.800411s;"></div><div class="particle" style="left: 83.1823%; width: 11.2184px; height: 7.42974px; background: rgb(255, 215, 0); animation-duration: 17.122s; animation-delay: 4.40061s;"></div><div class="particle" style="left: 76.0548%; width: 6.67939px; height: 10.8904px; background: rgb(255, 101, 132); animation-duration: 16.7942s; animation-delay: 6.11679s;"></div><div class="particle" style="left: 31.8247%; width: 5.8581px; height: 6.32664px; background: rgb(255, 101, 132); animation-duration: 15.3856s; animation-delay: 5.27387s;"></div><div class="particle" style="left: 33.8116%; width: 4.0121px; height: 6.78449px; background: rgb(255, 215, 0); animation-duration: 17.8029s; animation-delay: 6.16086s;"></div><div class="particle" style="left: 63.0161%; width: 6.47139px; height: 5.53108px; background: rgb(255, 215, 0); animation-duration: 8.59455s; animation-delay: 7.19649s;"></div><div class="particle" style="left: 10.3068%; width: 9.81916px; height: 4.04792px; background: rgb(255, 215, 0); animation-duration: 19.6032s; animation-delay: 4.85351s;"></div><div class="particle" style="left: 32.2617%; width: 11.101px; height: 8.09733px; background: rgb(255, 215, 0); animation-duration: 15.9934s; animation-delay: 5.42305s;"></div><div class="particle" style="left: 19.9847%; width: 11.9716px; height: 9.33151px; background: rgb(108, 99, 255); animation-duration: 12.4775s; animation-delay: 0.509486s;"></div><div class="particle" style="left: 88.2137%; width: 6.00295px; height: 6.80143px; background: rgb(255, 101, 132); animation-duration: 10.3144s; animation-delay: 1.444s;"></div><div class="particle" style="left: 13.9481%; width: 5.24825px; height: 4.54516px; background: rgb(255, 101, 132); animation-duration: 8.91663s; animation-delay: 6.18775s;"></div><div class="particle" style="left: 76.9097%; width: 9.33668px; height: 9.9474px; background: rgb(67, 198, 172); animation-duration: 8.42036s; animation-delay: 0.274223s;"></div><div class="particle" style="left: 78.8542%; width: 7.8058px; height: 6.77433px; background: rgb(240, 147, 251); animation-duration: 9.70631s; animation-delay: 0.3404s;"></div><div class="particle" style="left: 3.98969%; width: 6.12976px; height: 9.30486px; background: rgb(67, 198, 172); animation-duration: 19.0684s; animation-delay: 0.189361s;"></div><div class="particle" style="left: 87.8561%; width: 11.6088px; height: 8.98383px; background: rgb(255, 101, 132); animation-duration: 13.2011s; animation-delay: 3.5638s;"></div><div class="particle" style="left: 18.4693%; width: 4.62665px; height: 9.43475px; background: rgb(255, 215, 0); animation-duration: 15.2068s; animation-delay: 6.16197s;"></div><div class="particle" style="left: 61.9153%; width: 4.1915px; height: 10.7751px; background: rgb(108, 99, 255); animation-duration: 18.2653s; animation-delay: 7.74361s;"></div><div class="particle" style="left: 29.0689%; width: 8.22645px; height: 6.36448px; background: rgb(255, 101, 132); animation-duration: 15.1128s; animation-delay: 4.00174s;"></div><div class="particle" style="left: 70.1311%; width: 7.13788px; height: 8.72655px; background: rgb(108, 99, 255); animation-duration: 14.2147s; animation-delay: 1.81369s;"></div></div>
+
+<!-- TOAST -->
+<div id="toast">🎉 Level up!</div>
+
+<!-- FOCUS DOT -->
+<div id="focusDot" title="Focus"></div>
+
+<!-- ========= WELCOME SCREEN ========= -->
+<section id="welcome" class="min-h-screen flex items-center justify-center p-6">
+  <div class="max-w-4xl w-full mx-auto">
+    <!-- Logo + Hero -->
+    <div class="text-center mb-10">
+      <div class="text-7xl mb-4 animate-bounce">🧠</div>
+      <h1 class="hero-title mb-3">EduSlate</h1>
+      <p class="subtitle">The AI-Powered Learning Adventure for Kids</p>
+      <div class="flex gap-3 justify-center mt-4 flex-wrap">
+        <span class="stat-chip">🤖 Claude AI Tutor</span>
+        <span class="stat-chip">🎵 Music + Writing</span>
+        <span class="stat-chip">🧪 Science Lab</span>
+        <span class="stat-chip">🏆 300K Prize Pool</span>
+      </div>
+    </div>
+
+    <div class="glass p-8 max-w-2xl mx-auto">
+      <!-- Name + Age -->
+      <div class="grid md:grid-cols-2 gap-5 mb-6">
+        <div>
+          <label class="text-sm font-800 block mb-2 text-purple-300">👋 Your Name</label>
+          <input id="nameInput" class="w-full p-3.5 rounded-2xl bg-white/10 border border-white/20 text-white font-bold placeholder-white/40 outline-none focus:border-purple-400 transition" placeholder="e.g. Aanya">
+        </div>
+        <div>
+          <label class="text-sm font-800 block mb-2 text-purple-300">🎂 Age Group</label>
+          <select id="ageSelect" class="w-full p-3.5 rounded-2xl bg-white/10 border border-white/20 text-white font-bold outline-none focus:border-purple-400 transition cursor-pointer">
+            <option value="3-5">3–5 years (Preschool)</option>
+            <option value="6-8" selected="">6–8 years (Elementary)</option>
+            <option value="9-12">9–12 years (Advanced)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="mb-6">
+        <label class="text-sm font-800 block mb-3 text-purple-300">🤖 Choose Your AI Buddy</label>
+        <div class="flex gap-3 justify-center flex-wrap">
+          <button class="avatar-btn selected" onclick="selectAvatar(this,&#39;🐼&#39;)">🐼</button>
+          <button class="avatar-btn" onclick="selectAvatar(this,&#39;🦊&#39;)">🦊</button>
+          <button class="avatar-btn" onclick="selectAvatar(this,&#39;🤖&#39;)">🤖</button>
+          <button class="avatar-btn" onclick="selectAvatar(this,&#39;🐨&#39;)">🐨</button>
+          <button class="avatar-btn" onclick="selectAvatar(this,&#39;🦄&#39;)">🦄</button>
+          <button class="avatar-btn" onclick="selectAvatar(this,&#39;🐉&#39;)">🐉</button>
+        </div>
+      </div>
+
+      <!-- Theme -->
+      <div class="mb-6">
+        <label class="text-sm font-800 block mb-3 text-purple-300">🎨 Learning Theme</label>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="theme-pick sel" onclick="selectTheme(this,&#39;forest&#39;)">
+            <div class="text-3xl mb-1">🌳</div>
+            <div class="font-bold text-sm">Forest</div>
+          </div>
+          <div class="theme-pick" onclick="selectTheme(this,&#39;space&#39;)">
+            <div class="text-3xl mb-1">🚀</div>
+            <div class="font-bold text-sm">Space</div>
+          </div>
+          <div class="theme-pick" onclick="selectTheme(this,&#39;ocean&#39;)">
+            <div class="text-3xl mb-1">🌊</div>
+            <div class="font-bold text-sm">Ocean</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-neon btn-purple w-full text-xl py-4" onclick="startLearning()">
+        🚀 Start My Adventure!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========= APP ========= -->
+<section id="app" class="hidden min-h-screen">
+
+  <!-- HEADER -->
+  <header id="appHeader" class="flex items-center justify-between gap-3 flex-wrap">
+    <div class="flex items-center gap-3">
+      <div id="mascot" class="text-3xl animate-bounce">🐼</div>
+      <div>
+        <div id="greeting" class="font-bold text-lg" style="font-family:&#39;Fredoka One&#39;,sans-serif;color:#a78bfa">Hey, Friend!</div>
+        <div class="flex gap-2 flex-wrap">
+          <span class="stat-chip"><span class="streak-fire">🔥</span><span id="streakNum">0</span></span>
+          <span class="stat-chip">⭐<span id="xpNum">0</span> XP</span>
+          <span class="stat-chip">🏅 Level <span id="levelNum">1</span></span>
+        </div>
+      </div>
+    </div>
+    <div id="navScroll" class="flex gap-2 overflow-x-auto pb-1">
+      <button class="nav-pill active" onclick="showView(&#39;dashboard&#39;,this)">🏠 Home</button>
+      <button class="nav-pill" onclick="showView(&#39;alphabet&#39;,this)">🔤 ABC</button>
+      <button class="nav-pill" onclick="showView(&#39;numbers&#39;,this)">🔢 123</button>
+      <button class="nav-pill" onclick="showView(&#39;tables&#39;,this)">✖️ Tables</button>
+      <button class="nav-pill" onclick="showView(&#39;writing&#39;,this)">✏️ Write</button>
+      <button class="nav-pill" onclick="showView(&#39;memory&#39;,this)">🃏 Memory</button>
+      <button class="nav-pill" onclick="showView(&#39;music&#39;,this)">🎵 Music</button>
+      <button class="nav-pill" onclick="showView(&#39;stories&#39;,this)">📖 Stories</button>
+      <button class="nav-pill" onclick="showView(&#39;science&#39;,this)">🧪 Science</button>
+      <button class="nav-pill" onclick="showView(&#39;quiz&#39;,this)">🧩 Quiz</button>
+      <button class="nav-pill" onclick="showView(&#39;aitutor&#39;,this)">🤖 AI Chat</button>
+      <button class="nav-pill" onclick="showView(&#39;stats&#39;,this)">📊 Stats</button>
+    </div>
+  </header>
+
+  <main class="p-4 md:p-6 max-w-6xl mx-auto">
+
+    <!-- ====== DASHBOARD ====== -->
+    <div id="view-dashboard" class="view active">
+      <!-- Welcome banner -->
+      <div class="glass p-6 mb-6 text-center">
+        <div class="text-5xl mb-2">🌟</div>
+        <h2 class="text-2xl font-bold mb-1" style="font-family:&#39;Fredoka One&#39;,sans-serif;" id="dashGreeting">Welcome Back!</h2>
+        <p class="text-white/60">Keep up the amazing work! Your brain is growing every day.</p>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="glass p-4 text-center">
+          <div class="text-3xl mb-1">🔥</div>
+          <div class="text-2xl font-bold" id="statStreak">0</div>
+          <div class="text-xs text-white/50">Day Streak</div>
+        </div>
+        <div class="glass p-4 text-center">
+          <div class="text-3xl mb-1">⭐</div>
+          <div class="text-2xl font-bold" id="statXP">0</div>
+          <div class="text-xs text-white/50">Total XP</div>
+        </div>
+        <div class="glass p-4 text-center">
+          <div class="text-3xl mb-1">✅</div>
+          <div class="text-2xl font-bold" id="statActivities">0</div>
+          <div class="text-xs text-white/50">Activities Done</div>
+        </div>
+        <div class="glass p-4 text-center">
+          <div class="text-3xl mb-1">🏅</div>
+          <div class="text-2xl font-bold" id="statBadges">0</div>
+          <div class="text-xs text-white/50">Badges Earned</div>
+        </div>
+      </div>
+
+      <!-- Module Grid -->
+      <h3 class="text-xl font-bold mb-4" style="font-family:&#39;Fredoka One&#39;,sans-serif;">📚 Choose a Module</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="module-card mc-alphabet" onclick="showView(&#39;alphabet&#39;,null)">
+          <div class="text-4xl mb-2">🔤</div>
+          <div class="font-bold text-lg">Alphabet</div>
+          <div class="text-sm opacity-80">Learn A–Z</div>
+          <div class="prog-track mt-3"><div id="progAlphabet" class="prog-fill" style="width:0%"></div></div>
+        </div>
+        <div class="module-card mc-numbers" onclick="showView(&#39;numbers&#39;,null)">
+          <div class="text-4xl mb-2">🔢</div>
+          <div class="font-bold text-lg">Numbers</div>
+          <div class="text-sm opacity-80">Count 0–20</div>
+          <div class="prog-track mt-3"><div id="progNumbers" class="prog-fill" style="width:0%"></div></div>
+        </div>
+        <div class="module-card mc-tables" onclick="showView(&#39;tables&#39;,null)">
+          <div class="text-4xl mb-2">✖️</div>
+          <div class="font-bold text-lg">Times Tables</div>
+          <div class="text-sm opacity-80">1×1 to 12×12</div>
+          <div class="prog-track mt-3"><div id="progTables" class="prog-fill" style="width:0%"></div></div>
+        </div>
+        <div class="module-card mc-colors" onclick="showView(&#39;colors&#39;,null)">
+          <div class="text-4xl mb-2">🎨</div>
+          <div class="font-bold text-lg">Colors</div>
+          <div class="text-sm opacity-80">Paint &amp; mix</div>
+          <div class="prog-track mt-3"><div id="progColors" class="prog-fill" style="width:0%"></div></div>
+        </div>
+        <div class="module-card mc-stories" onclick="showView(&#39;stories&#39;,null)">
+          <div class="text-4xl mb-2">📖</div>
+          <div class="font-bold text-lg">AI Stories</div>
+          <div class="text-sm opacity-80">Personalized tales</div>
+        </div>
+        <div class="module-card mc-music" onclick="showView(&#39;music&#39;,null)">
+          <div class="text-4xl mb-2">🎵</div>
+          <div class="font-bold text-lg">Music</div>
+          <div class="text-sm opacity-80">Play piano</div>
+        </div>
+        <div class="module-card mc-science" onclick="showView(&#39;science&#39;,null)">
+          <div class="text-4xl mb-2">🧪</div>
+          <div class="font-bold text-lg">Science</div>
+          <div class="text-sm opacity-80">Elements &amp; facts</div>
+        </div>
+        <div class="module-card mc-quiz" onclick="showView(&#39;quiz&#39;,null)">
+          <div class="text-4xl mb-2">🧩</div>
+          <div class="font-bold text-lg">AI Quiz</div>
+          <div class="text-sm opacity-80">Smart questions</div>
+        </div>
+      </div>
+
+      <!-- Quick Write + Breathing -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="glass p-5 cursor-pointer hover:border-purple-400 transition" onclick="showView(&#39;writing&#39;,null)" style="border:1px solid rgba(255,255,255,0.1);">
+          <div class="flex items-center gap-3">
+            <div class="text-4xl">✏️</div>
+            <div>
+              <div class="font-bold text-lg">Writing Practice</div>
+              <div class="text-sm text-white/60">Trace letters &amp; draw</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5 cursor-pointer hover:border-teal-400 transition" onclick="showView(&#39;aitutor&#39;,null)" style="border:1px solid rgba(255,255,255,0.1);">
+          <div class="flex items-center gap-3">
+            <div class="text-4xl">🤖</div>
+            <div>
+              <div class="font-bold text-lg">AI Tutor Chat</div>
+              <div class="text-sm text-white/60">Ask anything!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="glass p-5">
+        <h3 class="text-lg font-bold mb-3" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🏆 Your Badges</h3>
+        <div id="badgesContainer" class="flex gap-2 flex-wrap">
+          <span class="text-white/40 text-sm">Start learning to earn badges!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ALPHABET ====== -->
+    <div id="view-alphabet" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🔤 Alphabet Adventure</h2>
+        <div class="flex gap-2">
+          <button class="btn-neon btn-dark text-sm py-2 px-4" onclick="toggleCase()">Aa</button>
+          <button class="btn-neon btn-purple text-sm py-2 px-4" onclick="speakHint(&#39;Tap any letter to hear it!&#39;)">🔊 Hint</button>
+        </div>
+      </div>
+      <!-- Example display -->
+      <div id="letterExample" class="glass p-5 mb-5 text-center hidden">
+        <div id="letEx_emoji" class="text-6xl mb-2">🍎</div>
+        <div id="letEx_word" class="text-2xl font-bold mb-1">Apple</div>
+        <div id="letEx_desc" class="text-white/70">A is for Apple</div>
+      </div>
+      <div id="alphabetGrid" class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fill,minmax(70px,1fr))"></div>
+      <div class="glass p-4 flex gap-6 justify-center text-sm">
+        <span>🎯 Score: <strong id="alphScore">0</strong></span>
+        <span>⭐ Mastered: <strong id="alphMastered">0/26</strong></span>
+      </div>
+    </div>
+
+    <!-- ====== NUMBERS ====== -->
+    <div id="view-numbers" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🔢 Number Land</h2>
+        <button class="btn-neon btn-coral text-sm py-2 px-4" onclick="speakHint(&#39;Tap a number to count with me!&#39;)">🔊 Count</button>
+      </div>
+      <div id="numExample" class="glass p-5 mb-5 text-center hidden">
+        <div id="numEmojis" class="text-4xl mb-2">🍌🍌🍌</div>
+        <div id="numCount" class="text-xl font-bold">Three bananas!</div>
+      </div>
+      <div id="numbersGrid" class="grid gap-3 mb-4" style="grid-template-columns:repeat(auto-fill,minmax(90px,1fr))"></div>
+      <div class="glass p-4 flex gap-6 justify-center text-sm">
+        <span>🎯 Score: <strong id="numScore">0</strong></span>
+        <span>⭐ Mastered: <strong id="numMastered">0/20</strong></span>
+      </div>
+    </div>
+
+    <!-- ====== TIMES TABLES ====== -->
+    <div id="view-tables" class="view">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">✖️ Times Tables</h2>
+        <div class="flex gap-2 flex-wrap">
+          <select id="tableSelect" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+            <option value="1">1× Table</option><option value="2">2× Table</option>
+            <option value="3">3× Table</option><option value="4">4× Table</option>
+            <option value="5">5× Table</option><option value="6">6× Table</option>
+            <option value="7">7× Table</option><option value="8">8× Table</option>
+            <option value="9">9× Table</option><option value="10">10× Table</option>
+            <option value="11">11× Table</option><option value="12">12× Table</option>
+          </select>
+          <button class="btn-neon btn-teal text-sm py-2 px-4" onclick="showTable()">📖 Show</button>
+          <button class="btn-neon btn-purple text-sm py-2 px-4" onclick="startTableQuiz()">🧩 Quiz Me</button>
+        </div>
+      </div>
+      <div id="tableDisplay" class="grid gap-2 mb-4" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div>
+      <!-- Table Quiz -->
+      <div id="tableQuiz" class="glass p-6 hidden">
+        <div class="text-center mb-4">
+          <div class="text-4xl font-bold mb-2" id="quizQuestion">3 × 4 = ?</div>
+          <input id="quizAnswer" type="number" class="w-32 p-3 rounded-xl bg-white/10 border border-white/20 text-white font-bold text-center text-xl outline-none focus:border-purple-400" placeholder="?">
+          <button class="btn-neon btn-purple ml-3 py-2.5 px-5" onclick="checkTableAnswer()">✓ Check</button>
+        </div>
+        <div id="quizFeedback" class="text-center text-lg font-bold"></div>
+      </div>
+    </div>
+
+    <!-- ====== WRITING ====== -->
+    <div id="view-writing" class="view">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">✏️ Writing Practice</h2>
+        <div class="flex gap-2 flex-wrap">
+          <select id="practiceType" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer" onchange="updatePracticeOpts()">
+            <option value="letters">Letters</option>
+            <option value="numbers">Numbers</option>
+            <option value="words">Words</option>
+          </select>
+          <select id="practiceItem" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer" onchange="generateGuide()"></select>
+          <button class="btn-neon btn-teal text-sm py-2 px-4" onclick="clearCanvas()">🗑️ Clear</button>
+          <button class="btn-neon btn-dark text-sm py-2 px-4" onclick="generateGuide()">✨ Guide</button>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="md:col-span-2">
+          <div class="relative">
+            <canvas id="writingCanvas" width="600" height="350" class="w-full"></canvas>
+            <div id="tracingGuide" class="absolute inset-0 pointer-events-none" style="border-radius:20px;overflow:hidden;"></div>
+          </div>
+          <div class="flex gap-3 mt-3 flex-wrap">
+            <button class="btn-neon btn-purple text-sm py-2 px-4" onclick="setColor(&#39;#a78bfa&#39;)">🟣</button>
+            <button class="btn-neon btn-coral text-sm py-2 px-4" onclick="setColor(&#39;#FF6584&#39;)">🔴</button>
+            <button class="btn-neon btn-teal text-sm py-2 px-4" onclick="setColor(&#39;#43C6AC&#39;)">🟢</button>
+            <button class="btn-neon btn-gold text-sm py-2 px-4" onclick="setColor(&#39;#FFD700&#39;)">🟡</button>
+            <label class="btn-neon btn-dark text-sm py-2 px-4 cursor-pointer">
+              <input type="range" id="brushSize" min="2" max="20" value="6" class="w-20 accent-purple-400">
+            </label>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="glass p-4">
+            <div class="text-lg font-bold mb-2">📝 Practice</div>
+            <div id="writingGuideDisplay" class="text-5xl font-bold text-center py-4" style="font-family:&#39;Fredoka One&#39;,sans-serif;background:linear-gradient(135deg,#6C63FF,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">A</div>
+          </div>
+          <div class="glass p-4">
+            <div class="text-sm font-bold mb-2">AI Feedback</div>
+            <div id="writingAIFeedback" class="text-sm text-white/60">Draw something and I'll give you tips! ✨</div>
+            <button class="btn-neon btn-purple w-full mt-3 text-sm py-2" onclick="getWritingFeedback()">🤖 Get Feedback</button>
+          </div>
+          <div class="glass p-4">
+            <div class="text-sm font-bold mb-2">🏅 Writing Score</div>
+            <div class="text-2xl font-bold" id="writingScore">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MEMORY GAME ====== -->
+    <div id="view-memory" class="view">
+      <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🃏 Memory Match</h2>
+        <div class="flex gap-2 flex-wrap">
+          <select id="memDiff" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+            <option value="easy">Easy (6 pairs)</option>
+            <option value="medium">Medium (8 pairs)</option>
+            <option value="hard">Hard (12 pairs)</option>
+          </select>
+          <button class="btn-neon btn-purple text-sm py-2 px-4" onclick="initMemory()">🔄 New Game</button>
+        </div>
+      </div>
+      <div class="glass p-4 flex gap-6 justify-center mb-4 text-sm">
+        <span>Matches: <strong id="memMatches">0</strong></span>
+        <span>Moves: <strong id="memMoves">0</strong></span>
+        <span>⏱️ <strong id="memTimer">0s</strong></span>
+      </div>
+      <div id="memoryGrid" class="grid gap-3" style="grid-template-columns:repeat(auto-fill,minmax(80px,1fr))"></div>
+    </div>
+
+    <!-- ====== MUSIC ====== -->
+    <div id="view-music" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🎵 Music Studio</h2>
+        <button class="btn-neon btn-coral text-sm py-2 px-4" onclick="playScale()">🎼 Play Scale</button>
+      </div>
+      <!-- Piano -->
+      <div class="glass p-5 mb-5">
+        <div class="text-sm font-bold mb-3 text-white/70">🎹 Mini Piano – Click keys or use keyboard (A–L)</div>
+        <div id="pianoWrap" class="flex gap-1 justify-center overflow-x-auto pb-2" style="min-height:130px;position:relative;align-items:flex-start;"></div>
+      </div>
+      <!-- Note display -->
+      <div class="glass p-4 text-center mb-5">
+        <div id="noteDisplay" class="text-4xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;background:linear-gradient(135deg,#a18cd1,#fbc2eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Play a note! 🎵</div>
+      </div>
+      <!-- Songs to play -->
+      <div class="glass p-5">
+        <div class="text-sm font-bold mb-3">🎶 Play These Songs</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <button class="btn-neon btn-dark text-sm py-3" onclick="playSong(&#39;twinkle&#39;)">⭐ Twinkle Twinkle</button>
+          <button class="btn-neon btn-dark text-sm py-3" onclick="playSong(&#39;happy&#39;)">😊 Happy Birthday</button>
+          <button class="btn-neon btn-dark text-sm py-3" onclick="playSong(&#39;abc&#39;)">🔤 ABC Song</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== AI STORIES ====== -->
+    <div id="view-stories" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">📖 AI Story Generator</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="space-y-4">
+          <div class="glass p-5">
+            <div class="text-sm font-bold mb-3">🎭 Story Settings</div>
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs text-white/60 block mb-1">Hero Name</label>
+                <input id="heroName" class="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none focus:border-purple-400" placeholder="e.g. Luna">
+              </div>
+              <div>
+                <label class="text-xs text-white/60 block mb-1">Story World</label>
+                <select id="storyWorld" class="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+                  <option value="magical forest">🌳 Magical Forest</option>
+                  <option value="outer space">🚀 Outer Space</option>
+                  <option value="underwater kingdom">🌊 Underwater Kingdom</option>
+                  <option value="dragon mountains">🐉 Dragon Mountains</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-white/60 block mb-1">Learning Lesson</label>
+                <select id="storyLesson" class="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+                  <option value="kindness and sharing">💝 Kindness &amp; Sharing</option>
+                  <option value="counting and math">🔢 Counting &amp; Math</option>
+                  <option value="letters and reading">🔤 Letters &amp; Reading</option>
+                  <option value="science and nature">🧪 Science &amp; Nature</option>
+                </select>
+              </div>
+              <button class="btn-neon btn-purple w-full py-3" onclick="generateStory()">✨ Generate Story!</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="story-panel h-full" id="storyOutput">
+            <div class="text-center text-white/40 py-10">
+              <div class="text-5xl mb-3">📖</div>
+              <div>Your personalized story will appear here...</div>
+              <div class="text-sm mt-2">Powered by Claude AI ✨</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== SCIENCE ====== -->
+    <div id="view-science" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🧪 Science Lab</h2>
+        <button class="btn-neon btn-teal text-sm py-2 px-4" onclick="getRandomFact()">⚡ Random Fact!</button>
+      </div>
+      <!-- Fun Fact Box (AI) -->
+      <div class="glass p-5 mb-5">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="text-3xl animate-pulse">🤖</div>
+          <div class="font-bold">AI Science Fact</div>
+        </div>
+        <div id="scienceFact" class="text-white/80 text-sm leading-relaxed">Click "Random Fact!" to discover amazing science with AI! 🌟</div>
+      </div>
+      <!-- Elements grid -->
+      <h3 class="text-lg font-bold mb-3" style="font-family:&#39;Fredoka One&#39;,sans-serif;">⚗️ Elements Explorer</h3>
+      <div id="elementsGrid" class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-5"></div>
+      <!-- Experiment ideas -->
+      <div class="glass p-5">
+        <div class="font-bold mb-3">🔬 Home Experiments</div>
+        <div class="grid md:grid-cols-2 gap-3" id="experimentsGrid"></div>
+      </div>
+    </div>
+
+    <!-- ====== AI QUIZ ====== -->
+    <div id="view-quiz" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🧩 AI Quiz Master</h2>
+        <div class="flex gap-2">
+          <select id="quizSubject" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+            <option value="general">🌟 General Knowledge</option>
+            <option value="math">🔢 Math</option>
+            <option value="science">🧪 Science</option>
+            <option value="animals">🦊 Animals</option>
+            <option value="space">🚀 Space</option>
+          </select>
+          <button class="btn-neon btn-purple text-sm py-2 px-4" onclick="generateQuiz()">🎲 New Quiz</button>
+        </div>
+      </div>
+      <div id="quizDisplay" class="glass p-6">
+        <div class="text-center text-white/40 py-8">
+          <div class="text-5xl mb-3">🧩</div>
+          <div class="font-bold">Click "New Quiz" to start!</div>
+          <div class="text-sm mt-1">AI generates questions just for you ✨</div>
+        </div>
+      </div>
+      <div class="glass p-4 mt-4 flex gap-6 justify-center text-sm">
+        <span>✅ Correct: <strong id="quizCorrect">0</strong></span>
+        <span>❌ Wrong: <strong id="quizWrong">0</strong></span>
+        <span>🎯 Score: <strong id="quizTotal">0%</strong></span>
+      </div>
+    </div>
+
+    <!-- ====== AI TUTOR CHAT ====== -->
+    <div id="view-aitutor" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🤖 AI Tutor</h2>
+        <button class="btn-neon btn-dark text-sm py-2 px-4" onclick="clearChat()">🗑️ Clear</button>
+      </div>
+      <!-- Quick prompts -->
+      <div class="flex gap-2 mb-4 flex-wrap">
+        <button class="btn-neon btn-dark text-xs py-2 px-3" onclick="sendQuickPrompt(&#39;Tell me a fun fact about animals 🦊&#39;)">🦊 Animal fact</button>
+        <button class="btn-neon btn-dark text-xs py-2 px-3" onclick="sendQuickPrompt(&#39;Explain what is gravity in simple words 🌍&#39;)">🌍 What is gravity?</button>
+        <button class="btn-neon btn-dark text-xs py-2 px-3" onclick="sendQuickPrompt(&#39;Help me with my multiplication tables 🔢&#39;)">🔢 Times tables help</button>
+        <button class="btn-neon btn-dark text-xs py-2 px-3" onclick="sendQuickPrompt(&#39;Tell me a short funny joke for kids 😂&#39;)">😂 Tell a joke</button>
+        <button class="btn-neon btn-dark text-xs py-2 px-3" onclick="sendQuickPrompt(&#39;What are the planets in our solar system? 🚀&#39;)">🚀 Solar system</button>
+      </div>
+      <!-- Chat window -->
+      <div id="chatWindow" class="glass p-4 mb-4 space-y-4 overflow-y-auto" style="min-height:350px;max-height:450px;"></div>
+      <!-- Input -->
+      <div class="flex gap-3">
+        <input id="chatInput" class="flex-1 p-4 rounded-2xl bg-white/10 border border-white/20 text-white font-bold outline-none focus:border-purple-400 transition placeholder-white/40" placeholder="Ask me anything... 🌟" onkeydown="if(event.key===&#39;Enter&#39;)sendChat()">
+        <button class="btn-neon btn-purple px-6" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+
+    <!-- ====== STATS ====== -->
+    <div id="view-stats" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">📊 My Progress</h2>
+        <button class="btn-neon btn-coral text-sm py-2 px-4" onclick="downloadReport()">⬇️ Report</button>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 mb-5">
+        <div class="glass p-5">
+          <div class="font-bold mb-4">📈 Learning Progress</div>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span>🔤 Alphabet</span><span id="alphPct">0%</span></div>
+              <div class="prog-track"><div id="statProgAlph" class="prog-fill" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span>🔢 Numbers</span><span id="numPct">0%</span></div>
+              <div class="prog-track" style="--grad:linear-gradient(90deg,#f093fb,#f5576c)">
+                <div id="statProgNum" class="prog-fill" style="width:0%;background:linear-gradient(90deg,#f093fb,#f5576c)"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span>🃏 Memory</span><span id="memPct">0 games</span></div>
+              <div class="prog-track"><div id="statProgMem" class="prog-fill" style="width:0%;background:linear-gradient(90deg,#43C6AC,#08d2b6)"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span>🧩 Quiz</span><span id="quizPct">0%</span></div>
+              <div class="prog-track"><div id="statProgQuiz" class="prog-fill" style="width:0%;background:linear-gradient(90deg,#ffecd2,#fcb69f)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="glass p-5">
+          <div class="font-bold mb-4">🏅 All Badges</div>
+          <div id="allBadges" class="flex gap-2 flex-wrap">
+            <span class="text-white/40 text-sm">Complete activities to unlock badges!</span>
+          </div>
+        </div>
+      </div>
+      <div class="glass p-5">
+        <div class="font-bold mb-3">📊 Activity Chart</div>
+        <div class="chart-wrap"><canvas id="statsChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ====== COLORS ====== -->
+    <div id="view-colors" class="view">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-2xl font-bold" style="font-family:&#39;Fredoka One&#39;,sans-serif;">🎨 Color World</h2>
+      </div>
+      <div id="colorsGrid" class="grid grid-cols-3 md:grid-cols-5 gap-4 mb-5"></div>
+      <!-- Color Mixer -->
+      <div class="glass p-5">
+        <div class="font-bold mb-3">🔮 Color Mixer</div>
+        <div class="flex gap-4 items-center flex-wrap">
+          <select id="mix1" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+            <option value="red">🔴 Red</option>
+            <option value="blue">🔵 Blue</option>
+            <option value="yellow">🟡 Yellow</option>
+          </select>
+          <span class="font-bold text-xl">+</span>
+          <select id="mix2" class="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold outline-none cursor-pointer">
+            <option value="blue">🔵 Blue</option>
+            <option value="yellow">🟡 Yellow</option>
+            <option value="red">🔴 Red</option>
+          </select>
+          <button class="btn-neon btn-purple py-2 px-4" onclick="mixColors()">= Mix!</button>
+          <div id="mixResult" class="glass-bright px-6 py-3 font-bold text-purple-900 rounded-2xl hidden"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</section>
+
+<!-- AI Loading Overlay for stories -->
+<div id="aiLoadingOverlay" class="modal-overlay">
+  <div class="modal-box text-center">
+    <div class="text-6xl mb-4 animate-spin">⭐</div>
+    <div class="text-xl font-bold mb-2">AI is thinking...</div>
+    <div class="ai-loading justify-center"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- ========= SCRIPT ========= -->
+<script>
+// ============ STATE ============
+let userName = 'Friend', userAge = '6-8', userAvatar = '🐼', userTheme = 'forest';
+let xp = 0, level = 1, streakDays = 1, activitiesTotal = 0;
+let alphMastered = 0, alphScore = 0;
+let numMastered = 0, numScore = 0;
+let writingScore = 0;
+let memGamesWon = 0;
+let quizCorrect = 0, quizWrong = 0;
+let badges = [];
+let statsChart = null;
+let activityLog = [0,0,0,0,0,0,0];
+let chatHistory = [];
+let showUppercase = true;
+let writingCtx = null, isDrawing = false, brushColor = '#a78bfa', brushSizeVal = 6;
+let currentPracticeItem = 'A';
+let memTimer = null, memSeconds = 0;
+let memFlipped = [], memMatched = 0, memMoves = 0, memTiles = [];
+let memLocked = false;
+let audioCtx = null;
+let tableQuizNum = 2, tableQuizMultiplier = 1;
+let currentQuizQuestion = null;
+
+// ============ PARTICLES ============
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#6C63FF','#FF6584','#43C6AC','#FFD700','#a855f7','#f093fb'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${4+Math.random()*8}px;
+      height:${4+Math.random()*8}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${8+Math.random()*12}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    container.appendChild(p);
+  }
+}
+spawnParticles();
+
+// ============ WELCOME ============
+function selectAvatar(el, av) {
+  document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  userAvatar = av;
+}
+function selectTheme(el, th) {
+  document.querySelectorAll('.theme-pick').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  userTheme = th;
+}
+function startLearning() {
+  const n = document.getElementById('nameInput').value.trim();
+  if (n) userName = n;
+  userAge = document.getElementById('ageSelect').value;
+  document.getElementById('welcome').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('mascot').textContent = userAvatar;
+  document.getElementById('greeting').textContent = `Hey, ${userName}! 🌟`;
+  document.getElementById('dashGreeting').textContent = `Welcome, ${userName}! Ready to learn?`;
+  loadState();
+  buildAlphabet();
+  buildNumbers();
+  buildColors();
+  buildElements();
+  buildExperiments();
+  initMemory();
+  initWritingCanvas();
+  initPiano();
+  updateHeader();
+  updateProgressBars();
+  updateStats();
+  showConfetti();
+  speak(`Welcome to BrightMind, ${userName}! Let's learn something amazing today!`);
+  // Initial AI greeting in chat
+  addChatMessage('ai', `Hi ${userName}! 👋 I'm your AI learning buddy ${userAvatar}. I can help you learn letters, numbers, science, tell stories, and answer any questions you have. What would you like to explore today? 🌟`);
+}
+
+// ============ STATE SAVE/LOAD ============
+function saveState() {
+  try {
+    localStorage.setItem('bmState', JSON.stringify({
+      userName,userAge,userAvatar,userTheme,xp,level,streakDays,
+      activitiesTotal,alphMastered,alphScore,numMastered,numScore,
+      writingScore,memGamesWon,quizCorrect,quizWrong,badges,activityLog
+    }));
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('bmState') || '{}');
+    if (s.userName) userName = s.userName;
+    if (s.xp !== undefined) xp = s.xp;
+    if (s.level !== undefined) level = s.level;
+    if (s.streakDays) streakDays = s.streakDays;
+    if (s.activitiesTotal) activitiesTotal = s.activitiesTotal;
+    if (s.alphMastered) alphMastered = s.alphMastered;
+    if (s.alphScore) alphScore = s.alphScore;
+    if (s.numMastered) numMastered = s.numMastered;
+    if (s.numScore) numScore = s.numScore;
+    if (s.writingScore) writingScore = s.writingScore;
+    if (s.memGamesWon) memGamesWon = s.memGamesWon;
+    if (s.quizCorrect) quizCorrect = s.quizCorrect;
+    if (s.quizWrong) quizWrong = s.quizWrong;
+    if (s.badges) badges = s.badges;
+    if (s.activityLog) activityLog = s.activityLog;
+    // Check streak
+    const today = new Date().toDateString();
+    const last = localStorage.getItem('bmLastDate');
+    if (last !== today) {
+      streakDays++;
+      localStorage.setItem('bmLastDate', today);
+    }
+  } catch(e) {}
+}
+
+// ============ NAVIGATION ============
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const v = document.getElementById('view-' + name);
+  if (v) v.classList.add('active');
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // Init on show
+  if (name === 'stats') renderStatsChart();
+  if (name === 'memory' && memTiles.length === 0) initMemory();
+  updateStats();
+}
+
+// ============ HEADER UPDATE ============
+function updateHeader() {
+  document.getElementById('xpNum').textContent = xp;
+  document.getElementById('streakNum').textContent = streakDays;
+  document.getElementById('levelNum').textContent = level;
+}
+
+// ============ XP + LEVEL ============
+function addXP(amount) {
+  xp += amount;
+  const nextLevel = level * 100;
+  if (xp >= nextLevel) {
+    level++;
+    toast(`🎉 Level Up! You're now Level ${level}!`);
+    showConfetti();
+    speak(`Incredible! You reached level ${level}!`);
+  }
+  activitiesTotal++;
+  activityLog[new Date().getDay()] = (activityLog[new Date().getDay()] || 0) + 1;
+  updateHeader();
+  updateStats();
+  checkBadges();
+  saveState();
+}
+
+// ============ PROGRESS BARS ============
+function updateProgressBars() {
+  const ap = Math.min(100, Math.round((alphMastered / 26) * 100));
+  const np = Math.min(100, Math.round((numMastered / 20) * 100));
+  setProgBar('progAlphabet', ap);
+  setProgBar('progNumbers', np);
+  setProgBar('progTables', Math.min(100, Math.round((quizCorrect / 20) * 100)));
+  setProgBar('alphPct', ap, true);
+  setProgBar('numPct', np, true);
+  document.getElementById('statProgAlph') && (document.getElementById('statProgAlph').style.width = ap + '%');
+  document.getElementById('statProgNum') && (document.getElementById('statProgNum').style.width = np + '%');
+  const mp = Math.min(100, memGamesWon * 10);
+  document.getElementById('statProgMem') && (document.getElementById('statProgMem').style.width = mp + '%');
+  const qp = (quizCorrect + quizWrong) > 0 ? Math.round((quizCorrect/(quizCorrect+quizWrong))*100) : 0;
+  document.getElementById('statProgQuiz') && (document.getElementById('statProgQuiz').style.width = qp + '%');
+  const el = document.getElementById('quizPct');
+  if (el) el.textContent = qp + '%';
+  const el2 = document.getElementById('memPct');
+  if (el2) el2.textContent = memGamesWon + ' games';
+}
+function setProgBar(id, val, isText) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (isText) el.textContent = val + '%';
+  else el.style.width = val + '%';
+}
+function updateStats() {
+  document.getElementById('statStreak').textContent = streakDays;
+  document.getElementById('statXP').textContent = xp;
+  document.getElementById('statActivities').textContent = activitiesTotal;
+  document.getElementById('statBadges').textContent = badges.length;
+  document.getElementById('alphScore').textContent = alphScore;
+  document.getElementById('alphMastered').textContent = `${alphMastered}/26`;
+  document.getElementById('numScore').textContent = numScore;
+  document.getElementById('numMastered').textContent = `${numMastered}/20`;
+  document.getElementById('quizCorrect').textContent = quizCorrect;
+  document.getElementById('quizWrong').textContent = quizWrong;
+  const qp = (quizCorrect+quizWrong)>0 ? Math.round(quizCorrect/(quizCorrect+quizWrong)*100) : 0;
+  document.getElementById('quizTotal').textContent = qp + '%';
+  document.getElementById('writingScore').textContent = writingScore;
+  updateProgressBars();
+}
+
+// ============ BADGES ============
+const BADGE_DEFS = [
+  {id:'first_letter', label:'🔤 First Letter', desc:'Tapped your first letter'},
+  {id:'alphabet_half', label:'🔤 Halfway!', desc:'Mastered 13 letters'},
+  {id:'alphabet_done', label:'🔤 ABC Master!', desc:'Mastered all 26 letters'},
+  {id:'first_number', label:'🔢 First Number', desc:'Tapped your first number'},
+  {id:'number_master', label:'🔢 Number Wizard', desc:'Mastered all 20 numbers'},
+  {id:'memory_win', label:'🃏 Memory Champ', desc:'Won your first memory game'},
+  {id:'quiz_5', label:'🧩 Quiz Starter', desc:'Answered 5 quiz questions'},
+  {id:'xp_100', label:'⭐ Century!', desc:'Earned 100 XP'},
+  {id:'writer', label:'✏️ Young Writer', desc:'Used writing 5 times'},
+  {id:'ai_chat', label:'🤖 AI Friend', desc:'Chatted with AI tutor'},
+  {id:'streak_3', label:'🔥 On Fire!', desc:'3-day streak'},
+];
+function checkBadges() {
+  const earn = (id) => {
+    if (!badges.includes(id)) {
+      badges.push(id);
+      const b = BADGE_DEFS.find(x=>x.id===id);
+      if (b) { toast(`🏅 Badge Earned: ${b.label}`); renderBadges(); saveState(); }
+    }
+  };
+  if (alphScore >= 1) earn('first_letter');
+  if (alphMastered >= 13) earn('alphabet_half');
+  if (alphMastered >= 26) earn('alphabet_done');
+  if (numScore >= 1) earn('first_number');
+  if (numMastered >= 20) earn('number_master');
+  if (memGamesWon >= 1) earn('memory_win');
+  if (quizCorrect+quizWrong >= 5) earn('quiz_5');
+  if (xp >= 100) earn('xp_100');
+  if (streakDays >= 3) earn('streak_3');
+}
+function renderBadges() {
+  const html = badges.map(id => {
+    const b = BADGE_DEFS.find(x=>x.id===id);
+    return b ? `<span class="badge">${b.label}</span>` : '';
+  }).join('') || '<span class="text-white/40 text-sm">Start learning to earn badges!</span>';
+  ['badgesContainer','allBadges'].forEach(i => {
+    const el = document.getElementById(i);
+    if (el) el.innerHTML = html;
+  });
+}
+
+// ============ ALPHABET ============
+const LETTER_DATA = {
+  A:{emoji:'🍎',word:'Apple',desc:'A is for Apple'},B:{emoji:'🦋',word:'Butterfly',desc:'B is for Butterfly'},
+  C:{emoji:'🐱',word:'Cat',desc:'C is for Cat'},D:{emoji:'🐶',word:'Dog',desc:'D is for Dog'},
+  E:{emoji:'🐘',word:'Elephant',desc:'E is for Elephant'},F:{emoji:'🐸',word:'Frog',desc:'F is for Frog'},
+  G:{emoji:'🦒',word:'Giraffe',desc:'G is for Giraffe'},H:{emoji:'🐹',word:'Hamster',desc:'H is for Hamster'},
+  I:{emoji:'🍦',word:'Ice cream',desc:'I is for Ice cream'},J:{emoji:'🦘',word:'Jaguar',desc:'J is for Jaguar'},
+  K:{emoji:'🦘',word:'Kangaroo',desc:'K is for Kangaroo'},L:{emoji:'🦁',word:'Lion',desc:'L is for Lion'},
+  M:{emoji:'🍄',word:'Mushroom',desc:'M is for Mushroom'},N:{emoji:'🌙',word:'Night',desc:'N is for Night'},
+  O:{emoji:'🐙',word:'Octopus',desc:'O is for Octopus'},P:{emoji:'🐧',word:'Penguin',desc:'P is for Penguin'},
+  Q:{emoji:'👸',word:'Queen',desc:'Q is for Queen'},R:{emoji:'🌈',word:'Rainbow',desc:'R is for Rainbow'},
+  S:{emoji:'⭐',word:'Star',desc:'S is for Star'},T:{emoji:'🐯',word:'Tiger',desc:'T is for Tiger'},
+  U:{emoji:'☂️',word:'Umbrella',desc:'U is for Umbrella'},V:{emoji:'🎻',word:'Violin',desc:'V is for Violin'},
+  W:{emoji:'🐳',word:'Whale',desc:'W is for Whale'},X:{emoji:'🎸',word:'Xylophone',desc:'X is for Xylophone'},
+  Y:{emoji:'🪀',word:'Yo-yo',desc:'Y is for Yo-yo'},Z:{emoji:'🦓',word:'Zebra',desc:'Z is for Zebra'}
+};
+function buildAlphabet() {
+  const grid = document.getElementById('alphabetGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let i=0; i<26; i++) {
+    const letter = String.fromCharCode(65+i);
+    const d = document.createElement('div');
+    d.className = 'letter-tile' + (alphMastered > i ? ' mastered' : '');
+    d.textContent = showUppercase ? letter : letter.toLowerCase();
+    d.onclick = () => playLetter(letter, d, i);
+    grid.appendChild(d);
+  }
+}
+function toggleCase() {
+  showUppercase = !showUppercase;
+  buildAlphabet();
+  toast(showUppercase ? '🔠 Uppercase' : '🔡 Lowercase');
+}
+function playLetter(letter, el, idx) {
+  const data = LETTER_DATA[letter];
+  if (!data) return;
+  // Show example
+  document.getElementById('letterExample').classList.remove('hidden');
+  document.getElementById('letEx_emoji').textContent = data.emoji;
+  document.getElementById('letEx_word').textContent = data.word;
+  document.getElementById('letEx_desc').textContent = data.desc;
+  speak(`${letter}. ${data.desc}`);
+  alphScore++;
+  if (alphScore % 3 === 0 && alphMastered <= idx) {
+    alphMastered = Math.max(alphMastered, idx + 1);
+    el.classList.add('mastered');
+    showConfetti();
+    addXP(10);
+  } else {
+    addXP(2);
+  }
+  updateStats();
+  toast(`${data.emoji} ${data.desc}`);
+}
+
+// ============ NUMBERS ============
+const NUM_DATA = {
+  '0':{emoji:'0️⃣',desc:'Zero – nothing here!'},
+  '1':{emoji:'1️⃣🍎',desc:'One apple'},
+  '2':{emoji:'2️⃣🍌🍌',desc:'Two bananas'},
+  '3':{emoji:'3️⃣🌟🌟🌟',desc:'Three stars'},
+  '4':{emoji:'4️⃣🌸🌸🌸🌸',desc:'Four flowers'},
+  '5':{emoji:'5️⃣🐱🐱🐱🐱🐱',desc:'Five cats'},
+  '6':{emoji:'6️⃣🦋🦋🦋🦋🦋🦋',desc:'Six butterflies'},
+  '7':{emoji:'7️⃣🌈',desc:'Seven colors of the rainbow'},
+  '8':{emoji:'8️⃣🕷️',desc:'Eight spider legs'},
+  '9':{emoji:'9️⃣🌙',desc:'Nine o\'clock'},
+  '10':{emoji:'🔟🙌🙌',desc:'Ten fingers'},
+  '11':{emoji:'🔢',desc:'Eleven'},
+  '12':{emoji:'🔢',desc:'Twelve – dozen!'},
+  '13':{emoji:'🔢',desc:'Thirteen'},
+  '14':{emoji:'🔢',desc:'Fourteen'},
+  '15':{emoji:'🔢',desc:'Fifteen'},
+  '16':{emoji:'🔢',desc:'Sixteen'},
+  '17':{emoji:'🔢',desc:'Seventeen'},
+  '18':{emoji:'🔢',desc:'Eighteen'},
+  '19':{emoji:'🔢',desc:'Nineteen'},
+  '20':{emoji:'🔢',desc:'Twenty! You counted to 20! 🎉'}
+};
+function buildNumbers() {
+  const grid = document.getElementById('numbersGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let i=0; i<=20; i++) {
+    const d = document.createElement('div');
+    d.className = 'num-tile' + (numMastered > i ? ' mastered' : '');
+    d.innerHTML = `<div class="num-label">${i}</div><div class="num-emoji">${NUM_DATA[String(i)]?.emoji?.slice(0,2)||'🔢'}</div>`;
+    d.onclick = () => playNumber(String(i), d, i);
+    grid.appendChild(d);
+  }
+}
+function playNumber(num, el, idx) {
+  const data = NUM_DATA[num];
+  if (!data) return;
+  document.getElementById('numExample').classList.remove('hidden');
+  document.getElementById('numEmojis').textContent = data.emoji;
+  document.getElementById('numCount').textContent = data.desc;
+  speak(`${num}. ${data.desc}`);
+  numScore++;
+  if (numScore % 2 === 0 && numMastered <= idx) {
+    numMastered = Math.max(numMastered, idx + 1);
+    el.classList.add('mastered');
+    showConfetti();
+    addXP(10);
+  } else { addXP(2); }
+  updateStats();
+  toast(`${num}: ${data.desc}`);
+}
+
+// ============ TIMES TABLES ============
+function showTable() {
+  const n = parseInt(document.getElementById('tableSelect').value);
+  const div = document.getElementById('tableDisplay');
+  div.innerHTML = '';
+  for (let i=1; i<=12; i++) {
+    const r = n * i;
+    const el = document.createElement('div');
+    el.className = 'glass p-3 text-center cursor-pointer hover:bg-purple-500/20 transition font-bold rounded-xl';
+    el.textContent = `${n} × ${i} = ${r}`;
+    el.onclick = () => { speak(`${n} times ${i} equals ${r}`); toast(`${n} × ${i} = ${r} ✅`); addXP(1); };
+    div.appendChild(el);
+  }
+  addXP(5);
+  toast(`📖 Showing ${n}× table!`);
+}
+function startTableQuiz() {
+  tableQuizNum = parseInt(document.getElementById('tableSelect').value);
+  tableQuizMultiplier = Math.ceil(Math.random() * 12);
+  document.getElementById('quizQuestion').textContent = `${tableQuizNum} × ${tableQuizMultiplier} = ?`;
+  document.getElementById('tableQuiz').classList.remove('hidden');
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizAnswer').value = '';
+  document.getElementById('quizAnswer').focus();
+}
+function checkTableAnswer() {
+  const ans = parseInt(document.getElementById('quizAnswer').value);
+  const correct = tableQuizNum * tableQuizMultiplier;
+  if (ans === correct) {
+    document.getElementById('quizFeedback').innerHTML = '<span style="color:#10B981">✅ Correct! Amazing! 🎉</span>';
+    showConfetti(); addXP(15); speak('Correct! Well done!');
+    setTimeout(() => startTableQuiz(), 1500);
+  } else {
+    document.getElementById('quizFeedback').innerHTML = `<span style="color:#EF4444">❌ Try again! ${tableQuizNum} × ${tableQuizMultiplier} = ${correct}</span>`;
+    speak(`Not quite! The answer is ${correct}`);
+  }
+}
+
+// ============ WRITING ============
+function initWritingCanvas() {
+  const canvas = document.getElementById('writingCanvas');
+  if (!canvas) return;
+  writingCtx = canvas.getContext('2d');
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', drawMove);
+  canvas.addEventListener('pointerup', stopDraw);
+  canvas.addEventListener('pointerout', stopDraw);
+  updatePracticeOpts();
+}
+function startDraw(e) {
+  isDrawing = true;
+  const r = e.target.getBoundingClientRect();
+  const scaleX = e.target.width / r.width;
+  const scaleY = e.target.height / r.height;
+  writingCtx.beginPath();
+  writingCtx.moveTo((e.clientX - r.left)*scaleX, (e.clientY - r.top)*scaleY);
+}
+function drawMove(e) {
+  if (!isDrawing) return;
+  const r = e.target.getBoundingClientRect();
+  const scaleX = e.target.width / r.width;
+  const scaleY = e.target.height / r.height;
+  writingCtx.lineWidth = brushSizeVal;
+  writingCtx.lineCap = 'round';
+  writingCtx.strokeStyle = brushColor;
+  writingCtx.lineTo((e.clientX - r.left)*scaleX, (e.clientY - r.top)*scaleY);
+  writingCtx.stroke();
+}
+function stopDraw() { isDrawing = false; }
+function setColor(c) { brushColor = c; }
+function clearCanvas() {
+  if (writingCtx) writingCtx.clearRect(0, 0, 600, 350);
+  generateGuide();
+}
+const brushSizeEl = document.getElementById ? document.getElementById('brushSize') : null;
+document.addEventListener('DOMContentLoaded', () => {
+  const bs = document.getElementById('brushSize');
+  if (bs) bs.addEventListener('input', () => { brushSizeVal = parseInt(bs.value); });
+});
+function updatePracticeOpts() {
+  const type = document.getElementById('practiceType').value;
+  const sel = document.getElementById('practiceItem');
+  sel.innerHTML = '';
+  let opts = [];
+  if (type === 'letters') opts = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  else if (type === 'numbers') opts = '0123456789'.split('');
+  else opts = ['cat','dog','sun','moon','fish','tree','star','bird'];
+  opts.forEach(o => {
+    const op = document.createElement('option');
+    op.value = op.textContent = o;
+    sel.appendChild(op);
+  });
+  currentPracticeItem = opts[0];
+  generateGuide();
+}
+function generateGuide() {
+  const item = document.getElementById('practiceItem').value;
+  currentPracticeItem = item;
+  document.getElementById('writingGuideDisplay').textContent = item;
+  if (writingCtx) {
+    writingCtx.clearRect(0, 0, 600, 350);
+    // Draw faint guide
+    writingCtx.save();
+    writingCtx.globalAlpha = 0.12;
+    writingCtx.fillStyle = '#a78bfa';
+    writingCtx.font = 'bold 220px Fredoka One, sans-serif';
+    writingCtx.textAlign = 'center';
+    writingCtx.textBaseline = 'middle';
+    writingCtx.fillText(item, 300, 175);
+    writingCtx.restore();
+  }
+  writingScore++;
+  addXP(3);
+  if (writingScore >= 5) checkBadges();
+  updateStats();
+}
+async function getWritingFeedback() {
+  const el = document.getElementById('writingAIFeedback');
+  el.innerHTML = '<div class="ai-loading"><span></span><span></span><span></span></div>';
+  const msg = `You're a friendly kids tutor. Give a short (2 sentences), encouraging, fun writing tip for a child practicing writing the letter/word "${currentPracticeItem}". Be playful and use 1-2 emojis.`;
+  try {
+    const res = await callClaude(msg);
+    el.textContent = res;
+  } catch(e) {
+    el.textContent = `Great job practicing "${currentPracticeItem}"! Keep going - practice makes perfect! ⭐`;
+  }
+}
+
+// ============ MEMORY GAME ============
+const MEM_SETS = {
+  easy:['🐶','🐱','🦊','🐻','🐼','🐨'],
+  medium:['🐶','🐱','🦊','🐻','🐼','🐨','🐯','🦁'],
+  hard:['🐶','🐱','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🐙','🦋','🌟']
+};
+function initMemory() {
+  clearInterval(memTimer);
+  memSeconds = 0;
+  memMatched = 0;
+  memMoves = 0;
+  memFlipped = [];
+  memLocked = false;
+  document.getElementById('memMatches').textContent = 0;
+  document.getElementById('memMoves').textContent = 0;
+  document.getElementById('memTimer').textContent = '0s';
+  const diff = document.getElementById('memDiff')?.value || 'easy';
+  const emojis = MEM_SETS[diff];
+  memTiles = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+  const grid = document.getElementById('memoryGrid');
+  if (!grid) return;
+  const cols = diff === 'easy' ? 4 : diff === 'medium' ? 4 : 6;
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.innerHTML = '';
+  memTiles.forEach((emoji, idx) => {
+    const tile = document.createElement('div');
+    tile.className = 'mem-tile';
+    tile.innerHTML = `<div class="mem-front">❓</div><div class="mem-back">${emoji}</div>`;
+    tile.onclick = () => flipTile(tile, idx);
+    grid.appendChild(tile);
+  });
+  memTimer = setInterval(() => {
+    memSeconds++;
+    const el = document.getElementById('memTimer');
+    if (el) el.textContent = memSeconds + 's';
+  }, 1000);
+}
+function flipTile(tile, idx) {
+  if (memLocked || tile.classList.contains('flipped') || tile.classList.contains('matched')) return;
+  tile.classList.add('flipped');
+  memFlipped.push({tile, idx});
+  if (memFlipped.length === 2) {
+    memMoves++;
+    document.getElementById('memMoves').textContent = memMoves;
+    memLocked = true;
+    const [a, b] = memFlipped;
+    if (memTiles[a.idx] === memTiles[b.idx]) {
+      a.tile.classList.add('matched');
+      b.tile.classList.add('matched');
+      memMatched++;
+      document.getElementById('memMatches').textContent = memMatched;
+      memFlipped = [];
+      memLocked = false;
+      speak('Match!');
+      addXP(15);
+      if (memMatched === memTiles.length / 2) {
+        clearInterval(memTimer);
+        memGamesWon++;
+        checkBadges();
+        showConfetti();
+        speak(`Amazing! You matched all pairs in ${memSeconds} seconds and ${memMoves} moves!`);
+        toast(`🏆 You won in ${memSeconds}s!`);
+        saveState();
+      }
+    } else {
+      setTimeout(() => {
+        a.tile.classList.remove('flipped');
+        b.tile.classList.remove('flipped');
+        memFlipped = [];
+        memLocked = false;
+      }, 900);
+    }
+  }
+}
+
+// ============ MUSIC / PIANO ============
+const NOTES = [
+  {name:'C4',freq:261.63,key:'a',type:'white'},
+  {name:'D4',freq:293.66,key:'s',type:'white'},
+  {name:'E4',freq:329.63,key:'d',type:'white'},
+  {name:'F4',freq:349.23,key:'f',type:'white'},
+  {name:'G4',freq:392.00,key:'g',type:'white'},
+  {name:'A4',freq:440.00,key:'h',type:'white'},
+  {name:'B4',freq:493.88,key:'j',type:'white'},
+  {name:'C5',freq:523.25,key:'k',type:'white'},
+  {name:'Cs4',freq:277.18,key:'w',type:'black'},
+  {name:'Ds4',freq:311.13,key:'e',type:'black'},
+  {name:'Fs4',freq:369.99,key:'t',type:'black'},
+  {name:'Gs4',freq:415.30,key:'y',type:'black'},
+  {name:'As4',freq:466.16,key:'u',type:'black'},
+];
+function initPiano() {
+  const wrap = document.getElementById('pianoWrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const whites = NOTES.filter(n=>n.type==='white');
+  const blacks = NOTES.filter(n=>n.type==='black');
+  const whiteContainer = document.createElement('div');
+  whiteContainer.style.cssText = 'display:flex;gap:2px;position:relative;';
+  whites.forEach(n => {
+    const k = document.createElement('div');
+    k.className = 'piano-key white-key';
+    k.innerHTML = `<span>${n.key.toUpperCase()}</span>`;
+    k.dataset.key = n.key;
+    k.addEventListener('pointerdown', () => playPianoNote(n));
+    whiteContainer.appendChild(k);
+  });
+  // overlay blacks roughly
+  const blackPositions = [0.7, 1.7, 3.7, 4.7, 5.7];
+  blacks.slice(0,5).forEach((n, i) => {
+    const k = document.createElement('div');
+    k.className = 'piano-key black-key';
+    k.style.cssText = `position:absolute;left:${blackPositions[i]*52}px;top:0;`;
+    k.innerHTML = `<span>${n.key.toUpperCase()}</span>`;
+    k.addEventListener('pointerdown', () => playPianoNote(n));
+    whiteContainer.appendChild(k);
+  });
+  wrap.appendChild(whiteContainer);
+  document.addEventListener('keydown', (e) => {
+    const n = NOTES.find(x=>x.key===e.key.toLowerCase());
+    if (n) { playPianoNote(n); highlightKey(e.key.toLowerCase()); }
+  });
+}
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playPianoNote(note) {
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = 'sine';
+  osc.frequency.value = note.freq;
+  gain.gain.setValueAtTime(0.5, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+  osc.start(); osc.stop(ctx.currentTime + 1.2);
+  document.getElementById('noteDisplay').textContent = `${note.name} 🎵`;
+  addXP(1);
+}
+function highlightKey(k) {
+  const el = document.querySelector(`[data-key="${k}"]`);
+  if (el) { el.classList.add('pressed'); setTimeout(() => el.classList.remove('pressed'), 300); }
+}
+function playScale() {
+  const whites = NOTES.filter(n=>n.type==='white');
+  whites.forEach((n,i) => { setTimeout(() => playPianoNote(n), i * 300); });
+}
+const SONGS = {
+  twinkle:[
+    {name:'C4',freq:261.63},{name:'C4',freq:261.63},{name:'G4',freq:392},{name:'G4',freq:392},
+    {name:'A4',freq:440},{name:'A4',freq:440},{name:'G4',freq:392},{name:'F4',freq:349.23},
+    {name:'F4',freq:349.23},{name:'E4',freq:329.63},{name:'E4',freq:329.63},{name:'D4',freq:293.66},
+    {name:'D4',freq:293.66},{name:'C4',freq:261.63}
+  ],
+  happy:[
+    {freq:261.63},{freq:261.63},{freq:293.66},{freq:261.63},{freq:349.23},{freq:329.63},
+    {freq:261.63},{freq:261.63},{freq:293.66},{freq:261.63},{freq:392},{freq:349.23}
+  ],
+  abc:[
+    {freq:261.63},{freq:261.63},{freq:392},{freq:392},{freq:440},{freq:440},{freq:392},
+    {freq:349.23},{freq:349.23},{freq:329.63},{freq:329.63},{freq:293.66},{freq:293.66},{freq:261.63}
+  ]
+};
+function playSong(name) {
+  const song = SONGS[name];
+  if (!song) return;
+  song.forEach((n,i) => {
+    setTimeout(() => playPianoNote({...n, name: n.name || '♪'}), i * 400);
+  });
+  toast(`🎵 Playing ${name}!`);
+}
+
+// ============ AI STORIES ============
+async function generateStory() {
+  const hero = document.getElementById('heroName').value || userName;
+  const world = document.getElementById('storyWorld').value;
+  const lesson = document.getElementById('storyLesson').value;
+  document.getElementById('aiLoadingOverlay').classList.add('open');
+  const prompt = `Write a short, magical story (150-200 words) for a child aged ${userAge} years.
+Hero: ${hero}
+World: ${world}
+The story should teach about: ${lesson}
+Make it exciting, fun, with emojis, and end with a positive lesson. Use simple language.`;
+  try {
+    const story = await callClaude(prompt);
+    document.getElementById('aiLoadingOverlay').classList.remove('open');
+    document.getElementById('storyOutput').innerHTML = `<div class="hero-story-text leading-relaxed" style="white-space:pre-wrap">${story}</div>`;
+    addXP(20);
+    speak(story.replace(/[🌟✨🎉🚀⭐🌈]/g,''));
+  } catch(e) {
+    document.getElementById('aiLoadingOverlay').classList.remove('open');
+    document.getElementById('storyOutput').innerHTML = `<div class="hero-story-text">Once upon a time, ${hero} went on an amazing adventure in the ${world}. They learned about ${lesson} and made the world a better place! 🌟</div>`;
+  }
+}
+
+// ============ SCIENCE ============
+const ELEMENTS = [
+  {symbol:'H',name:'Hydrogen',color:'#60a5fa',emoji:'💧'},
+  {symbol:'O',name:'Oxygen',color:'#34d399',emoji:'🌬️'},
+  {symbol:'C',name:'Carbon',color:'#6b7280',emoji:'💎'},
+  {symbol:'N',name:'Nitrogen',color:'#a78bfa',emoji:'🌫️'},
+  {symbol:'Fe',name:'Iron',color:'#f59e0b',emoji:'⚙️'},
+  {symbol:'Au',name:'Gold',color:'#fbbf24',emoji:'🥇'},
+  {symbol:'Na',name:'Sodium',color:'#ec4899',emoji:'🧂'},
+  {symbol:'Ca',name:'Calcium',color:'#f97316',emoji:'🦷'},
+  {symbol:'He',name:'Helium',color:'#67e8f9',emoji:'🎈'},
+  {symbol:'Li',name:'Lithium',color:'#c084fc',emoji:'🔋'},
+  {symbol:'Cu',name:'Copper',color:'#a16207',emoji:'🪙'},
+  {symbol:'Ag',name:'Silver',color:'#9ca3af',emoji:'🌙'}
+];
+const EXPERIMENTS = [
+  {emoji:'🌋',title:'Volcano!',desc:'Baking soda + vinegar = amazing eruption'},
+  {emoji:'🌈',title:'Rainbow in a glass',desc:'Layer sugar water with food coloring'},
+  {emoji:'🧲',title:'Magnet magic',desc:'Find things magnets attract at home'},
+  {emoji:'🌱',title:'Bean in a jar',desc:'Watch a plant grow from seed'},
+];
+function buildElements() {
+  const g = document.getElementById('elementsGrid');
+  if (!g) return;
+  g.innerHTML = '';
+  ELEMENTS.forEach(el => {
+    const d = document.createElement('div');
+    d.className = 'element-card';
+    d.innerHTML = `<div style="font-size:1.5rem">${el.emoji}</div><div style="font-size:1.3rem;font-weight:900;font-family:'Fredoka One',sans-serif;color:${el.color}">${el.symbol}</div><div style="font-size:0.7rem;opacity:0.7">${el.name}</div>`;
+    d.onclick = () => { speak(`${el.name}! ${el.symbol} is the symbol for ${el.name}.`); toast(`${el.emoji} ${el.name}`); addXP(3); };
+    g.appendChild(d);
+  });
+}
+function buildExperiments() {
+  const g = document.getElementById('experimentsGrid');
+  if (!g) return;
+  g.innerHTML = '';
+  EXPERIMENTS.forEach(ex => {
+    const d = document.createElement('div');
+    d.className = 'glass p-4 rounded-2xl cursor-pointer hover:bg-white/10 transition';
+    d.innerHTML = `<div class="text-2xl mb-1">${ex.emoji}</div><div class="font-bold text-sm">${ex.title}</div><div class="text-xs text-white/60 mt-1">${ex.desc}</div>`;
+    d.onclick = () => { speak(`${ex.title}. ${ex.desc}`); addXP(5); toast(`🧪 ${ex.title}`); };
+    g.appendChild(d);
+  });
+}
+async function getRandomFact() {
+  const topics = ['animals','space','the ocean','dinosaurs','plants','weather','the human body'];
+  const topic = topics[Math.floor(Math.random() * topics.length)];
+  const el = document.getElementById('scienceFact');
+  el.innerHTML = '<div class="ai-loading"><span></span><span></span><span></span></div>';
+  const prompt = `Give one amazing, mind-blowing science fact about ${topic} for a child aged ${userAge}. Keep it 1-2 sentences. Use simple words and 1-2 emojis. Be enthusiastic!`;
+  try {
+    const fact = await callClaude(prompt);
+    el.textContent = fact;
+    speak(fact.replace(/[🌟✨🎉🚀⭐🌈🦊🐋🦕]/g,''));
+    addXP(5);
+  } catch(e) {
+    el.textContent = '🌟 Did you know? The Sun is so big that 1 million Earths could fit inside it! 🌞';
+  }
+}
+
+// ============ AI QUIZ ============
+async function generateQuiz() {
+  const subject = document.getElementById('quizSubject').value;
+  const disp = document.getElementById('quizDisplay');
+  disp.innerHTML = '<div class="text-center py-8"><div class="ai-loading justify-center"><span></span><span></span><span></span></div><div class="mt-3 text-white/60">Generating question...</div></div>';
+  const prompt = `Generate a fun multiple-choice quiz question about ${subject} for a child aged ${userAge}.
+Return ONLY valid JSON like this:
+{"question":"...", "options":["A) ...","B) ...","C) ...","D) ..."], "answer": 0}
+where answer is the 0-based index of the correct option.
+Make it fun and appropriate for kids!`;
+  try {
+    const raw = await callClaude(prompt);
+    let q;
+    try {
+      q = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    } catch {
+      const match = raw.match(/\{[\s\S]*\}/);
+      q = match ? JSON.parse(match[0]) : null;
+    }
+    if (!q) throw new Error('parse fail');
+    currentQuizQuestion = q;
+    disp.innerHTML = `
+      <div class="text-xl font-bold mb-6 text-center">${q.question}</div>
+      <div class="grid md:grid-cols-2 gap-3">
+        ${q.options.map((opt,i) => `
+          <button class="quiz-opt" onclick="checkQuiz(${i}, this)">
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+    `;
+  } catch(e) {
+    // fallback
+    const fallbacks = [
+      {q:'How many legs does a spider have?',opts:['A) 4','B) 6','C) 8','D) 10'],a:2},
+      {q:'What is 5 × 3?',opts:['A) 12','B) 15','C) 18','D) 20'],a:1},
+      {q:'Which planet is closest to the Sun?',opts:['A) Venus','B) Earth','C) Mars','D) Mercury'],a:3},
+    ];
+    const f = fallbacks[Math.floor(Math.random()*fallbacks.length)];
+    currentQuizQuestion = {question:f.q, options:f.opts, answer:f.a};
+    disp.innerHTML = `
+      <div class="text-xl font-bold mb-6 text-center">${f.q}</div>
+      <div class="grid md:grid-cols-2 gap-3">
+        ${f.opts.map((opt,i) => `<button class="quiz-opt" onclick="checkQuiz(${i}, this)">${opt}</button>`).join('')}
+      </div>
+    `;
+  }
+}
+function checkQuiz(idx, btn) {
+  if (!currentQuizQuestion) return;
+  const btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach(b => b.disabled = true);
+  if (idx === currentQuizQuestion.answer) {
+    btn.classList.add('correct');
+    quizCorrect++;
+    showConfetti();
+    speak('Correct! Well done!');
+    addXP(20);
+    toast('✅ Correct!');
+  } else {
+    btn.classList.add('wrong');
+    btns[currentQuizQuestion.answer].classList.add('correct');
+    quizWrong++;
+    speak('Not quite! The correct answer is highlighted in green.');
+    toast('❌ Not quite!');
+  }
+  checkBadges();
+  updateStats();
+  saveState();
+}
+
+// ============ AI CHAT ============
+function addChatMessage(role, text) {
+  const win = document.getElementById('chatWindow');
+  const div = document.createElement('div');
+  div.className = 'flex ' + (role === 'ai' ? 'justify-start' : 'justify-end');
+  div.innerHTML = `
+    <div class="${role === 'ai' ? 'chat-bubble-ai' : 'chat-bubble-user'} fade-in">
+      ${role === 'ai' ? `<span class="text-lg">${userAvatar} </span>` : ''}
+      ${text}
+    </div>
+  `;
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+function addTypingIndicator() {
+  const win = document.getElementById('chatWindow');
+  const div = document.createElement('div');
+  div.id = 'typingIndicator';
+  div.className = 'flex justify-start';
+  div.innerHTML = `<div class="chat-bubble-ai"><div class="chat-typing"><div class="dot-pulse"></div><div class="dot-pulse"></div><div class="dot-pulse"></div></div></div>`;
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+function removeTypingIndicator() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addChatMessage('user', msg);
+  chatHistory.push({role:'user', content:msg});
+  addTypingIndicator();
+  if (!badges.includes('ai_chat')) { badges.push('ai_chat'); renderBadges(); toast('🏅 Badge: AI Friend!'); saveState(); }
+  const systemPrompt = `You are a friendly, encouraging AI tutor for a child named ${userName}, aged ${userAge}. 
+Your avatar is ${userAvatar}. Always be enthusiastic, use simple language, emojis, and short responses (under 100 words).
+Make learning fun! Topics you help with: letters, numbers, math, science, nature, animals, space, stories, fun facts.`;
+  try {
+    const messages = chatHistory.map(m => ({role: m.role, content: m.content}));
+    const reply = await callClaudeChat(systemPrompt, messages);
+    removeTypingIndicator();
+    addChatMessage('ai', reply);
+    chatHistory.push({role:'assistant', content:reply});
+    addXP(5);
+    speak(reply.replace(/[🌟✨🎉🚀⭐🌈🤖🐼🦊]/g,''));
+  } catch(e) {
+    removeTypingIndicator();
+    const fallback = `That's a great question, ${userName}! 🌟 Keep exploring and learning every day! 📚`;
+    addChatMessage('ai', fallback);
+  }
+}
+function sendQuickPrompt(msg) {
+  document.getElementById('chatInput').value = msg;
+  sendChat();
+}
+function clearChat() {
+  document.getElementById('chatWindow').innerHTML = '';
+  chatHistory = [];
+  addChatMessage('ai', `Hi ${userName}! I'm ready to help you learn! What would you like to know? 🌟`);
+}
+
+// ============ COLORS ============
+const COLORS_DATA = [
+  {name:'Red',hex:'#EF4444',emoji:'🔴'},
+  {name:'Orange',hex:'#F97316',emoji:'🟠'},
+  {name:'Yellow',hex:'#FBBF24',emoji:'🟡'},
+  {name:'Green',hex:'#10B981',emoji:'🟢'},
+  {name:'Blue',hex:'#3B82F6',emoji:'🔵'},
+  {name:'Purple',hex:'#8B5CF6',emoji:'🟣'},
+  {name:'Pink',hex:'#EC4899',emoji:'🩷'},
+  {name:'Brown',hex:'#92400E',emoji:'🟤'},
+  {name:'Black',hex:'#1F2937',emoji:'⚫'},
+  {name:'White',hex:'#F9FAFB',emoji:'⚪'},
+];
+function buildColors() {
+  const g = document.getElementById('colorsGrid');
+  if (!g) return;
+  g.innerHTML = '';
+  COLORS_DATA.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'color-swatch';
+    d.style.background = c.hex;
+    d.innerHTML = `<span style="text-shadow:0 1px 4px rgba(0,0,0,0.8)">${c.name}</span>`;
+    d.onclick = () => {
+      speak(`${c.name}! ${c.name} is like ${c.emoji}`);
+      toast(`${c.emoji} ${c.name}!`);
+      addXP(3);
+      document.getElementById('progColors').style.width = (COLORS_DATA.indexOf(c)+1)/COLORS_DATA.length*100 + '%';
+    };
+    g.appendChild(d);
+  });
+}
+const COLOR_MIXES = {
+  'red+blue':'Purple 🟣','blue+red':'Purple 🟣',
+  'red+yellow':'Orange 🟠','yellow+red':'Orange 🟠',
+  'blue+yellow':'Green 🟢','yellow+blue':'Green 🟢',
+};
+function mixColors() {
+  const c1 = document.getElementById('mix1').value;
+  const c2 = document.getElementById('mix2').value;
+  const r = COLOR_MIXES[`${c1}+${c2}`] || '🤔 Hmm, try primary colors!';
+  const div = document.getElementById('mixResult');
+  div.textContent = c1 + ' + ' + c2 + ' = ' + r;
+  div.classList.remove('hidden');
+  speak(`${c1} plus ${c2} makes ${r}`);
+  addXP(5);
+  toast(`🎨 ${r}`);
+}
+
+// ============ STATS CHART ============
+function renderStatsChart() {
+  const canvas = document.getElementById('statsChart');
+  if (!canvas) return;
+  if (statsChart) statsChart.destroy();
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  statsChart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Activities',
+        data: activityLog,
+        backgroundColor: 'rgba(108,99,255,0.6)',
+        borderColor: '#6C63FF',
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#fff', font: { family: 'Nunito', weight: '700' } } } },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: 'rgba(255,255,255,0.6)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
+
+// ============ DOWNLOAD REPORT ============
+function downloadReport() {
+  const content = `BrightMind Learning Report
+=========================
+Student: ${userName}  |  Age: ${userAge}
+Date: ${new Date().toLocaleDateString()}
+
+📊 PROGRESS
+-----------
+XP Earned: ${xp}
+Level: ${level}
+Streak: ${streakDays} days
+Activities: ${activitiesTotal}
+
+🔤 Alphabet: ${alphMastered}/26 letters mastered (${Math.round(alphMastered/26*100)}%)
+🔢 Numbers: ${numMastered}/20 mastered (${Math.round(numMastered/20*100)}%)
+🧩 Quiz: ${quizCorrect} correct, ${quizWrong} wrong
+🃏 Memory Games Won: ${memGamesWon}
+
+🏅 BADGES (${badges.length})
+${badges.map(id => {const b=BADGE_DEFS.find(x=>x.id===id);return b?'  ✓ '+b.label:''}).filter(Boolean).join('\n')}
+
+Keep up the amazing work! 🌟
+Generated by BrightMind AI Platform`;
+  const blob = new Blob([content], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `BrightMind_Report_${userName}.txt`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('📄 Report downloaded!');
+}
+
+// ============ CONFETTI ============
+function showConfetti() {
+  const colors = ['#6C63FF','#FF6584','#43C6AC','#FFD700','#a855f7','#f093fb','#10B981'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:${-10 + Math.random()*20}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*0.5}s;
+      border-radius:${Math.random()>0.5 ? '50%' : '2px'};
+      width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;
+    `;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+// ============ TOAST ============
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============ SPEECH ============
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.9; utt.pitch = 1.1;
+  const voices = window.speechSynthesis.getVoices();
+  const friendly = voices.find(v => v.name.includes('Google') || v.lang.startsWith('en'));
+  if (friendly) utt.voice = friendly;
+  window.speechSynthesis.speak(utt);
+}
+function speakHint(msg) { speak(msg); toast('🔊 ' + msg); }
+
+// ============ FOCUS TRACKING ============
+document.addEventListener('visibilitychange', () => {
+  const dot = document.getElementById('focusDot');
+  if (document.hidden) dot.classList.add('unfocused');
+  else dot.classList.remove('unfocused');
+});
+
+// ============ CLAUDE API ============
+async function callClaude(userMsg) {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: `You are a friendly, enthusiastic AI learning assistant for children aged ${userAge}. Keep responses short, fun, and age-appropriate. Use simple words and emojis.`,
+      messages: [{role:"user", content: userMsg}]
+    })
+  });
+  if (!response.ok) throw new Error('API error');
+  const data = await response.json();
+  return data.content.map(c => c.text || '').join('').trim();
+}
+async function callClaudeChat(systemPrompt, messages) {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: messages
+    })
+  });
+  if (!response.ok) throw new Error('API error');
+  const data = await response.json();
+  return data.content.map(c => c.text || '').join('').trim();
+}
+
+// ============ INIT ============
+spawnParticles();
+</script>
+
+
+</body></html>
